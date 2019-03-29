@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Button onlineShop;
     public Button news;
     public Button mine;
+
+    public RecyclerView recommendProjectsRecycler;
+    List<Project> recommendProjectsList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +142,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mine = findViewById(R.id.mine);
         mine.setOnClickListener(this);
 
-
+        recommendProjectsRecycler = findViewById(R.id.recommendProjectsRecyclerView);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
+        linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recommendProjectsRecycler.setLayoutManager(linearLayoutManager1);
+        recommendProjectsList = new ArrayList<>();
+        Project project = new Project("test", "test", "test");
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        recommendProjectsList.add(project);
+        RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
+        recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
     }
 
     public void StartLocateService() {
@@ -330,6 +351,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             container.addView(view);
             return view;
         }
+    }
+
+    private class RecommendProjectsAdapter extends RecyclerView.Adapter<RecommendProjectsAdapter.ViewHolder> {
+        private List<Project> projectsList;
+
+        private RecommendProjectsAdapter(List<Project> projectsList) {
+            this.projectsList = projectsList;
+        }
+
+        @Override
+        public RecommendProjectsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.recommendproject_item, parent, false);
+            final RecommendProjectsAdapter.ViewHolder holder = new RecommendProjectsAdapter.ViewHolder(view);
+            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });*/
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecommendProjectsAdapter.ViewHolder holder, int position) {
+            Project project = projectsList.get(position);
+            Log.i(String.valueOf(position), project.title);
+            holder.recommendProjectText.setText(project.title);
+        }
+
+        @Override
+        public int getItemCount() {
+            return projectsList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private ImageView recommendProjectPic;
+            private TextView recommendProjectText;
+
+            private ViewHolder(View view) {
+                super(view);
+                recommendProjectPic = view.findViewById(R.id.projectPic);
+                recommendProjectText = view.findViewById(R.id.projectText);
+            }
+        }
+
+
     }
 
 }

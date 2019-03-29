@@ -71,130 +71,6 @@
         android:layout_marginTop="55dp"
         android:src="#f6f6f6"
         />
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/cardboard"
-        app:layout_constraintTop_toBottomOf="@+id/topGuideLine"
-        android:layout_marginTop="10dp"
-        />
-    <com.gama.farm_fun.ViewPagerIndicator
-        android:id="@+id/indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/viewPager"
-        app:layout_constraintBottom_toBottomOf="@+id/viewPager"
-        app:layout_constraintStart_toStartOf="@id/viewPager"
-        app:layout_constraintEnd_toEndOf="@id/viewPager"
-        app:layout_constraintVertical_bias="0.95"
-        />
-
-    <Button
-        android:id="@+id/pick"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine"
-        android:background="@drawable/pick"
-        />
-    <Button
-        android:id="@+id/homeStay"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine"
-        android:background="@drawable/homestay"
-        />
-    <Button
-        android:id="@+id/restaurant"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine"
-        android:background="@drawable/restaurant"
-        />
-    <Button
-        android:id="@+id/waterPlay"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine"
-        android:background="@drawable/waterplay"
-        />
-    <Button
-        android:id="@+id/ktv"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/ktv"
-        />
-
-    <Button
-        android:id="@+id/fishing"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/pick"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine"
-        android:background="@drawable/fishing"
-        />
-    <Button
-        android:id="@+id/chess"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/pick"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine"
-        android:background="@drawable/chess"
-        />
-
-    <Button
-        android:id="@+id/barbecue"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/pick"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine"
-        android:background="@drawable/barbecue"
-        />
-
-    <Button
-        android:id="@+id/shooting"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/pick"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine"
-        app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine"
-        android:background="@drawable/shooting"
-        />
-
-    <Button
-        android:id="@+id/all"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:layout_constraintTop_toBottomOf="@id/pick"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/all"
-        />
-
     <ImageView
         android:id="@+id/bottomGuideLine"
         android:layout_width="match_parent"
@@ -204,6 +80,222 @@
         android:layout_marginBottom="55dp"
         android:src="#f6f6f6"
         />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/bottomGuideLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topGuideLine"
+        >
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/topGuideLine2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"
+                android:src="#f6f6f6"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/oneFifthGuideLine2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintGuide_percent="0.2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/twoFifthGuideLine2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintGuide_percent="0.4"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/threeFifthGuideLine2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintGuide_percent="0.6"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/fourFifthGuideLine2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintGuide_percent="0.8"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/cardboard"
+                app:layout_constraintTop_toBottomOf="@+id/topGuideLine2" />
+
+            <com.gama.farm_fun.ViewPagerIndicator
+                android:id="@+id/indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/viewPager"
+                app:layout_constraintEnd_toEndOf="@id/viewPager"
+                app:layout_constraintStart_toStartOf="@id/viewPager"
+                app:layout_constraintTop_toTopOf="@+id/viewPager"
+                app:layout_constraintVertical_bias="0.95" />
+
+            <Button
+                android:id="@+id/pick"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/pick"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+            <Button
+                android:id="@+id/homeStay"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/homestay"
+                app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+            <Button
+                android:id="@+id/restaurant"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/restaurant"
+                app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+            <Button
+                android:id="@+id/waterPlay"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/waterplay"
+                app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+            <Button
+                android:id="@+id/ktv"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ktv"
+                app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+            <Button
+                android:id="@+id/fishing"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/fishing"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/pick" />
+
+            <Button
+                android:id="@+id/chess"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/chess"
+                app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/pick" />
+
+            <Button
+                android:id="@+id/barbecue"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/barbecue"
+                app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/pick" />
+
+            <Button
+                android:id="@+id/shooting"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shooting"
+                app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
+                app:layout_constraintTop_toBottomOf="@id/pick" />
+
+            <Button
+                android:id="@+id/all"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/all"
+                app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pick" />
+
+
+            <TextView
+                android:id="@+id/recommendProjects"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="推荐项目"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fishing" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recommendProjectsRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                app:layout_constraintTop_toBottomOf="@id/recommendProjects"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+
+
+            <TextView
+                android:id="@+id/travelJournal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="精品游记"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recommendProjectsRecyclerView" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+
     <Button
         android:id="@+id/homePage"
         android:layout_width="30dp"
