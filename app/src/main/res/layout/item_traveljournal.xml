@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff">
+
+    <ImageView
+        android:id="@+id/leftTop"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="#ffffff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/rightBottom"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/travelJournalBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/traveljournalbackground"
+        app:layout_constraintStart_toEndOf="@id/leftTop"
+        app:layout_constraintEnd_toStartOf="@id/rightBottom"
+        app:layout_constraintTop_toBottomOf="@id/leftTop"
+        app:layout_constraintBottom_toTopOf="@id/rightBottom"
+        />
+    <TextView
+        android:id="@+id/travelJournalTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Test"
+        android:textColor="#ffffff"
+        android:textSize="35sp"
+        app:layout_constraintVertical_bias="0.35"
+        />
+    <TextView
+        android:id="@+id/travelJournalSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/travelJournalTitle"
+        android:text="Test"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        />
+</android.support.constraint.ConstraintLayout>

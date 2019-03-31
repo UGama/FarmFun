@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public RecyclerView recommendProjectsRecycler;
     List<Project> recommendProjectsList = null;
 
+    public RecyclerView travelJournalRecycler;
+    List<TravelJournal> travelJournalsList = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +145,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mine = findViewById(R.id.mine);
         mine.setOnClickListener(this);
 
+        Log.i("test1", "success");
+        travelJournalRecycler = findViewById(R.id.travelJournalRecyclerView);
+        travelJournalRecycler.setNestedScrollingEnabled(false);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
+        linearLayoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
+        travelJournalRecycler.setLayoutManager(linearLayoutManager2);
+        Log.i("test2", "success");
+        travelJournalsList = new ArrayList<>();
+        TravelJournal travelJournal = new TravelJournal("test", "test", "test");
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        Log.i("test3", "success");
+        TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalsList);
+        Log.i("test4", "success");
+        travelJournalRecycler.setAdapter(travelJournalsAdapter);
+        Log.i("test5", "success");
+
         recommendProjectsRecycler = findViewById(R.id.recommendProjectsRecyclerView);
+        recommendProjectsRecycler.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         recommendProjectsRecycler.setLayoutManager(linearLayoutManager1);
@@ -159,7 +186,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recommendProjectsList.add(project);
         RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
         recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
+
+
     }
+
+
 
     public void StartLocateService() {
         mLocationClient = new LocationClient(getApplicationContext());
@@ -294,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             position = position % posterList.size();
-            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.poster_item, null);
+            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_poster, null);
             ImageView poster = view.findViewById(R.id.poster);
             poster.setBackgroundResource(posterList.get(position).getSourceId());
             //poster.setImageResource(posterList.get(position).getSourceId());
@@ -363,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public RecommendProjectsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recommendproject_item, parent, false);
+                    .inflate(R.layout.item_recommendproject, parent, false);
             final RecommendProjectsAdapter.ViewHolder holder = new RecommendProjectsAdapter.ViewHolder(view);
             /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -400,4 +431,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private class TravelJournalsAdapter extends RecyclerView.Adapter<TravelJournalsAdapter.ViewHolder> {
+        private List<TravelJournal> travelJournalsList;
+
+        private TravelJournalsAdapter(List<TravelJournal> travelJournalsList) {
+            this.travelJournalsList = travelJournalsList;
+        }
+
+        @Override
+        public TravelJournalsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_traveljournal, parent, false);
+            final TravelJournalsAdapter.ViewHolder holder = new TravelJournalsAdapter.ViewHolder(view);
+            holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(TravelJournalsAdapter.ViewHolder holder, int position) {
+            TravelJournal travelJournal = travelJournalsList.get(position);
+            Log.i(String.valueOf(position), "TravelJournal" + travelJournal.title);
+            holder.travelJournalTitle.setText(travelJournal.title);
+            holder.travelJournalSubtitle.setText(travelJournal.subTitle);
+        }
+
+        @Override
+        public int getItemCount() {
+            return travelJournalsList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView travelJournalTitle;
+            private TextView travelJournalSubtitle;
+            private View travelJournalView;
+
+            private ViewHolder(View view) {
+                super(view);
+                travelJournalTitle = view.findViewById(R.id.travelJournalTitle);
+                travelJournalSubtitle = view.findViewById(R.id.travelJournalSubtitle);
+                travelJournalView = view.findViewById(R.id.travelJournalBackground);
+            }
+        }
+    }
 }

@@ -5,6 +5,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
 
+    <ImageView
+        android:id="@+id/topGuideLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="120dp"
+        />
+    <ImageView
+        android:id="@+id/headPic"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
+        android:background="@drawable/male"
+        app:layout_constraintHorizontal_bias="0.1"
+        />
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="游客"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        app:layout_constraintStart_toEndOf="@id/headPic"
+        app:layout_constraintTop_toTopOf="@+id/headPic"
+        app:layout_constraintBottom_toBottomOf="@id/headPic"
+        android:layout_marginLeft="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/secondTopGuideLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toTopOf="@id/topGuideLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="120dp"
+        android:background="#000000"
+        />
+
+    <ImageView
+        android:id="@+id/localSpecialtyOrder"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/oneFifthGuideLine"
+        app:layout_constraintTop_toTopOf="@+id/topGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
+        android:background="@drawable/localspecialorder"
+        app:layout_constraintVertical_bias="0.35"
+        />
+    <ImageView
+        android:id="@+id/homeStayOrder"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
+        app:layout_constraintTop_toTopOf="@id/topGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
+        app:layout_constraintVertical_bias="0.35"
+        android:background="@drawable/homestayorder"
+        />
+
+    <ImageView
+        android:id="@+id/restaurantOrder"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/twoFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/threeFifthGuideLine"
+        app:layout_constraintTop_toTopOf="@id/topGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
+        app:layout_constraintVertical_bias="0.35"
+        android:background="@drawable/restaurantorder"
+        />
+
+    <ImageView
+        android:id="@+id/projectOrder"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
+        app:layout_constraintTop_toTopOf="@id/topGuideLine"
+        android:background="@drawable/projectsorder"
+        app:layout_constraintVertical_bias="0.35"
+        />
+
+    <ImageView
+        android:id="@+id/comment"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/fourFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
+        android:background="@drawable/comment"
+        app:layout_constraintVertical_bias="0.35"
+        />
+
     <android.support.constraint.Guideline
         android:id="@+id/oneFifthGuideLine"
         android:layout_width="wrap_content"
@@ -41,6 +143,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintGuide_percent="0.8"
         />
+
+
+
 
     <ImageView
         android:id="@+id/bottomGuideLine"
