@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SDKInitializer.setCoordType(CoordType.BD09LL);
         setContentView(R.layout.activity_main);
 
-        //StartLocateService();
+        StartLocateService();
 
         posterList = new ArrayList<>();
         posterList.add(new Poster(R.drawable.adtest));
