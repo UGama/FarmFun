@@ -41,15 +41,20 @@
         <!--</activity>-->
         <activity android:name=".MainActivity" />
 
-        <activity android:name=".DatabaseOperation" >
+        <!--<activity android:name=".DatabaseOperation" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <!--<activity android:name=".DatabaseOperation" />-->
+        <activity android:name=".PickActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <!--<activity android:name=".DatabaseOperation" />-->
-
-
 
 
         <service android:name="com.avos.avoscloud.PushService"/>
