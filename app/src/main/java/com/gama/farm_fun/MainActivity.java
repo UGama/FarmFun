@@ -38,9 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public TextView locationText;
     public String locationString;
     public ImageView locationPic;
-
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
+
+    public Button pick;
 
     public Button onlineShop;
     public Button news;
@@ -187,10 +188,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
         recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
 
-
+        InitUI();
     }
 
 
+    public void InitUI() {
+        pick = findViewById(R.id.pick);
+        pick.setOnClickListener(this);
+    }
 
     public void StartLocateService() {
         mLocationClient = new LocationClient(getApplicationContext());
@@ -296,6 +301,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.onlineStore:
                 Intent intent1 = new Intent(MainActivity.this, OnlineShopActivity.class);
                 startActivity(intent1);
+                break;
+            case R.id.pick:
+                Intent pickIntent = new Intent(MainActivity.this, PickActivity.class);
+                startActivity(pickIntent);
                 break;
         }
     }

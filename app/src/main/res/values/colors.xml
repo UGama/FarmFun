@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorTheme">#08a3ea</color>
+    <color name="colorTextGray">#7a7a7a</color>
     <color name="colorLineGray">#e7e7e7</color>
+    <color name="colorRemind" >#ff4d64</color>
 </resources>
