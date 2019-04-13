@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent1);
                 break;
             case R.id.pick:
-                Intent pickIntent = new Intent(MainActivity.this, PickActivity.class);
+                Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 startActivity(pickIntent);
                 break;
         }

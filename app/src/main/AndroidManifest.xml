@@ -48,7 +48,7 @@
             <!--</intent-filter>-->
         <!--</activity>-->
         <!--<activity android:name=".DatabaseOperation" />-->
-        <activity android:name=".PickActivity">
+        <activity android:name=".AmusementActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

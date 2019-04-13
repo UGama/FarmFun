@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PickActivity extends AppCompatActivity {
+public class AmusementActivity extends AppCompatActivity {
 
     private ObservableScrollView observableScrollView;
     private ImageView mainPic;
@@ -39,12 +39,11 @@ public class PickActivity extends AppCompatActivity {
     private RecyclerView ticketRecyclerView;
     private List<Ticket> ticketList;
 
-    private ImageView loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_amusementproject2);
+        setContentView(R.layout.activity_amusement);
 
         getData();
         initUI();
@@ -77,7 +76,6 @@ public class PickActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         ticketRecyclerView.setLayoutManager(linearLayoutManager);
 
-        loading = findViewById(R.id.loading);
 
         getProjectInformation();
     }
@@ -121,11 +119,11 @@ public class PickActivity extends AppCompatActivity {
                 }
                 Log.i("TicketList.size", String.valueOf(ticketList.size()));
                 ticketRecyclerView = findViewById(R.id.ticketRecyclerView);
-                LinearLayoutManager linearLayout = new LinearLayoutManager(PickActivity.this);
+                LinearLayoutManager linearLayout = new LinearLayoutManager(AmusementActivity.this);
                 ticketRecyclerView.setLayoutManager(linearLayout);
                 TicketAdapter ticketAdapter = new TicketAdapter(ticketList);
                 ticketRecyclerView.setAdapter(ticketAdapter);
-                loading.setVisibility(View.INVISIBLE);
+
 
             }
         });
@@ -183,7 +181,7 @@ public class PickActivity extends AppCompatActivity {
             Ticket ticket = ticketList.get(position);
             Log.i(String.valueOf(position), ticket.ticketType);
             holder.ticketType.setText(ticket.ticketType);
-            holder.sales.setText(String.valueOf(ticket.sales));
+            holder.sales.setText("已售"+String.valueOf(ticket.sales));
             holder.price.setText(String.valueOf(ticket.price));
         }
 

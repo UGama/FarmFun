@@ -136,22 +136,66 @@
                 android:id="@+id/comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/test"
+                android:text="评论"
                 android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cutLine2"
                 />
+            <ImageView
+                android:id="@+id/headPic"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintTop_toBottomOf="@id/comment"
+                android:background="@drawable/male"
+                />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/test"
+                app:layout_constraintStart_toEndOf="@id/headPic"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/headPic"
+                android:textColor="#000000"
+                />
+            <TextView
+                android:id="@+id/commentContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="describedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribe"
+                app:layout_constraintTop_toBottomOf="@+id/userName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#000000"
+                />
+            <ImageView
+                android:id="@+id/cutLine3"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/colorLineGray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/commentContent"
+                />
+            <TextView
+                android:id="@+id/mapGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="地图导览"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cutLine3"
+                />
+
 
         </android.support.constraint.ConstraintLayout>
 
     </com.gama.farm_fun.ObservableScrollView>
 
-    <ImageView
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000"
-        />
+
 
 
 
