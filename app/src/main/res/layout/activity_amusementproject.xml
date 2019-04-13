@@ -77,7 +77,7 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="16dp"
-                android:background="@drawable/pic_shape"
+                android:background="@drawable/shape_pic"
                 app:layout_constraintBottom_toTopOf="@+id/cutLine"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

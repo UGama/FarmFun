@@ -28,7 +28,8 @@
         >
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/mainPic"
                 android:layout_width="match_parent"
@@ -82,7 +83,7 @@
                 app:layout_constraintTop_toBottomOf="@id/address"
                 />
             <TextView
-                android:id="@+id/reserve"
+                android:id="@+id/ticket"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,13 +91,36 @@
                 android:text="@string/test"
                 android:textColor="#000000"
                 />
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/more"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.97"
+                app:layout_constraintTop_toTopOf="@+id/ticket"
+                app:layout_constraintBottom_toBottomOf="@+id/ticket"
+                />
+            <TextView
+                android:id="@+id/allTicketType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/ticket"
+                app:layout_constraintBottom_toBottomOf="@id/ticket"
+                android:textSize="12sp"
+                android:textColor="@color/colorTextGray"
+                android:text="@string/test"
+                app:layout_constraintEnd_toStartOf="@id/more"
+                />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ticketRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reserve"
+                app:layout_constraintTop_toBottomOf="@id/ticket"
+                android:background="#ffffff"
                 />
 
             <ImageView
@@ -121,6 +145,13 @@
         </android.support.constraint.ConstraintLayout>
 
     </com.gama.farm_fun.ObservableScrollView>
+
+    <ImageView
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        />
 
 
 
