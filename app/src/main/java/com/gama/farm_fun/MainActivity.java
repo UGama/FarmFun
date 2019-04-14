@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyLocationListener myListener = new MyLocationListener();
 
     public Button pick;
+    public Button drift;
 
     public Button onlineShop;
     public Button news;
@@ -57,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
-        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
-        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
         setContentView(R.layout.activity_main);
 
@@ -120,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
-
 
         AVObject testObject = new AVObject("TestObject");
         testObject.put("words","Hello World!");
@@ -195,6 +192,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void InitUI() {
         pick = findViewById(R.id.pick);
         pick.setOnClickListener(this);
+        drift = findViewById(R.id.drift);
+        drift.setOnClickListener(this);
     }
 
     public void StartLocateService() {
@@ -255,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLocationClient.start();
     }
 
-
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location){
@@ -280,7 +278,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
             String locationDescribe = location.getLocationDescribe();
-            Log.i("1", "onReceiveLocation: " + locationDescribe);
+            Log.i("locateDescribe", locationDescribe);
+            Log.i("address", addr);
             locationString = locationDescribe;
             locationText = findViewById(R.id.locationText);
             if (locationString != null) {
@@ -304,7 +303,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.pick:
                 Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                pickIntent.putExtra("Type", "pick");
                 startActivity(pickIntent);
+                break;
+            case R.id.drift:
+                Intent driftIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                driftIntent.putExtra("Type", "drift");
+                startActivity(driftIntent);
                 break;
         }
     }

@@ -222,7 +222,7 @@
                 android:textColor="#888888"
                 />
             <Button
-                android:id="@+id/waterPlay"
+                android:id="@+id/drift"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
@@ -231,14 +231,14 @@
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/viewPager" />
             <TextView
-                android:id="@+id/waterPlayText"
+                android:id="@+id/driftText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/pick"
                 app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
                 android:textSize="15sp"
-                android:text="戏水"
+                android:text="漂流"
                 android:textColor="#888888"
                 />
 
@@ -425,8 +425,8 @@
                 />
             <Button
                 android:id="@+id/more"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:background="@drawable/more"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/moreText"

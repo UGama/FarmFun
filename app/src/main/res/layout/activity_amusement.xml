@@ -5,16 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
 
-    <include
-        android:id="@+id/topBar"
-        layout="@layout/bar_project"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
 
     <com.gama.farm_fun.ObservableScrollView
         android:id="@+id/observableScrollView"
@@ -37,7 +27,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/adtest"
+                android:src="@drawable/wh43pic"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 />
             <TextView
                 android:id="@+id/projectName"
@@ -189,11 +181,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cutLine3"
                 />
+            <ImageView
+                android:id="@+id/mapPic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wh43pic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mapGuide"
+                />
 
 
         </android.support.constraint.ConstraintLayout>
 
     </com.gama.farm_fun.ObservableScrollView>
+
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/bar_project"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
 
