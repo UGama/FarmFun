@@ -10,7 +10,6 @@ import com.avos.avoscloud.AVObject;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
@@ -31,7 +30,8 @@ public class DatabaseOperation extends AppCompatActivity {
         //uploadAmusementGeopoint();
         //LatLng latLng = new LatLng(34.7568711, 113.663221);
         //getLocationDescribeByLatLng(latLng);
-        Test();
+
+        upLoadRestaurantOrderInformation();
     }
 
     public void uploadAmusementGeopoint() {
@@ -42,25 +42,47 @@ public class DatabaseOperation extends AppCompatActivity {
         Log.i("UploadAmusementGeopoint", "success!");
     }
 
-    public void Test() {
-        //新建编码查询对象
-        GeoCoder geocode = GeoCoder.newInstance();
-        //新建查询对象要查询的条件
-        GeoCodeOption GeoOption = new GeoCodeOption().city("郑州").address("郑州东站");
-        //发起地理编码请求
-        geocode.geocode(GeoOption);
-        //设置查询结果监听者
-        geocode.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-            @Override
-            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-                Log.i("test", String.valueOf(geoCodeResult.getLocation()));
+    public void upLoadRestaurantOrderInformation() {
+        for (int i = 1; i < 31; i++) {
+            String date;
+            if (i <= 9) {
+                date = "2019/06/0" + String.valueOf(i);
+            } else {
+                date = "2019/06/" + String.valueOf(i);
             }
-
-            @Override
-            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-
+            for (int j = 0; j < 4; j++) {
+                if (j == 0) {
+                    AVObject avObject = new AVObject("RestaurantOrder");
+                    avObject.put("date", date);
+                    avObject.put("seatNumber", 2);
+                    avObject.put("type", "小桌（2人）");
+                    avObject.put("remain", 10);
+                    avObject.saveInBackground();
+                } else if (j == 1) {
+                    AVObject avObject = new AVObject("RestaurantOrder");
+                    avObject.put("date", date);
+                    avObject.put("seatNumber", 4);
+                    avObject.put("type", "中桌（4人）");
+                    avObject.put("remain", 20);
+                    avObject.saveInBackground();
+                } else if (j == 2) {
+                    AVObject avObject = new AVObject("RestaurantOrder");
+                    avObject.put("date", date);
+                    avObject.put("seatNumber", 10);
+                    avObject.put("type", "大桌（10人）");
+                    avObject.put("remain", 6);
+                    avObject.saveInBackground();
+                } else {
+                    AVObject avObject = new AVObject("RestaurantOrder");
+                    avObject.put("date", date);
+                    avObject.put("seatNumber", 12);
+                    avObject.put("type", "包厢（12人）");
+                    avObject.put("remain", 4);
+                    avObject.saveInBackground();
+                }
             }
-        });
+        }
+
     }
 
     public void getLocationDescribeByLatLng(LatLng latLng) {

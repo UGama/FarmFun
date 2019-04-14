@@ -7,4 +7,5 @@
     <color name="colorTextGray">#7a7a7a</color>
     <color name="colorLineGray">#e7e7e7</color>
     <color name="colorRemind" >#ff4d64</color>
+    <color name="colorBackgroundGray">#f4f4f6</color>
 </resources>

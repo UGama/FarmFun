@@ -12,7 +12,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_percent="0.08"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <ImageView
         android:id="@+id/cutLine0"
@@ -24,13 +25,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/amusementTitle"
+        android:id="@+id/restaurantTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:gravity="center"
         android:maxEms="15"
-        android:text="游乐项目"
+        android:text="餐饮"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/topGuideLine"
@@ -42,9 +43,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/amusementtitle"
+        android:src="@drawable/restauranttitle"
         app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
-        app:layout_constraintEnd_toStartOf="@id/amusementTitle"
+        app:layout_constraintEnd_toStartOf="@id/restaurantTitle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.gama.farm_fun.ObservableScrollView
@@ -83,17 +84,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/cinemaPic"
+                android:id="@+id/restaurantPic"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/loading"
                 app:layout_constraintBottom_toBottomOf="@id/pic_shape"
                 app:layout_constraintEnd_toEndOf="@id/pic_shape"
                 app:layout_constraintStart_toStartOf="@id/pic_shape"
-                app:layout_constraintTop_toTopOf="@id/pic_shape" />
+                app:layout_constraintTop_toTopOf="@id/pic_shape"
+                android:scaleType="centerCrop"/>
 
             <TextView
-                android:id="@+id/cinemaName2"
+                android:id="@+id/restaurantName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -101,13 +103,13 @@
                 android:text="@string/test"
                 android:textColor="#000000"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/cinemaPic"
-                app:layout_constraintStart_toEndOf="@id/cinemaPic"
-                app:layout_constraintTop_toTopOf="@id/cinemaPic"
+                app:layout_constraintBottom_toBottomOf="@+id/restaurantPic"
+                app:layout_constraintStart_toEndOf="@id/restaurantPic"
+                app:layout_constraintTop_toTopOf="@id/restaurantPic"
                 app:layout_constraintVertical_bias="0.3" />
 
             <TextView
-                android:id="@+id/position"
+                android:id="@+id/locationDescribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -116,8 +118,8 @@
                 android:text="@string/test"
                 android:textColor="#000000"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@id/cinemaName2"
-                app:layout_constraintTop_toBottomOf="@id/cinemaName2" />
+                app:layout_constraintStart_toStartOf="@id/restaurantName"
+                app:layout_constraintTop_toBottomOf="@id/restaurantName" />
 
             <TextView
                 android:id="@+id/distance"
@@ -126,15 +128,15 @@
                 android:text="@string/test"
                 android:textColor="#000000"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/position"
+                app:layout_constraintBottom_toBottomOf="@id/locationDescribe"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.95"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/position" />
+                app:layout_constraintTop_toTopOf="@id/locationDescribe" />
 
             <include
                 android:id="@+id/midPanel"
-                layout="@layout/panel_project"
+                layout="@layout/panel_restaurant"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +153,7 @@
                 app:layout_constraintTop_toBottomOf="@id/midPanel" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/screeningsRecyclerView"
+                android:id="@+id/timeRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
@@ -165,7 +167,7 @@
 
     <include
         android:id="@+id/topPanel"
-        layout="@layout/panel_project"
+        layout="@layout/panel_restaurant"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:visibility="gone"
