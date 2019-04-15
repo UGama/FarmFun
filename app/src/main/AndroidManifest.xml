@@ -44,7 +44,7 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         <!--</activity>-->
-        <activity android:name=".DatabaseOperation" />
+        <!--<activity android:name=".DatabaseOperation" />-->
         <!--<activity android:name=".AmusementActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +54,15 @@
         </activity>-->
         <activity android:name=".AmusementActivity" />
 
-        <activity android:name=".RestaurantActivity">
+        <!--<activity android:name=".RestaurantActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <activity android:name=".RestaurantActivity" />
+
+        <activity android:name=".HomeStayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

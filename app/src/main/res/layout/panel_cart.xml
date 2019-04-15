@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff">
+    <ImageView
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/shape_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cart"
+        app:layout_constraintStart_toStartOf="@drawable/frame"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="45dp"
+        android:background="@drawable/shape_pay"
+        app:layout_constraintEnd_toEndOf="@id/frame"
+        app:layout_constraintBottom_toBottomOf="@id/frame"
+        android:text="去支付>"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        />
+
+
+
+</android.support.constraint.ConstraintLayout>

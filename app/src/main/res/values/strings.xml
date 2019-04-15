@@ -3,4 +3,9 @@
     <string name="test">Test</string>
     <string name="orderTomorrow">可订明日</string>
     <string name="yuan">元</string>
+    <string name="zhuo">桌</string>
+    <string name="remain">还剩</string>
+    <string name="seat_detail">公告：中饭时间：10：30至13：30；\n&#160;&#160;&#160;&#160;&#160;&#160;晚饭时间：16：30至19：30</string>
+    <string name="chosen">已选择：</string>
+    <string name="lunch_dinner">（中饭/晚饭）</string>
 </resources>

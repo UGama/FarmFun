@@ -50,37 +50,60 @@ public class DatabaseOperation extends AppCompatActivity {
             } else {
                 date = "2019/06/" + String.valueOf(i);
             }
-            for (int j = 0; j < 4; j++) {
-                if (j == 0) {
-                    AVObject avObject = new AVObject("RestaurantOrder");
-                    avObject.put("date", date);
-                    avObject.put("seatNumber", 2);
-                    avObject.put("type", "小桌（2人）");
-                    avObject.put("remain", 10);
-                    avObject.saveInBackground();
-                } else if (j == 1) {
-                    AVObject avObject = new AVObject("RestaurantOrder");
-                    avObject.put("date", date);
-                    avObject.put("seatNumber", 4);
-                    avObject.put("type", "中桌（4人）");
-                    avObject.put("remain", 20);
-                    avObject.saveInBackground();
-                } else if (j == 2) {
-                    AVObject avObject = new AVObject("RestaurantOrder");
-                    avObject.put("date", date);
-                    avObject.put("seatNumber", 10);
-                    avObject.put("type", "大桌（10人）");
-                    avObject.put("remain", 6);
-                    avObject.saveInBackground();
-                } else {
-                    AVObject avObject = new AVObject("RestaurantOrder");
-                    avObject.put("date", date);
-                    avObject.put("seatNumber", 12);
-                    avObject.put("type", "包厢（12人）");
-                    avObject.put("remain", 4);
-                    avObject.saveInBackground();
+            for (int k = 0; k < 2; k++) {
+                for (int j = 0; j < 4; j++) {
+                    if (j == 0) {
+                        AVObject avObject = new AVObject("Seat");
+                        avObject.put("date", date);
+                        avObject.put("seatNumber", 2);
+                        avObject.put("describe", "小桌（2人）");
+                        avObject.put("remain", 10);
+                        if (k == 0) {
+                            avObject.put("meal", "lunch");
+                        } else {
+                            avObject.put("meal", "dinner");
+                        }
+                        avObject.saveInBackground();
+                    } else if (j == 1) {
+                        AVObject avObject = new AVObject("Seat");
+                        avObject.put("date", date);
+                        avObject.put("seatNumber", 4);
+                        avObject.put("describe", "中桌（4人）");
+                        avObject.put("remain", 20);
+                        if (k == 0) {
+                            avObject.put("meal", "lunch");
+                        } else {
+                            avObject.put("meal", "dinner");
+                        }
+                        avObject.saveInBackground();
+                    } else if (j == 2) {
+                        AVObject avObject = new AVObject("Seat");
+                        avObject.put("date", date);
+                        avObject.put("seatNumber", 10);
+                        avObject.put("describe", "大桌（10人）");
+                        avObject.put("remain", 6);
+                        if (k == 0) {
+                            avObject.put("meal", "lunch");
+                        } else {
+                            avObject.put("meal", "dinner");
+                        }
+                        avObject.saveInBackground();
+                    } else {
+                        AVObject avObject = new AVObject("Seat");
+                        avObject.put("date", date);
+                        avObject.put("seatNumber", 12);
+                        avObject.put("describe", "包厢（12人）");
+                        avObject.put("remain", 4);
+                        if (k == 0) {
+                            avObject.put("meal", "lunch");
+                        } else {
+                            avObject.put("meal", "dinner");
+                        }
+                        avObject.saveInBackground();
+                    }
                 }
             }
+
         }
 
     }

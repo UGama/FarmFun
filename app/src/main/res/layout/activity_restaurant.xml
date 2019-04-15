@@ -16,7 +16,7 @@
         />
 
     <ImageView
-        android:id="@+id/cutLine0"
+        android:id="@+id/barBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorLineGray"
@@ -49,7 +49,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.gama.farm_fun.ObservableScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/observableScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#ffffff"
@@ -153,13 +153,19 @@
                 app:layout_constraintTop_toBottomOf="@id/midPanel" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/timeRecyclerView"
+                android:id="@+id/seatRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cutLine2" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="#ffffff"
+                app:layout_constraintTop_toBottomOf="@id/seatRecyclerView"
+                />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -176,12 +182,25 @@
         app:layout_constraintTop_toBottomOf="@id/topGuideLine" />
 
     <ImageView
-        android:id="@+id/cutLine00"
+        android:id="@+id/panelBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorLineGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topPanel" />
+
+    <include
+        android:id="@+id/restaurantCart"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        layout="@layout/panel_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        />
+
+
 
 </android.support.constraint.ConstraintLayout>
