@@ -38,12 +38,12 @@
         <!--</activity>-->
         <activity android:name=".MainActivity" />
 
-        <activity android:name=".DatabaseOperation" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <!--<activity android:name=".DatabaseOperation" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <!--<activity android:name=".DatabaseOperation" />-->
         <!--<activity android:name=".AmusementActivity">
             <intent-filter>
@@ -62,12 +62,12 @@
         <!--</activity>-->
         <activity android:name=".RestaurantActivity" />
 
-        <!--<activity android:name=".HomeStayActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+        <activity android:name=".HomeStayActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
         <service android:name="com.avos.avoscloud.PushService"/>

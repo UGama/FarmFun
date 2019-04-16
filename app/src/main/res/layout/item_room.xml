@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="90dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
     android:background="#ffffff">
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/roomPic"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--android:src="@drawable/wh11pic"-->
+        <!--/>-->
+    <!--<ImageView-->
+        <!--android:id="@+id/frame"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--app:layout_constraintStart_toStartOf="@id/seatPic"-->
+        <!--app:layout_constraintEnd_toEndOf="@id/seatPic"-->
+        <!--app:layout_constraintTop_toTopOf="@id/seatPic"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/seatPic"-->
+        <!--android:src="@drawable/frame"-->
+        <!--/>-->
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/roomPic"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/wh11pic"
-        />
-    <ImageView
-        android:id="@+id/frame"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@id/seatPic"
-        app:layout_constraintEnd_toEndOf="@id/seatPic"
-        app:layout_constraintTop_toTopOf="@id/seatPic"
-        app:layout_constraintBottom_toBottomOf="@id/seatPic"
-        android:src="@drawable/frame"
+        fresco:placeholderImage="@drawable/placeholder"
+        fresco:placeholderImageScaleType="fitCenter"
         />
 
     <TextView
@@ -36,7 +48,7 @@
         android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="@id/roomPic"
         app:layout_constraintBottom_toBottomOf="@id/roomPic"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_bias="0.2"
         android:textColor="#000000"
         />
 
@@ -50,7 +62,18 @@
         app:layout_constraintStart_toStartOf="@id/roomType"
         app:layout_constraintTop_toBottomOf="@id/roomType"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_bias="0.2"
+        />
+
+    <TextView
+        android:id="@+id/roomRemain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/describe"
+        app:layout_constraintStart_toStartOf="@id/roomType"
+        android:textColor="@color/colorTextGray"
+        android:text="@string/test"
+        android:textSize="12sp"
         />
     <TextView
         android:id="@+id/price"
@@ -96,5 +119,16 @@
         app:layout_constraintEnd_toEndOf="@id/yuan"
         app:layout_constraintTop_toBottomOf="@id/yuan"
         android:layout_marginTop="3dp"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/colorLineGray"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         />
 </android.support.constraint.ConstraintLayout>

@@ -123,7 +123,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     avObject.put("roomPicName", "bigbedroom.jpg");
                     avObject.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
                     avObject.put("roomType", "大床房");
-                    avObject.put("price", 244);
+                    avObject.put("price", 258);
                     avObject.put("remain", 20);
                     avObject.saveInBackground();
                 } else if (j == 1) {
@@ -132,7 +132,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     avObject.put("roomPicName", "standardroom.jpg");
                     avObject.put("describe", "25m² 有窗 2张单人床1.2m 可住2人）");
                     avObject.put("roomType", "标准间");
-                    avObject.put("price", 263);
+                    avObject.put("price", 278);
                     avObject.put("remain", 15);
                     avObject.saveInBackground();
                 } else if (j == 2) {
@@ -141,7 +141,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     avObject.put("roomPicName", "smallsuite.jpg");
                     avObject.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
                     avObject.put("roomType", "小套房");
-                    avObject.put("price", 244);
+                    avObject.put("price", 328);
                     avObject.put("remain", 10);
                     avObject.saveInBackground();
                 } else {
@@ -150,7 +150,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     avObject.put("roomPicName", "bigsuite.jpg");
                     avObject.put("describe", "25m² 有窗 2张双人床1.8m 可住4人）");
                     avObject.put("roomType", "大套房");
-                    avObject.put("price", 244);
+                    avObject.put("price", 479);
                     avObject.put("remain", 5);
                     avObject.saveInBackground();
                 }

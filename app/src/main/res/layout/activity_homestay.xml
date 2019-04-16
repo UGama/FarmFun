@@ -48,7 +48,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/homeStayName"
-                android:text="describedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribedescribe"
+                android:text="@string/test"
                 android:singleLine="false"
                 android:textColor="#000000"
                 android:maxEms="20"
@@ -74,7 +74,7 @@
                 app:layout_constraintTop_toBottomOf="@id/address"
                 />
             <TextView
-                android:id="@+id/ticket"
+                android:id="@+id/reserve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,37 +82,24 @@
                 android:text="@string/test"
                 android:textColor="#000000"
                 />
-            <ImageView
-                android:id="@+id/more"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/more"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.97"
-                app:layout_constraintTop_toTopOf="@+id/ticket"
-                app:layout_constraintBottom_toBottomOf="@+id/ticket"
-                />
-            <TextView
-                android:id="@+id/allTicketType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/ticket"
-                app:layout_constraintBottom_toBottomOf="@id/ticket"
-                android:textSize="12sp"
-                android:textColor="@color/colorTextGray"
-                android:text="@string/test"
-                app:layout_constraintEnd_toStartOf="@id/more"
-                />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/ticketRecyclerView"
+
+            <include
+                layout="@layout/panel_homestay"
+                android:id="@+id/panel_homeStay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ticket"
-                android:background="#ffffff"
+                app:layout_constraintTop_toBottomOf="@id/reserve"
                 />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/roomRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/panel_homeStay" />
 
             <ImageView
                 android:id="@+id/cutLine2"
@@ -121,7 +108,7 @@
                 android:background="@color/colorLineGray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ticketRecyclerView"
+                app:layout_constraintTop_toBottomOf="@id/roomRecyclerView"
                 />
             <TextView
                 android:id="@+id/comment"
