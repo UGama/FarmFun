@@ -10,4 +10,5 @@
     <string name="chosen">已选择：</string>
     <string name="lunch_dinner">（中饭/晚饭）</string>
     <string name="physical_store_price">门市价</string>
+    <string name="register">注册</string>
 </resources>

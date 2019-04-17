@@ -40,14 +40,14 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     public void setLength(int sum){
-        this.sum=sum;
+        this.sum = sum;
         this.selected = 0;
         draw();
     }
 
     public void setSelected(int selected){
         removeAllViews();
-        this.selected=sum==0?0:selected%sum;
+        this.selected = sum == 0 ? 0 : selected % sum;
         draw();
     }
 
@@ -55,13 +55,13 @@ public class ViewPagerIndicator extends LinearLayout {
         removeAllViews();
         this.selected_id = selected_id;
         this.unselected_id = unselected_id;
-        this.selected=sum==0?0:selected%sum;
+        this.selected = sum == 0 ? 0 : selected % sum;
         draw();
     }
 
     public void draw(){
         for(int i=0;i<sum;i++){
-            ImageView imageview=new ImageView(context);
+            ImageView imageview = new ImageView(context);
             imageview.setLayoutParams(new LayoutParams(60, 60));
             imageview.setPadding(20, 0, 20, 0);
             if(i==selected){
