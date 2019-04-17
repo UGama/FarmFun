@@ -1,5 +1,7 @@
 package com.gama.farm_fun;
 
+import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,11 +11,14 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -32,7 +37,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.animation.ObjectAnimator.ofFloat;
+
 public class HomeStayActivity extends AppCompatActivity {
+    public int screenWidth;
+    public int screenHeight;
+
+    private View topBar;
+    private float alphaStorage;
+    private TextView title;
+    private ImageView titleIcon;
+    private TextView firstSubTitle;
+    private TextView secondSubTitle;
+    private TextView thirdSubTitle;
+    private TextView fourthSubTitle;
 
     private ObservableScrollView observableScrollView;
 
@@ -57,12 +75,45 @@ public class HomeStayActivity extends AppCompatActivity {
         Fresco.initialize(this);
         setContentView(R.layout.activity_homestay);
 
+        getWindowInformation();
 
+    }
+    public void getWindowInformation() {
+        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;         // 屏幕宽度（像素）
+        screenHeight = displayMetrics.heightPixels;       // 屏幕高度（像素）
+        float density = displayMetrics.density;         // 屏幕密度（0.75 / 1.0 / 1.5）
+        int densityDpi = displayMetrics.densityDpi;     // 屏幕密度dpi（120 / 160 / 240）
+        // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
+        float width = screenWidth / density;  // 屏幕宽度(dp)
+        float height = screenHeight / density;// 屏幕高度(dp)
+        Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
+        Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
         initUI();
     }
 
     public void initUI() {
+        topBar = findViewById(R.id.topBar);
+        topBar.setVisibility(View.VISIBLE);
+        topBar.setAlpha(0);
+        alphaStorage = 0f;
+        title = topBar.findViewById(R.id.title);
+        title.setText("民宿");
+        titleIcon = topBar.findViewById(R.id.titleIcon);
+        titleIcon.setImageResource(R.drawable.homestaytitle);
+        firstSubTitle = topBar.findViewById(R.id.firstSubTitle);
+        secondSubTitle = topBar.findViewById(R.id.secondSubTitle);
+        thirdSubTitle = topBar.findViewById(R.id.thirdSubTitle);
+        fourthSubTitle = topBar.findViewById(R.id.fourthSubTitle);
+        firstSubTitle.setText("民宿概况");
+        secondSubTitle.setText("房间预订");
+        thirdSubTitle.setText("住户评论");
+        fourthSubTitle.setText("地图导览");
+
         observableScrollView = findViewById(R.id.observableScrollView);
+        setObservableScrollView();
 
         homeStayPic = findViewById(R.id.mainPic);
         homeStayName = findViewById(R.id.homeStayName);
@@ -80,6 +131,29 @@ public class HomeStayActivity extends AppCompatActivity {
 
         getHomeStayInformation();
     }
+    public void setObservableScrollView(){
+        observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
+                int[] mainPicLocationOnScreen = new int[2];
+                homeStayPic.getLocationOnScreen(mainPicLocationOnScreen);
+                int mainPicY = mainPicLocationOnScreen[1] - getStatusBarHeight();
+                Log.i("mainPicY", String.valueOf(-mainPicY));
+                Log.i("mainPic.getBottom", String.valueOf(homeStayPic.getBottom()));
+                Log.i("topBar.getBottom", String.valueOf(topBar.getBottom()));
+                if (-mainPicY >= homeStayPic.getBottom() - topBar.getBottom()) {
+                    topBar.setVisibility(View.VISIBLE);
+                } else if (-mainPicY < homeStayPic.getBottom() - topBar.getBottom()) {
+                    float alpha = (float) (-mainPicY) / (homeStayPic.getBottom() - topBar.getBottom());
+                    Log.i("alpha", String.valueOf(alpha));
+                    ObjectAnimator objectAnimator = ofFloat(topBar, "alpha", alphaStorage, alpha);
+                    alphaStorage = alpha;
+                    objectAnimator.setDuration(100);
+                    objectAnimator.start();
+                }
+            }
+        });
+    }
 
     public void getHomeStayInformation() {
         AVQuery<AVObject> query = new AVQuery<>("HomeStay");
@@ -95,6 +169,7 @@ public class HomeStayActivity extends AppCompatActivity {
             }
         });
     }
+
     public void loadMainPic() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereEqualTo("name", mainPicName);
@@ -121,6 +196,7 @@ public class HomeStayActivity extends AppCompatActivity {
             }
         });
     }
+
     public void initRoomInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Room");
         query.whereEqualTo("date", "2019/06/01");
@@ -235,7 +311,7 @@ public class HomeStayActivity extends AppCompatActivity {
         }
     }
 
-    public List<Room> sortRoom(List<Room> roomList,int[][] roomSupport) {
+    public List<Room> sortRoom(List<Room> roomList, int[][] roomSupport) {
         List<Room> rooms = new ArrayList<>();
         int supportPrice[] = new int[2];
         int minPrice = 9999;
@@ -262,5 +338,14 @@ public class HomeStayActivity extends AppCompatActivity {
                     + "/" + String.valueOf(roomSupport[i][1]));
         }
         return rooms;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

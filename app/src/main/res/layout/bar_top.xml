@@ -16,25 +16,25 @@
         app:layout_constraintGuide_percent="0.5"
         />
     <TextView
-        android:id="@+id/amusementTitle"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:maxEms="15"
-        android:text="游乐项目"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/back"
         app:layout_constraintBottom_toBottomOf="@id/back"
         />
     <ImageView
+        android:id="@+id/titleIcon"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/amusementtitle"
-        app:layout_constraintEnd_toStartOf="@id/amusementTitle"
+        android:src="@drawable/placeholder"
+        app:layout_constraintEnd_toStartOf="@id/title"
         app:layout_constraintTop_toTopOf="@id/back"
         app:layout_constraintBottom_toBottomOf="@id/back" />
     <ImageView
@@ -68,53 +68,90 @@
         app:layout_constraintHorizontal_bias="0.97"
         android:background="@drawable/more2"
         />
-    <TextView
+
+    <android.support.constraint.Guideline
+        android:id="@+id/oneFifthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="概况"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/twoFifthGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/threeFifthGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/fourFifthGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/firstSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/oneFifthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintVertical_bias="0.4"
         android:textColor="#000000"
         android:textSize="18sp"
         />
     <TextView
+        android:id="@+id/secondSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/twoFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="预定"
         android:textColor="#000000"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintVertical_bias="0.4"
         android:textSize="18sp"
         />
     <TextView
+        android:id="@+id/thirdSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/threeFifthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="评论"
         android:textColor="#000000"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintVertical_bias="0.4"
         android:textSize="18sp"
         />
     <TextView
+        android:id="@+id/fourthSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/fourFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="地图"
         android:textColor="#000000"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintVertical_bias="0.4"

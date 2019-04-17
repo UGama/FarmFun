@@ -44,6 +44,12 @@ public class AmusementActivity extends AppCompatActivity {
 
     private View topBar;
     private float alphaStorage;
+    private TextView title;
+    private ImageView titleIcon;
+    private TextView firstSubTitle;
+    private TextView secondSubTitle;
+    private TextView thirdSubTitle;
+    private TextView fourthSubTitle;
 
     private ObservableScrollView observableScrollView;
     private ImageView mainPic;
@@ -104,6 +110,19 @@ public class AmusementActivity extends AppCompatActivity {
         topBar.setVisibility(View.VISIBLE);
         topBar.setAlpha(0);
         alphaStorage = 0f;
+        title = topBar.findViewById(R.id.title);
+        title.setText("游乐项目");
+        titleIcon = topBar.findViewById(R.id.titleIcon);
+        titleIcon.setImageResource(R.drawable.amusementtitle);
+        firstSubTitle = topBar.findViewById(R.id.firstSubTitle);
+        secondSubTitle = topBar.findViewById(R.id.secondSubTitle);
+        thirdSubTitle = topBar.findViewById(R.id.thirdSubTitle);
+        fourthSubTitle = topBar.findViewById(R.id.fourthSubTitle);
+        firstSubTitle.setText("项目概况");
+        secondSubTitle.setText("门票预订");
+        thirdSubTitle.setText("用户评论");
+        fourthSubTitle.setText("地图导览");
+
         observableScrollView = findViewById(R.id.observableScrollView);
         mainPic = findViewById(R.id.mainPic);
         projectName = findViewById(R.id.projectName);
