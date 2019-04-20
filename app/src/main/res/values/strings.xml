@@ -11,4 +11,8 @@
     <string name="lunch_dinner">（中饭/晚饭）</string>
     <string name="physical_store_price">门市价</string>
     <string name="register">注册</string>
+    <string name="login">登录</string>
+    <string name="order">预定</string>
+    <string name="pay_online">在线付</string>
+    <string name="comment">评论</string>
 </resources>

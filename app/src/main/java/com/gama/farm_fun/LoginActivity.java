@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,7 +21,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toast toast;
 
@@ -34,21 +35,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button clearPassword;
     private String passwordString;
 
-    private ConstraintLayout mobileLayout;
-    private EditText mobile;
-    private Button clearMobile;
-    private String mobileString;
-
+    private Button login;
     private Button register;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
 
         initUI();
     }
-
     public void initUI() {
         userNameLayout = findViewById(R.id.userNamePanel);
         userName = findViewById(R.id.userName);
@@ -100,35 +97,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         clearPassword = findViewById(R.id.clearPassword);
         clearPassword.setOnClickListener(this);
 
-        mobileLayout = findViewById(R.id.mobileNumberPanel);
-        mobile = findViewById(R.id.mobileNumber);
-        mobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                clearMobile.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
-                    clearMobile.setVisibility(View.INVISIBLE);
-                } else {
-                    clearMobile.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        clearMobile = findViewById(R.id.clearMobile);
-        clearMobile.setOnClickListener(this);
+        login = findViewById(R.id.button_login);
+        login.setOnClickListener(this);
 
         register = findViewById(R.id.button_register);
         register.setOnClickListener(this);
-    }
 
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -141,32 +117,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 password.setText("");
                 clearPassword.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.clearMobile:
-                mobile.setText("");
-                clearMobile.setVisibility(View.INVISIBLE);
-                break;
-            case R.id.button_register:
+            case R.id.button_login:
                 userNameString = userName.getText().toString();
                 passwordString = password.getText().toString();
-                mobileString = mobile.getText().toString();
                 if (userNameString.isEmpty()) {
                     showToast("用户名不能为空！");
                     userNameLayout.startAnimation(shakeAnimation());
                 } else if (passwordString.isEmpty()) {
                     showToast("密码不能为空！");
                     passwordLayout.startAnimation(shakeAnimation());
-                } else if (mobileString.isEmpty()) {
-                    showToast("请填写手机号!");
-                    mobileLayout.startAnimation(shakeAnimation());
                 } else if (checkUserName(userNameString)) {
                     userNameLayout.startAnimation(shakeAnimation());
                 } else if (checkPassword(passwordString)) {
                     passwordLayout.startAnimation(shakeAnimation());
-                } else if (checkMobileNumber(mobileString)) {
-                    mobileLayout.startAnimation(shakeAnimation());
                 } else {
-                    checkUserNameRepeat();
+                    checkUserNameMatch();
                 }
+                break;
+            case R.id.button_register:
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -180,7 +150,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             toast.show();
         }
     }
-
     private Animation shakeAnimation() {
         Animation translateAnimation = new TranslateAnimation(0, 10, 0, 0);
         translateAnimation.setInterpolator(new CycleInterpolator(5));
@@ -188,21 +157,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return translateAnimation;
     }
 
-    private boolean checkMobileNumber(String mobileNumber) {
-        if (mobileNumber.length() != 11||mobileNumber.toCharArray()[0]!='1') {
-            showToast("请输入正确的手机号！");
-            return true;
-        }else {
-            return false;
-        }
-    }
-
     private boolean checkUserName(String userName) {
         if (userName.length() >= 14) {
-            showToast("用户名不能超过13个字符！");
+            showToast("该用户名不存在！");
             return true;
         } else if (userName.length() < 6) {
-            showToast("用户名不能低于6个字符！");
+            showToast("该用户名不存在！");
             return true;
         } else {
             char[] userNameChar = userName.toCharArray();
@@ -219,13 +179,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return userCharBoolean;
         }
     }
-
     private boolean checkPassword(String password) {
         if (password.length() >= 14) {
-            showToast("密码不能超过13个字符！");
+            showToast("密码错误！");
             return true;
         } else if (password.length() < 6) {
-            showToast("密码不能低于6个字符！");
+            showToast("密码错误！");
             return true;
         } else {
             char[] passwordChar = password.toCharArray();
@@ -243,44 +202,48 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void checkUserNameRepeat() {
+    public void checkUserNameMatch() {
         AVQuery<AVObject> query = new AVQuery<>("Users");
         query.whereEqualTo("name", userNameString);
         query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject object, AVException e) {
                 if (object == null) {
-                    checkMobileRepeat();
+                    checkMobileMatch();
                 } else {
-                    showToast("该用户名已被注册！");
-                    userNameLayout.startAnimation(shakeAnimation());
+                    if (passwordString.equals(object.getString("password"))) {
+                        finishLogin();
+                    } else {
+                        showToast("密码错误！");
+                        passwordLayout.startAnimation(shakeAnimation());
+                    }
                 }
             }
         });
     }
-
-    private void checkMobileRepeat(){
+    public void checkMobileMatch(){
         AVQuery<AVObject> query = new AVQuery<>("Users");
-        query.whereEqualTo("mobilePhone", mobileString);
+        query.whereEqualTo("mobilePhone", userNameString);
         query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject object, AVException e) {
                 if (object == null) {
-                    finishRegister();
+                    showToast("该用户名不存在！");
+                    userNameLayout.startAnimation(shakeAnimation());
                 } else {
-                    showToast("该手机号已被注册！");
-                    mobileLayout.startAnimation(shakeAnimation());
+                    if (passwordString.equals(object.getString("password"))) {
+                        finishLogin();
+                    } else {
+                        showToast("密码错误！");
+                        passwordLayout.startAnimation(shakeAnimation());
+                    }
                 }
             }
         });
     }
 
-    private void finishRegister(){
-        AVObject avObject = new AVObject("Users");
-        avObject.put("name", userName.getText().toString());
-        avObject.put("password", password.getText().toString());
-        avObject.put("mobilePhone", mobile.getText().toString());
-        avObject.saveInBackground();
-        showToast("注册成功！");
+    public void finishLogin(){
+
     }
+
 }

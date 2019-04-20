@@ -2,10 +2,13 @@ package com.gama.farm_fun;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -40,6 +44,8 @@ import java.util.List;
 import static android.animation.ObjectAnimator.ofFloat;
 
 public class HomeStayActivity extends AppCompatActivity {
+    private String userId;
+
     public int screenWidth;
     public int screenHeight;
 
@@ -78,6 +84,7 @@ public class HomeStayActivity extends AppCompatActivity {
         getWindowInformation();
 
     }
+
     public void getWindowInformation() {
         WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -91,6 +98,15 @@ public class HomeStayActivity extends AppCompatActivity {
         float height = screenHeight / density;// 屏幕高度(dp)
         Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
         Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
+        getUserInformation();
+    }
+
+    public void getUserInformation() {
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
+        if (userId != null) {
+            Log.i("userId", userId);
+        }
         initUI();
     }
 
@@ -131,21 +147,22 @@ public class HomeStayActivity extends AppCompatActivity {
 
         getHomeStayInformation();
     }
-    public void setObservableScrollView(){
+
+    public void setObservableScrollView() {
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
                 int[] mainPicLocationOnScreen = new int[2];
                 homeStayPic.getLocationOnScreen(mainPicLocationOnScreen);
                 int mainPicY = mainPicLocationOnScreen[1] - getStatusBarHeight();
-                Log.i("mainPicY", String.valueOf(-mainPicY));
-                Log.i("mainPic.getBottom", String.valueOf(homeStayPic.getBottom()));
-                Log.i("topBar.getBottom", String.valueOf(topBar.getBottom()));
+//                Log.i("mainPicY", String.valueOf(-mainPicY));
+//                Log.i("mainPic.getBottom", String.valueOf(homeStayPic.getBottom()));
+//                Log.i("topBar.getBottom", String.valueOf(topBar.getBottom()));
                 if (-mainPicY >= homeStayPic.getBottom() - topBar.getBottom()) {
                     topBar.setVisibility(View.VISIBLE);
                 } else if (-mainPicY < homeStayPic.getBottom() - topBar.getBottom()) {
                     float alpha = (float) (-mainPicY) / (homeStayPic.getBottom() - topBar.getBottom());
-                    Log.i("alpha", String.valueOf(alpha));
+//                    Log.i("alpha", String.valueOf(alpha));
                     ObjectAnimator objectAnimator = ofFloat(topBar, "alpha", alphaStorage, alpha);
                     alphaStorage = alpha;
                     objectAnimator.setDuration(100);
@@ -189,7 +206,7 @@ public class HomeStayActivity extends AppCompatActivity {
                     @Override
                     public void done(Integer percentDone) {
                         if (percentDone == 100) {
-                            initRoomInformation();
+                            getRoomInformation();
                         }
                     }
                 });
@@ -197,26 +214,43 @@ public class HomeStayActivity extends AppCompatActivity {
         });
     }
 
-    public void initRoomInformation() {
+    public void getRoomInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Room");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+
+                for (AVObject avObject : avObjects) {
+                    Room room = new Room(avObject.getString("roomType"),
+                            avObject.getString("describe"),
+                            avObject.getString("roomPicName"));
+                    roomList.add(room);
+                }
+                getRoomTimeTable();
+
+            }
+        });
+    }
+
+    public void getRoomTimeTable() {
+        AVQuery<AVObject> query = new AVQuery<>("RoomTimeTable");
         query.whereEqualTo("date", "2019/06/01");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                int i = 0;
                 roomSupport = new int[avObjects.size()][2];
                 for (AVObject avObject : avObjects) {
-                    Room room = new Room(avObject.getString("roomType"),
-                            avObject.getString("describe"),
-                            avObject.getInt("price"),
-                            avObject.getInt("remain"),
-                            avObject.getString("roomPicName"));
-                    roomList.add(room);
-                    roomSupport[i][0] = i;
-                    roomSupport[i][1] = avObject.getInt("price");
-                    Log.i("辅助数组", String.valueOf(roomSupport[i][0])
-                            + "/" + String.valueOf(roomSupport[i][1]));
-                    i++;
+                    for (int j = 0; j < roomList.size(); j++) {
+                        if (avObject.getString("roomType").equals(roomList.get(j).roomType)) {
+                            roomList.get(j).setPrice(avObject.getInt("price"));
+                            roomList.get(j).setRemain(avObject.getInt("remain"));
+                            roomSupport[j][0] = j;
+                            roomSupport[j][1] = avObject.getInt("price");
+                            Log.i("辅助数组", String.valueOf(roomSupport[j][0])
+                                    + "/" + String.valueOf(roomSupport[j][1]));
+                            break;
+                        }
+                    }
                 }
                 roomList = sortRoom(roomList, roomSupport);
 
@@ -233,56 +267,64 @@ public class HomeStayActivity extends AppCompatActivity {
             this.roomsList = roomsList;
         }
 
+
+        @NonNull
         @Override
-        public RoomAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RoomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_room, parent, false);
-            final RoomAdapter.ViewHolder holder = new RoomAdapter.ViewHolder(view);
-            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            RoomAdapter.ViewHolder holder = new RoomAdapter.ViewHolder(view);
 
-                }
-            });*/
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(RoomAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final RoomAdapter.ViewHolder holder, int position) {
             Room room = roomsList.get(position);
             Log.i(String.valueOf(position), room.roomType);
-            holder.roomType.setText(room.roomType);
-            holder.roomDescribe.setText(room.roomDescribe);
-            holder.roomRemain.setText(String.valueOf(room.remain));
-            holder.price.setText(String.valueOf(room.price));
-            holder.storePrice.setText(String.valueOf(room.price + 20));
-            final SimpleDraweeView roomPic = holder.roomPic;
+            if (room.remain == 0) {
+                holder.roomType.setText(room.roomType);
+                holder.roomDescribe.setText(room.roomDescribe);
+                holder.roomRemain.setText("已售完");
+                holder.price.setText(String.valueOf(room.price));
+                holder.price.setTextColor(getResources().getColor(R.color.colorTextGray));
+                holder.storePrice.setText(String.valueOf(room.price + 20));
+                holder.storePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                holder.roomType.setText(room.roomType);
+                holder.roomDescribe.setText(room.roomDescribe);
+                holder.roomRemain.setText("还剩" + String.valueOf(room.remain) + "间");
+                holder.price.setText(String.valueOf(room.price));
+                holder.storePrice.setText(String.valueOf(room.price + 20));
+                holder.storePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.order.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (userId.equals("tourist")) {
+                            Intent loginIntent = new Intent(HomeStayActivity.this, LoginActivity.class);
+                            startActivity(loginIntent);
+                        } else {
+                            String roomType = holder.roomType.getText().toString();
+                            Log.i("RoomType", roomType);
+                            AVObject avObject = new AVObject("order");
+                        }
+                    }
+                });
+            }
             AVQuery<AVObject> query = new AVQuery<>("_File");
             query.whereEqualTo("name", room.roomPicName);
+            Log.i("name", room.roomPicName);
             query.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject object, AVException e) {
-//                    AVFile avFile = new AVFile("seat.png", object.getString("url"), new HashMap<String, Object>());
-//                    avFile.getDataInBackground(new GetDataCallback() {
-//                        @Override
-//                        public void done(byte[] data, AVException e) {
-//                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//                            roomPic.setImageBitmap(bitmap);
-//                        }
-//                    }, new ProgressCallback() {
-//                        @Override
-//                        public void done(Integer percentDone) {
-//                            if (percentDone == 100) {
-//
-//                            }
-//                        }
-//                    });
                     Uri imageUri = Uri.parse(object.getString("url"));
-                    roomPic.setImageURI(imageUri);
+                    holder.roomPic.setImageURI(imageUri);
+                    Log.i("setImage", object.getString("name"));
                     RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-                    roomPic.getHierarchy().setRoundingParams(roundingParams);
+                    holder.roomPic.getHierarchy().setRoundingParams(roundingParams);
                 }
             });
+
 
         }
 
@@ -298,6 +340,7 @@ public class HomeStayActivity extends AppCompatActivity {
             private TextView price;
             private TextView storePrice;
             private SimpleDraweeView roomPic;
+            private Button order;
 
             private ViewHolder(View view) {
                 super(view);
@@ -307,6 +350,7 @@ public class HomeStayActivity extends AppCompatActivity {
                 price = view.findViewById(R.id.price);
                 storePrice = view.findViewById(R.id.physicalStorePrice);
                 roomPic = view.findViewById(R.id.roomPic);
+                order = view.findViewById(R.id.order);
             }
         }
     }

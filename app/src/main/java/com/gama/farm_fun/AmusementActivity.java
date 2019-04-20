@@ -36,6 +36,7 @@ import java.util.List;
 import static android.animation.ObjectAnimator.ofFloat;
 
 public class AmusementActivity extends AppCompatActivity {
+    private String userId;
 
     public int screenWidth;
     public int screenHeight;
@@ -69,12 +70,14 @@ public class AmusementActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.getStringExtra("Type") == null) {
             type = "drift";
-        }else{
+        } else {
             type = intent.getStringExtra("Type");
         }
+        userId = intent.getStringExtra("UserId");
 
         getWindowInformation();
     }
+
     public void getWindowInformation() {
         WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -90,6 +93,7 @@ public class AmusementActivity extends AppCompatActivity {
         Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
         getProject();
     }
+
     public void getProject() {
         Log.i("initData", "Start");
         AVQuery<AVObject> query = new AVQuery<>("Amusement");
@@ -138,7 +142,8 @@ public class AmusementActivity extends AppCompatActivity {
         setObservableScrollView();
         getProjectInformation();
     }
-    public void setObservableScrollView(){
+
+    public void setObservableScrollView() {
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
@@ -162,7 +167,7 @@ public class AmusementActivity extends AppCompatActivity {
         });
     }
 
-    public void getProjectInformation (){
+    public void getProjectInformation() {
         AVQuery<AVObject> projectQuery = new AVQuery<>("Amusement");
         projectQuery.whereEqualTo("type", type);
         projectQuery.getFirstInBackground(new GetCallback<AVObject>() {
@@ -174,8 +179,11 @@ public class AmusementActivity extends AppCompatActivity {
                 loadMainPic();
             }
         });
-    };
-    public void loadMainPic(){
+    }
+
+    ;
+
+    public void loadMainPic() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereEqualTo("name", type + "main.jpg");
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -204,7 +212,7 @@ public class AmusementActivity extends AppCompatActivity {
 
     public void getTicket() {
         AVQuery<AVObject> ticketQuery = new AVQuery<>("Price");
-        ticketQuery.whereEqualTo("name",projectName.getText().toString());
+        ticketQuery.whereEqualTo("name", projectName.getText().toString());
         ticketQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
@@ -239,7 +247,6 @@ public class AmusementActivity extends AppCompatActivity {
     }
 
 
-
     private class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
         private List<Ticket> ticketList;
 
@@ -266,7 +273,7 @@ public class AmusementActivity extends AppCompatActivity {
             Ticket ticket = ticketList.get(position);
             Log.i(String.valueOf(position), ticket.ticketType);
             holder.ticketType.setText(ticket.ticketType);
-            holder.sales.setText("已售"+String.valueOf(ticket.sales));
+            holder.sales.setText("已售" + String.valueOf(ticket.sales));
             holder.price.setText(String.valueOf(ticket.price));
         }
 
@@ -290,6 +297,7 @@ public class AmusementActivity extends AppCompatActivity {
 
 
     }
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");

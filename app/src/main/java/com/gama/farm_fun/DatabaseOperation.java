@@ -20,6 +20,7 @@ public class DatabaseOperation extends AppCompatActivity {
 
 
     GeoCoder geoCoder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,10 @@ public class DatabaseOperation extends AppCompatActivity {
         //getLocationDescribeByLatLng(latLng);
 
         //upLoadRestaurantOrderInformation();
-        upLoadRoomInformation();
+        //upLoadRoomInformation();
+        //reUpLoadRoomInformation();
+        //upLoadRoomTimeTable();
+
     }
 
     public void uploadAmusementGeopoint() {
@@ -108,6 +112,7 @@ public class DatabaseOperation extends AppCompatActivity {
         }
 
     }
+
     public void upLoadRoomInformation() {
         for (int i = 1; i < 31; i++) {
             String date;
@@ -156,9 +161,74 @@ public class DatabaseOperation extends AppCompatActivity {
                 }
             }
 
+        }
+
+    }
+    public void reUpLoadRoomInformation() {
+        AVObject avObject3 = new AVObject("Room");
+        avObject3.put("roomPicName", "bigbedroom.jpg");
+        avObject3.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
+        avObject3.put("roomType", "大床房");
+        avObject3.saveInBackground();
+        AVObject avObject1 = new AVObject("Room");
+        avObject1.put("roomPicName", "bigsuite.jpg");
+        avObject1.put("describe", "25m² 有窗 2张双人床1.8m 可住4人）");
+        avObject1.put("roomType", "大套房");
+        avObject1.saveInBackground();
+        AVObject avObject2 = new AVObject("Room");
+        avObject2.put("roomPicName", "standardroom.jpg");
+        avObject2.put("describe", "25m² 有窗 2张单人床1.2m 可住2人）");
+        avObject2.put("roomType", "标准间");
+        avObject2.saveInBackground();
+        AVObject avObject4 = new AVObject("Room");
+        avObject4.put("roomPicName", "smallsuite.jpg");
+        avObject4.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
+        avObject4.put("roomType", "小套房");
+        avObject4.saveInBackground();
+    }
+
+    public void upLoadRoomTimeTable() {
+        for (int i = 1; i < 31; i++) {
+            String date;
+            if (i <= 9) {
+                date = "2019/06/0" + String.valueOf(i);
+            } else {
+                date = "2019/06/" + String.valueOf(i);
+            }
+            for (int j = 0; j < 4; j++) {
+                if (j == 0) {
+                    AVObject avObject = new AVObject("RoomTimeTable");
+                    avObject.put("date", date);
+                    avObject.put("roomType", "大床房");
+                    avObject.put("price", 258);
+                    avObject.put("remain", 20);
+                    avObject.saveInBackground();
+                } else if (j == 1) {
+                    AVObject avObject = new AVObject("RoomTimeTable");
+                    avObject.put("date", date);
+                    avObject.put("roomType", "标准间");
+                    avObject.put("price", 278);
+                    avObject.put("remain", 15);
+                    avObject.saveInBackground();
+                } else if (j == 2) {
+                    AVObject avObject = new AVObject("RoomTimeTable");
+                    avObject.put("date", date);
+                    avObject.put("roomType", "小套房");
+                    avObject.put("price", 328);
+                    avObject.put("remain", 10);
+                    avObject.saveInBackground();
+                } else {
+                    AVObject avObject = new AVObject("RoomTimeTable");
+                    avObject.put("date", date);
+                    avObject.put("roomType", "大套房");
+                    avObject.put("price", 479);
+                    avObject.put("remain", 5);
+                    avObject.saveInBackground();
+                }
             }
 
         }
+    }
 
     public void getLocationDescribeByLatLng(LatLng latLng) {
         geoCoder = GeoCoder.newInstance();

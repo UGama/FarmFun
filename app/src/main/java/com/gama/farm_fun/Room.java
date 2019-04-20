@@ -14,4 +14,18 @@ public class Room {
         this.remain = remain;
         this.roomPicName = roomPicName;
     }
+
+    public Room(String roomType, String roomDescribe, String roomPicName) {
+        this.roomType = roomType;
+        this.roomDescribe = roomDescribe;
+        this.roomPicName = roomPicName;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setRemain(int remain) {
+        this.remain = remain;
+    }
 }

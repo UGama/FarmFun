@@ -1,6 +1,7 @@
 package com.gama.farm_fun;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,20 +30,22 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private String userId;
 
     private ViewPager viewPager;
     private PosterPagerAdapter posterPagerAdapter;
     private List<Poster> posterList;
     private ViewPagerIndicator indicator;
 
-    public TextView locationText;
-    public String locationString;
-    public ImageView locationPic;
-    public LocationClient mLocationClient = null;
+    private TextView locationText;
+    private String locationString;
+    private ImageView locationPic;
+    private LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
 
-    public Button pick;
-    public Button drift;
+    private Button pick;
+    private Button drift;
+    private Button homeStay;
 
     public Button onlineShop;
     public Button news;
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager = findViewById(R.id.viewPager);
         posterPagerAdapter = new PosterPagerAdapter(posterList);
         viewPager.setAdapter(posterPagerAdapter);
-        viewPager.setPageTransformer(true,new com.gama.farm_fun.ScalePageTransformer());
+        viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
         indicator = findViewById(R.id.indicator);
         indicator.setLength(posterList.size());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -121,12 +124,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello World!");
+        testObject.put("words", "Hello World!");
         testObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
+                if (e == null) {
+                    Log.d("saved", "success!");
                 }
             }
         });
@@ -153,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         travelJournalsList = new ArrayList<>();
         TravelJournal travelJournal = new TravelJournal("test", "test", "test");
         travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
+        travelJournalsList.add(travelJournal);
         travelJournalsList.add(travelJournal);
         travelJournalsList.add(travelJournal);
         travelJournalsList.add(travelJournal);
@@ -185,15 +189,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
         recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
 
-        InitUI();
+        getUserInformation();
     }
 
+    public void getUserInformation() {
+        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        userId = sharedPreferences.getString("id", "tourist");
+        Log.i("userId", userId);
+        InitUI();
+    }
 
     public void InitUI() {
         pick = findViewById(R.id.pick);
         pick.setOnClickListener(this);
         drift = findViewById(R.id.drift);
         drift.setOnClickListener(this);
+        homeStay = findViewById(R.id.homeStay);
+        homeStay.setOnClickListener(this);
     }
 
     public void StartLocateService() {
@@ -236,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         option.SetIgnoreCacheException(false);
 //可选，设置是否收集Crash信息，默认收集，即参数为false
 
-        option.setWifiCacheTimeOut(5*60*1000);
+        option.setWifiCacheTimeOut(5 * 60 * 1000);
 //可选，V7.2版本新增能力
 //如果设置了该接口，首次启动定位时，会先判断当前Wi-Fi是否超出有效期，若超出有效期，会先重新扫描Wi-Fi，然后定位
 
@@ -256,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
-        public void onReceiveLocation(BDLocation location){
+        public void onReceiveLocation(BDLocation location) {
             //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
             //以下只列举部分获取经纬度相关（常用）的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
@@ -290,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationPic:
@@ -298,21 +309,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.onlineStore:
-                Intent intent1 = new Intent(MainActivity.this, OnlineShopActivity.class);
-                startActivity(intent1);
+                Intent onlineStoreIntent = new Intent(MainActivity.this, OnlineShopActivity.class);
+                onlineStoreIntent.putExtra("UserId", userId);
+                startActivity(onlineStoreIntent);
                 break;
             case R.id.pick:
                 Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 pickIntent.putExtra("Type", "pick");
+                pickIntent.putExtra("UserId", userId);
                 startActivity(pickIntent);
                 break;
             case R.id.drift:
                 Intent driftIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 driftIntent.putExtra("Type", "drift");
+                driftIntent.putExtra("UserId", userId);
                 startActivity(driftIntent);
                 break;
+            case R.id.homeStay:
+                Intent homeStayIntent = new Intent(MainActivity.this, HomeStayActivity.class);
+                homeStayIntent.putExtra("UserId", userId);
+                startActivity(homeStayIntent);
         }
     }
+
     private class PosterPagerAdapter extends android.support.v4.view.PagerAdapter {
 
         List<Poster> posterList = new ArrayList<>();
