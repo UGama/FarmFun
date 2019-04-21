@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button login;
     private Button register;
 
+    private String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -212,6 +213,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     checkMobileMatch();
                 } else {
                     if (passwordString.equals(object.getString("password"))) {
+                        userId = object.getObjectId();
                         finishLogin();
                     } else {
                         showToast("密码错误！");
@@ -232,6 +234,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     userNameLayout.startAnimation(shakeAnimation());
                 } else {
                     if (passwordString.equals(object.getString("password"))) {
+                        userId = object.getObjectId();
                         finishLogin();
                     } else {
                         showToast("密码错误！");
@@ -243,7 +246,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void finishLogin(){
-
+        Intent intent = new Intent();
+        intent.putExtra("UserId", userId);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }

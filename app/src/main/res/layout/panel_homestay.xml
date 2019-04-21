@@ -32,16 +32,50 @@
             />
 
         <TextView
-            android:id="@+id/chosenDate"
+            android:id="@+id/chosenStartDate"
             android:text="@string/test"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textColor="#000000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dateCut"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            />
+        <ImageView
+            android:id="@+id/dateCut"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:background="@color/colorLineGray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <TextView
+            android:id="@+id/chosenEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:text="@string/test"
+            app:layout_constraintStart_toEndOf="@id/dateCut"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp"
+            />
+        <TextView
+            android:id="@+id/nights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textColor="@color/colorTextGray"
+            app:layout_constraintEnd_toEndOf="@id/timeChosePanel"
+            app:layout_constraintTop_toTopOf="@id/chosenEndDate"
+            app:layout_constraintBottom_toBottomOf="@id/chosenEndDate"
+            android:layout_marginEnd="10dp"
+            android:textSize="12sp"
             />
 
     </android.support.constraint.ConstraintLayout>

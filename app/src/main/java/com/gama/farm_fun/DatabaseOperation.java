@@ -36,6 +36,7 @@ public class DatabaseOperation extends AppCompatActivity {
         //upLoadRoomInformation();
         //reUpLoadRoomInformation();
         //upLoadRoomTimeTable();
+        //upTimeTable();
 
     }
 
@@ -126,7 +127,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     AVObject avObject = new AVObject("Room");
                     avObject.put("date", date);
                     avObject.put("roomPicName", "bigbedroom.jpg");
-                    avObject.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
+                    avObject.put("describe", "25m² 有窗 1张双人床1.8m");
                     avObject.put("roomType", "大床房");
                     avObject.put("price", 258);
                     avObject.put("remain", 20);
@@ -135,7 +136,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     AVObject avObject = new AVObject("Room");
                     avObject.put("date", date);
                     avObject.put("roomPicName", "standardroom.jpg");
-                    avObject.put("describe", "25m² 有窗 2张单人床1.2m 可住2人）");
+                    avObject.put("describe", "25m² 有窗 2张单人床1.2m");
                     avObject.put("roomType", "标准间");
                     avObject.put("price", 278);
                     avObject.put("remain", 15);
@@ -144,7 +145,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     AVObject avObject = new AVObject("Room");
                     avObject.put("date", date);
                     avObject.put("roomPicName", "smallsuite.jpg");
-                    avObject.put("describe", "25m² 有窗 1张双人床1.8m 可住2人）");
+                    avObject.put("describe", "25m² 有窗 1张双人床1.8m");
                     avObject.put("roomType", "小套房");
                     avObject.put("price", 328);
                     avObject.put("remain", 10);
@@ -153,7 +154,7 @@ public class DatabaseOperation extends AppCompatActivity {
                     AVObject avObject = new AVObject("Room");
                     avObject.put("date", date);
                     avObject.put("roomPicName", "bigsuite.jpg");
-                    avObject.put("describe", "25m² 有窗 2张双人床1.8m 可住4人）");
+                    avObject.put("describe", "25m² 有窗 2张双人床1.8m");
                     avObject.put("roomType", "大套房");
                     avObject.put("price", 479);
                     avObject.put("remain", 5);
@@ -195,6 +196,7 @@ public class DatabaseOperation extends AppCompatActivity {
             } else {
                 date = "2019/06/" + String.valueOf(i);
             }
+
             for (int j = 0; j < 4; j++) {
                 if (j == 0) {
                     AVObject avObject = new AVObject("RoomTimeTable");
@@ -229,6 +231,73 @@ public class DatabaseOperation extends AppCompatActivity {
 
         }
     }
+
+    public void upTimeTable() {
+        for (int i = 1; i < 31; i++) {
+            String date;
+            if (i <= 9) {
+                date = "2019/06/0" + String.valueOf(i);
+            } else {
+                date = "2019/06/" + String.valueOf(i);
+            }
+            int weekday = (i + 5) % 7;
+            if (weekday == 0) {
+                weekday = 7;
+            }
+            AVObject avObject = new AVObject("TimeTable");
+            avObject.put("date", date);
+            avObject.put("week", weekday);
+            if (weekday == 6 || weekday == 7) {
+                avObject.put("weekday", 0);
+            } else {
+                avObject.put("weekday", 1);
+            }
+            avObject.saveInBackground();
+        }
+        for (int i = 1; i < 32; i++) {
+            String date;
+            if (i <= 9) {
+                date = "2019/07/0" + String.valueOf(i);
+            } else {
+                date = "2019/07/" + String.valueOf(i);
+            }
+            int weekday = i % 7;
+            if (weekday == 0) {
+                weekday = 7;
+            }
+            AVObject avObject = new AVObject("TimeTable");
+            avObject.put("date", date);
+            avObject.put("week", weekday);
+            if (weekday == 6 || weekday == 7) {
+                avObject.put("weekday", 0);
+            } else {
+                avObject.put("weekday", 1);
+            }
+            avObject.saveInBackground();
+        }
+        for (int i = 1; i < 32; i++) {
+            String date;
+            if (i <= 9) {
+                date = "2019/08/0" + String.valueOf(i);
+            } else {
+                date = "2019/08/" + String.valueOf(i);
+            }
+            int weekday = (i + 3) % 7;
+            if (weekday == 0) {
+                weekday = 7;
+            }
+            AVObject avObject = new AVObject("TimeTable");
+            avObject.put("date", date);
+            avObject.put("week", weekday);
+            if (weekday == 6 || weekday == 7) {
+                avObject.put("weekday", 0);
+            } else {
+                avObject.put("weekday", 1);
+            }
+            avObject.saveInBackground();
+        }
+    }
+
 
     public void getLocationDescribeByLatLng(LatLng latLng) {
         geoCoder = GeoCoder.newInstance();

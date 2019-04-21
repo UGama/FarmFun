@@ -15,4 +15,13 @@
     <string name="order">预定</string>
     <string name="pay_online">在线付</string>
     <string name="comment">评论</string>
+    <string name="cancel">取消</string>
+    <string name="chose_date">请选择入住离店时间</string>
+    <string name="Monday">Mon.</string>
+    <string name="Tuesday">Tue.</string>
+    <string name="Wednesday">Wed.</string>
+    <string name="Thursday">Thu.</string>
+    <string name="Friday">Fri.</string>
+    <string name="Saturday">Sat.</string>
+    <string name="Sunday">Sun.</string>
 </resources>

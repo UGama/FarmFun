@@ -69,13 +69,20 @@ public class HomeStayActivity extends AppCompatActivity {
     private TextView reserve;
     private View homeStayPanel;
     private ConstraintLayout panelTopLayout;
-    private TextView panelChosenDate;
+    private TextView panelChosenStartDate;
+    private TextView panelChosenEndDate;
+    private TextView nights;
     private RecyclerView roomRecyclerView;
     private List<Room> roomList;
     private int[][] roomSupport;
 
+    private View timeChosePanel;
+    private RecyclerView monthRecyclerView;
+    private List<Date> dateList;
+    private List<Month> monthList;
 
     @Override
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
@@ -139,11 +146,21 @@ public class HomeStayActivity extends AppCompatActivity {
         reserve.setText("房间预订");
         homeStayPanel = findViewById(R.id.panel_homeStay);
         panelTopLayout = homeStayPanel.findViewById(R.id.topLayout);
-        panelChosenDate = homeStayPanel.findViewById(R.id.chosenDate);
+        panelChosenStartDate = homeStayPanel.findViewById(R.id.chosenStartDate);
+        panelChosenStartDate.setText("6月1日");
+        panelChosenEndDate = homeStayPanel.findViewById(R.id.chosenEndDate);
+        panelChosenEndDate.setText("6月2日");
+        nights = homeStayPanel.findViewById(R.id.nights);
+        nights.setText("共1晚>");
         roomRecyclerView = findViewById(R.id.roomRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         roomRecyclerView.setLayoutManager(linearLayoutManager);
         roomList = new ArrayList<>();
+
+        timeChosePanel = findViewById(R.id.datePanel);
+        monthRecyclerView = findViewById(R.id.timeChoseRecyclerView);
+        dateList = new ArrayList<>();
+        monthList = new ArrayList<>();
 
         getHomeStayInformation();
     }
@@ -222,7 +239,7 @@ public class HomeStayActivity extends AppCompatActivity {
 
                 for (AVObject avObject : avObjects) {
                     Room room = new Room(avObject.getString("roomType"),
-                            avObject.getString("describe"),
+                            avObject.getString("describe"), avObject.getString("bed"),
                             avObject.getString("roomPicName"));
                     roomList.add(room);
                 }
@@ -256,8 +273,69 @@ public class HomeStayActivity extends AppCompatActivity {
 
                 RoomAdapter roomAdapter = new RoomAdapter(roomList);
                 roomRecyclerView.setAdapter(roomAdapter);
+                getDateInformation();
             }
         });
+    }
+
+    public void getDateInformation() {
+        AVQuery<AVObject> query = new AVQuery<>("TimeTable");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Date date = new Date(avObject.getString("date"), avObject.getString("week"));
+                    dateList.add(date);
+                }
+                initTimePanel();
+            }
+        });
+    }
+
+
+    public void initTimePanel() {
+
+    }
+
+    private class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.ViewHolder> {
+        private List<Date> dateList;
+
+        private MonthAdapter(List<Date> dateList) {
+            this.dateList = dateList;
+        }
+
+
+        @NonNull
+        @Override
+        public MonthAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_months, parent, false);
+            MonthAdapter.ViewHolder holder = new MonthAdapter.ViewHolder(view);
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final MonthAdapter.ViewHolder holder, int position) {
+            Date date = dateList.get(position);
+            holder.month
+        }
+
+        @Override
+        public int getItemCount() {
+            return dateList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView month;
+            private RecyclerView weekRecyclerView;
+
+            private ViewHolder(View view) {
+                super(view);
+                month = view.findViewById(R.id.month);
+                weekRecyclerView = view.findViewById(R.id.week);
+            }
+        }
     }
 
     private class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
@@ -285,6 +363,7 @@ public class HomeStayActivity extends AppCompatActivity {
             if (room.remain == 0) {
                 holder.roomType.setText(room.roomType);
                 holder.roomDescribe.setText(room.roomDescribe);
+                holder.bed.setText(room.bed);
                 holder.roomRemain.setText("已售完");
                 holder.price.setText(String.valueOf(room.price));
                 holder.price.setTextColor(getResources().getColor(R.color.colorTextGray));
@@ -293,6 +372,7 @@ public class HomeStayActivity extends AppCompatActivity {
             } else {
                 holder.roomType.setText(room.roomType);
                 holder.roomDescribe.setText(room.roomDescribe);
+                holder.bed.setText(room.bed);
                 holder.roomRemain.setText("还剩" + String.valueOf(room.remain) + "间");
                 holder.price.setText(String.valueOf(room.price));
                 holder.storePrice.setText(String.valueOf(room.price + 20));
@@ -301,25 +381,28 @@ public class HomeStayActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (userId.equals("tourist")) {
+                            Log.i("User", "click");
                             Intent loginIntent = new Intent(HomeStayActivity.this, LoginActivity.class);
-                            startActivity(loginIntent);
+                            startActivityForResult(loginIntent, 1);
                         } else {
                             String roomType = holder.roomType.getText().toString();
                             Log.i("RoomType", roomType);
-                            AVObject avObject = new AVObject("order");
+                            AVObject avObject = new AVObject("Order");
+                            avObject.put("userId", userId);
+                            avObject.put("type", "HomeStay");
+                            avObject.put("status", "待支付");
+
                         }
                     }
                 });
             }
             AVQuery<AVObject> query = new AVQuery<>("_File");
             query.whereEqualTo("name", room.roomPicName);
-            Log.i("name", room.roomPicName);
             query.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject object, AVException e) {
                     Uri imageUri = Uri.parse(object.getString("url"));
                     holder.roomPic.setImageURI(imageUri);
-                    Log.i("setImage", object.getString("name"));
                     RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
                     holder.roomPic.getHierarchy().setRoundingParams(roundingParams);
                 }
@@ -336,6 +419,7 @@ public class HomeStayActivity extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView roomType;
             private TextView roomDescribe;
+            private TextView bed;
             private TextView roomRemain;
             private TextView price;
             private TextView storePrice;
@@ -347,6 +431,7 @@ public class HomeStayActivity extends AppCompatActivity {
                 roomType = view.findViewById(R.id.roomType);
                 roomDescribe = view.findViewById(R.id.describe);
                 roomRemain = view.findViewById(R.id.roomRemain);
+                bed = view.findViewById(R.id.bed);
                 price = view.findViewById(R.id.price);
                 storePrice = view.findViewById(R.id.physicalStorePrice);
                 roomPic = view.findViewById(R.id.roomPic);
@@ -391,5 +476,25 @@ public class HomeStayActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    public List<Month> transToMonth(List<Date> dateList) {
+        List<Month> months = new ArrayList<>();
+        for (int i = 0; i < dateList.size(); i++) {
+            char[] dateChar = dateList.get(i).day.toCharArray();
+            
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    userId = data.getStringExtra("UserId");
+                }
+        }
+
     }
 }
