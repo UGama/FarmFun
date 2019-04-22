@@ -34,6 +34,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -46,6 +47,7 @@ import static android.animation.ObjectAnimator.ofFloat;
 
 public class HomeStayActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
+    private String projectName;
 
     public int screenWidth;
     public int screenHeight;
@@ -95,6 +97,10 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean firstTouch = true;
 
+    private AVObject orderAVObject;
+    private String orderRoomType;
+    private int orderPrice;
+
     @Override
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,9 +131,6 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     public void getUserInformation() {
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
-        if (userId != null) {
-            Log.i("userId", userId);
-        }
         initUI();
     }
 
@@ -224,6 +227,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void done(AVObject object, AVException e) {
                 homeStayName.setText(object.getString("name"));
+                projectName = object.getString("name");
                 describe.setText(object.getString("describe"));
                 address.setText(object.getString("locateDescribe"));
                 mainPicName = object.getString("mainPicName");
@@ -761,12 +765,34 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                             Intent loginIntent = new Intent(HomeStayActivity.this, LoginActivity.class);
                             startActivityForResult(loginIntent, 1);
                         } else {
-                            String roomType = holder.roomType.getText().toString();
-                            Log.i("RoomType", roomType);
-                            AVObject avObject = new AVObject("Order");
-                            avObject.put("userId", userId);
-                            avObject.put("type", "HomeStay");
-                            avObject.put("status", "待支付");
+                            orderRoomType = holder.roomType.getText().toString();
+                            orderPrice = Integer.parseInt(holder.price.getText().toString());
+                            Log.i("RoomType", orderRoomType);
+                            orderAVObject = new AVObject("Order");
+                            orderAVObject.put("userId", userId);
+                            orderAVObject.put("type", "HomeStay");
+                            orderAVObject.put("status", "待支付");
+                            orderAVObject.put("item", orderRoomType);
+                            orderAVObject.put("detail", startTime + " 至 " + endTime);
+                            orderAVObject.put("count", nightCount);
+                            orderAVObject.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    if (e == null) {
+                                        Intent orderIntent = new Intent(HomeStayActivity.this, OrderActivity.class);
+                                        orderIntent.putExtra("UserId", userId);
+                                        orderIntent.putExtra("Type", "homeStay");
+                                        orderIntent.putExtra("Project", projectName);
+                                        orderIntent.putExtra("Item", orderRoomType);
+                                        orderIntent.putExtra("Detail", startTime + " 至 " + endTime);
+                                        orderIntent.putExtra("Count", nightCount);
+                                        orderIntent.putExtra("Price",orderPrice);
+                                        orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                        startActivityForResult(orderIntent, 0);
+                                    }
+                                }
+                            });
+
 
                         }
                     }
@@ -930,6 +956,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
 //        }
         return weeks;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
