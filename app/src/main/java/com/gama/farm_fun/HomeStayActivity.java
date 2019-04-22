@@ -81,6 +81,11 @@ public class HomeStayActivity extends AppCompatActivity {
     private List<Date> dateList;
     private List<Month> monthList;
 
+    private String startTime;
+    private String endTime;
+
+    private boolean firstTouch = true;
+
     @Override
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,8 +153,10 @@ public class HomeStayActivity extends AppCompatActivity {
         panelTopLayout = homeStayPanel.findViewById(R.id.topLayout);
         panelChosenStartDate = homeStayPanel.findViewById(R.id.chosenStartDate);
         panelChosenStartDate.setText("6月1日");
+        startTime = "6月1日";
         panelChosenEndDate = homeStayPanel.findViewById(R.id.chosenEndDate);
         panelChosenEndDate.setText("6月2日");
+        endTime = "6月2日";
         nights = homeStayPanel.findViewById(R.id.nights);
         nights.setText("共1晚>");
         roomRecyclerView = findViewById(R.id.roomRecyclerView);
@@ -280,11 +287,12 @@ public class HomeStayActivity extends AppCompatActivity {
 
     public void getDateInformation() {
         AVQuery<AVObject> query = new AVQuery<>("TimeTable");
+        query.orderByAscending("date");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
-                    Date date = new Date(avObject.getString("date"), avObject.getString("week"));
+                    Date date = new Date(avObject.getString("date"), avObject.getInt("week"));
                     dateList.add(date);
                 }
                 initTimePanel();
@@ -294,14 +302,133 @@ public class HomeStayActivity extends AppCompatActivity {
 
 
     public void initTimePanel() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        monthRecyclerView.setLayoutManager(linearLayoutManager);
+        monthList = transToMonth(dateList);
+        Log.i("monthList", String.valueOf(monthList.size()));
+        MonthAdapter monthAdapter = new MonthAdapter(monthList);
+        monthRecyclerView.setAdapter(monthAdapter);
+        Log.i("Test", "setAdapterSuccess!");
+    }
 
+    private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
+        private List<Week> weeksList;
+
+        private WeekAdapter(List<Week> weeksList) {
+            this.weeksList = weeksList;
+        }
+
+
+        @NonNull
+        @Override
+        public WeekAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_week, parent, false);
+            WeekAdapter.ViewHolder holder = new WeekAdapter.ViewHolder(view);
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final WeekAdapter.ViewHolder holder, int position) {
+            Week week = weeksList.get(position);
+            if (week.weekArray[0] == 0) {
+                holder.Sun.setText("");
+            } else {
+                holder.Sun.setText(String.valueOf(week.weekArray[0]));
+                holder.Sun.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v.setBackgroundColor(getResources().getColor(R.color.colorTheme));
+                        if (firstTouch) {
+                            holder.SunDetail.setText("入住");
+                            firstTouch = false;
+                        } else {
+                            holder.SunDetail.setText("离店");
+                        }
+                    }
+                });
+            }
+            if (week.weekArray[1] == 0) {
+                holder.Mon.setText("");
+            } else {
+                holder.Mon.setText(String.valueOf(week.weekArray[1]));
+            }
+            if (week.weekArray[2] == 0) {
+                holder.Tue.setText("");
+            } else {
+                holder.Tue.setText(String.valueOf(week.weekArray[2]));
+            }
+            if (week.weekArray[3] == 0) {
+                holder.Wed.setText("");
+            } else {
+                holder.Wed.setText(String.valueOf(week.weekArray[3]));
+            }
+            if (week.weekArray[4] == 0) {
+                holder.Thu.setText("");
+            } else {
+                holder.Thu.setText(String.valueOf(week.weekArray[4]));
+            }
+            if (week.weekArray[5] == 0) {
+                holder.Fri.setText("");
+            } else {
+                holder.Fri.setText(String.valueOf(week.weekArray[5]));
+            }
+            if (week.weekArray[6] == 0) {
+                holder.Sat.setText("");
+            } else {
+                holder.Sat.setText(String.valueOf(week.weekArray[6]));
+            }
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return weeksList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView Sun;
+            private TextView Mon;
+            private TextView Tue;
+            private TextView Wed;
+            private TextView Thu;
+            private TextView Fri;
+            private TextView Sat;
+            private TextView SunDetail;
+            private TextView MonDetail;
+            private TextView TueDetail;
+            private TextView WedDetail;
+            private TextView ThuDetail;
+            private TextView FriDetail;
+            private TextView SatDetail;
+
+            private ViewHolder(View view) {
+                super(view);
+                Sun = view.findViewById(R.id.Sun);
+                Mon = view.findViewById(R.id.Mon);
+                Tue = view.findViewById(R.id.Tue);
+                Wed = view.findViewById(R.id.Wed);
+                Thu = view.findViewById(R.id.Thu);
+                Fri = view.findViewById(R.id.Fri);
+                Sat = view.findViewById(R.id.Sat);
+                SunDetail = view.findViewById(R.id.Sun_detail);
+                MonDetail = view.findViewById(R.id.Mon_detail);
+                TueDetail = view.findViewById(R.id.Tue_detail);
+                WedDetail = view.findViewById(R.id.Wed_detail);
+                ThuDetail = view.findViewById(R.id.Thu_detail);
+                FriDetail = view.findViewById(R.id.Fri_detail);
+                SatDetail = view.findViewById(R.id.Sat_detail);
+            }
+        }
     }
 
     private class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.ViewHolder> {
-        private List<Date> dateList;
+        private List<Month> monthList;
 
-        private MonthAdapter(List<Date> dateList) {
-            this.dateList = dateList;
+        private MonthAdapter(List<Month> monthList) {
+            this.monthList = monthList;
         }
 
 
@@ -317,13 +444,18 @@ public class HomeStayActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull final MonthAdapter.ViewHolder holder, int position) {
-            Date date = dateList.get(position);
-            holder.month
+            Month month = monthList.get(position);
+            holder.month.setText(month.month);
+            List<Week> weekList = transToWeek(month);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
+            holder.weekRecyclerView.setLayoutManager(linearLayoutManager);
+            WeekAdapter weekAdapter = new WeekAdapter(weekList);
+            holder.weekRecyclerView.setAdapter(weekAdapter);
         }
 
         @Override
         public int getItemCount() {
-            return dateList.size();
+            return monthList.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -480,12 +612,80 @@ public class HomeStayActivity extends AppCompatActivity {
 
     public List<Month> transToMonth(List<Date> dateList) {
         List<Month> months = new ArrayList<>();
+        int days[] = new int[6];
+        int j = -1;
         for (int i = 0; i < dateList.size(); i++) {
             char[] dateChar = dateList.get(i).day.toCharArray();
-            
+            Date date = dateList.get(i);
+            if (i == 0) {
+                Log.i("dateExample", date.day);
+            }
+            //example:"2019/06/01"
+            if (dateChar[8] == '0' & dateChar[9] == '1') {
+//                Log.i("dateInformation", String.valueOf(dateChar[5]));
+//                Log.i("dateInformation", String.valueOf(dateChar[6]));
+//                Log.i("dateInformation", String.valueOf(dateChar[5] + String.valueOf(dateChar[6])));
+                Month month = new Month(date.week, String.valueOf(dateChar[5] + String.valueOf(dateChar[6])), 0);
+                Log.i("monthInformation", month.month + " " + String.valueOf(month.firstDayWeek));
+                months.add(month);
+                j++;
+                days[j] = 1;
+            } else {
+                days[j]++;
+            }
         }
+        for (int k = 0; k < months.size(); k++) {
+            months.get(k).setDays(days[k]);
+        }
+        return months;
     }
 
+    public List<Week> transToWeek(Month month) {
+        List<Week> weeks = new ArrayList<>();
+        if (month.firstDayWeek == 7) {
+            month.firstDayWeek = 0;
+        }
+        int[] firstWeekArray = new int[7];
+        int k = 1;
+        for (int j = 0; j < 7; j++) {
+            if (j < month.firstDayWeek) {
+                firstWeekArray[j] = 0;
+            } else {
+                firstWeekArray[j] = k;
+                k++;
+            }
+        }
+        Week firstWeek = new Week(firstWeekArray);
+        weeks.add(firstWeek);
+
+        int[] weekArray=new int[7];
+        int l = 0;
+        for (int i = 8 - month.firstDayWeek; i <= month.days; i++) {
+            if ((i + month.firstDayWeek) % 7 == 1) {
+                weekArray[0] = i;
+//                Log.i("weekFirst", String.valueOf(weekArray[0]));
+                l = 1;
+            } else {
+                weekArray[l] = i;
+                if (l == 6) {
+                    Week week = new Week(weekArray);
+//                    Log.i("weekFinal", String.valueOf(weekArray[l]));
+//                    Log.i("week.weekArray", String.valueOf(week.weekArray[l]));
+                    weeks.add(week);
+                    weekArray = new int[7];
+                }
+                l++;
+            }
+            if (i == month.days) {
+                Week week = new Week(weekArray);
+                weeks.add(week);
+            }
+        }
+//        for (int i = 0; i < weeks.size(); i++) {
+//            Log.i("weeks", String.valueOf(weeks.get(i).weekArray[0]));
+//        }
+        return weeks;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

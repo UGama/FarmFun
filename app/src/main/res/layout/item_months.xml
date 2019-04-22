@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
-    <TextView
-        android:id="@+id/month"
+    <LinearLayout
+        android:id="@+id/monthPanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="10dp"
-        android:text="@string/test"
-        android:textSize="14sp"
-        android:textColor="#000000"
-        />
+        >
+        <TextView
+            android:id="@+id/before_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/year2019"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            />
+        <TextView
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            />
+        <TextView
+            android:id="@+id/after_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/month"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/week"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/month"
+        app:layout_constraintTop_toBottomOf="@id/monthPanel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
         />
 
 

@@ -24,4 +24,7 @@
     <string name="Friday">Fri.</string>
     <string name="Saturday">Sat.</string>
     <string name="Sunday">Sun.</string>
+    <string name="year2019">2019年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
 </resources>

@@ -19,6 +19,8 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 public class DatabaseOperation extends AppCompatActivity {
 
 
+    private int days = 1;
+
     GeoCoder geoCoder;
 
     @Override
@@ -296,6 +298,33 @@ public class DatabaseOperation extends AppCompatActivity {
             }
             avObject.saveInBackground();
         }
+    }
+
+    public void updateTimeTable() {
+        String date;
+        if (days <= 9) {
+            date = "2019/06/0" + String.valueOf(days);
+        } else {
+            date = "2019/06/" + String.valueOf(days);
+        }
+        int weekday = (days + 5) % 7;
+        if (weekday == 0) {
+            weekday = 7;
+        }
+        AVObject avObject = new AVObject("TimeTable");
+        avObject.put("date", date);
+        avObject.put("week", weekday);
+        if (weekday == 6 || weekday == 7) {
+            avObject.put("weekday", 0);
+        } else {
+            avObject.put("weekday", 1);
+        }
+        avObject.saveInBackground();
+        days++;
+        if (days < 30) {
+            updateTimeTable();
+        }
+
     }
 
 
