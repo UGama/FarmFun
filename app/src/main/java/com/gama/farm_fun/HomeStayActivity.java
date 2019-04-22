@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +44,7 @@ import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class HomeStayActivity extends AppCompatActivity {
+public class HomeStayActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
 
     public int screenWidth;
@@ -77,12 +78,20 @@ public class HomeStayActivity extends AppCompatActivity {
     private int[][] roomSupport;
 
     private View timeChosePanel;
+    private ImageView shelter;
+    private Button cancelDateChose;
     private RecyclerView monthRecyclerView;
     private List<Date> dateList;
     private List<Month> monthList;
+    private AnimatorSet timeChosePanelQuit;
 
     private String startTime;
     private String endTime;
+    private int startMonth;
+    private int startDay;
+    private int endMonth;
+    private int endDay;
+    private int nightCount;
 
     private boolean firstTouch = true;
 
@@ -149,8 +158,9 @@ public class HomeStayActivity extends AppCompatActivity {
         address = findViewById(R.id.address);
         reserve = findViewById(R.id.reserve);
         reserve.setText("房间预订");
-        homeStayPanel = findViewById(R.id.panel_homeStay);
+        homeStayPanel = findViewById(R.id.panel_homeStay_middle);
         panelTopLayout = homeStayPanel.findViewById(R.id.topLayout);
+        panelTopLayout.setOnClickListener(this);
         panelChosenStartDate = homeStayPanel.findViewById(R.id.chosenStartDate);
         panelChosenStartDate.setText("6月1日");
         startTime = "6月1日";
@@ -159,15 +169,27 @@ public class HomeStayActivity extends AppCompatActivity {
         endTime = "6月2日";
         nights = homeStayPanel.findViewById(R.id.nights);
         nights.setText("共1晚>");
+        nightCount = 1;
+
         roomRecyclerView = findViewById(R.id.roomRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         roomRecyclerView.setLayoutManager(linearLayoutManager);
         roomList = new ArrayList<>();
 
         timeChosePanel = findViewById(R.id.datePanel);
+        shelter = findViewById(R.id.shelter);
+        shelter.setOnClickListener(this);
+        cancelDateChose = timeChosePanel.findViewById(R.id.cancel);
+        cancelDateChose.setOnClickListener(this);
         monthRecyclerView = findViewById(R.id.timeChoseRecyclerView);
         dateList = new ArrayList<>();
         monthList = new ArrayList<>();
+        ObjectAnimator delay = ofFloat(timeChosePanel, "rotation", 0, 0);
+        delay.setDuration(500);
+        ObjectAnimator quit = ofFloat(timeChosePanel, "translationY", 0, screenHeight);
+        quit.setDuration(500);
+        timeChosePanelQuit = new AnimatorSet();
+        timeChosePanelQuit.play(delay).before(quit);
 
         getHomeStayInformation();
     }
@@ -300,7 +322,6 @@ public class HomeStayActivity extends AppCompatActivity {
         });
     }
 
-
     public void initTimePanel() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         monthRecyclerView.setLayoutManager(linearLayoutManager);
@@ -311,13 +332,38 @@ public class HomeStayActivity extends AppCompatActivity {
         Log.i("Test", "setAdapterSuccess!");
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.topLayout:
+                initTimePanel();
+                timeChosePanel.setVisibility(View.VISIBLE);
+                ObjectAnimator objectAnimator = ofFloat(timeChosePanel, "translationY", screenHeight, 0);
+                objectAnimator.setDuration(1000);
+                objectAnimator.start();
+                shelter.setVisibility(View.VISIBLE);
+                break;
+            case R.id.shelter:
+            case R.id.cancel:
+                timeChosePanel.setVisibility(View.INVISIBLE);
+                shelter.setVisibility(View.INVISIBLE);
+                if (!firstTouch) {
+                    startTime = panelChosenStartDate.getText().toString();
+                    firstTouch = true;
+                }
+                timeChosePanelQuit.start();
+                break;
+        }
+    }
+
     private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         private List<Week> weeksList;
+        private int month;
 
-        private WeekAdapter(List<Week> weeksList) {
+        private WeekAdapter(List<Week> weeksList, int month) {
             this.weeksList = weeksList;
+            this.month = month;
         }
-
 
         @NonNull
         @Override
@@ -339,12 +385,32 @@ public class HomeStayActivity extends AppCompatActivity {
                 holder.Sun.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        v.setBackgroundColor(getResources().getColor(R.color.colorTheme));
                         if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                             holder.SunDetail.setText("入住");
+                            holder.SunDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Sun.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Sun.getText().toString());
+                            Log.i("StartTime", startTime);
                             firstTouch = false;
                         } else {
-                            holder.SunDetail.setText("离店");
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Sun.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.SunDetail.setText("离店");
+                                holder.SunDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Sun.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                Log.i("endTime", endTime);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                shelter.setVisibility(View.INVISIBLE);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
                         }
                     }
                 });
@@ -353,34 +419,212 @@ public class HomeStayActivity extends AppCompatActivity {
                 holder.Mon.setText("");
             } else {
                 holder.Mon.setText(String.valueOf(week.weekArray[1]));
+                holder.Mon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.MonDetail.setText("入住");
+                            holder.MonDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Mon.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Mon.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Mon.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.MonDetail.setText("离店");
+                                holder.MonDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Mon.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
             if (week.weekArray[2] == 0) {
                 holder.Tue.setText("");
             } else {
                 holder.Tue.setText(String.valueOf(week.weekArray[2]));
+                holder.Tue.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.TueDetail.setText("入住");
+                            holder.TueDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Tue.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Tue.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Tue.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.TueDetail.setText("离店");
+                                holder.TueDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Tue.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
             if (week.weekArray[3] == 0) {
                 holder.Wed.setText("");
             } else {
                 holder.Wed.setText(String.valueOf(week.weekArray[3]));
+                holder.Wed.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.WedDetail.setText("入住");
+                            holder.WedDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Wed.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Wed.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Wed.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.WedDetail.setText("离店");
+                                holder.WedDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Wed.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
             if (week.weekArray[4] == 0) {
                 holder.Thu.setText("");
             } else {
                 holder.Thu.setText(String.valueOf(week.weekArray[4]));
+                holder.Thu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.ThuDetail.setText("入住");
+                            holder.ThuDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Thu.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Thu.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Thu.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.ThuDetail.setText("离店");
+                                holder.ThuDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Thu.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
             if (week.weekArray[5] == 0) {
                 holder.Fri.setText("");
             } else {
                 holder.Fri.setText(String.valueOf(week.weekArray[5]));
+                holder.Fri.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.FriDetail.setText("入住");
+                            holder.FriDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Fri.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Fri.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Fri.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.FriDetail.setText("离店");
+                                holder.FriDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Fri.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
             if (week.weekArray[6] == 0) {
                 holder.Sat.setText("");
             } else {
                 holder.Sat.setText(String.valueOf(week.weekArray[6]));
+                holder.Sat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (firstTouch) {
+                            v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                            holder.SatDetail.setText("入住");
+                            holder.SatDetail.setVisibility(View.VISIBLE);
+                            startTime = String.valueOf(month) + "月" + holder.Sat.getText().toString() + "日";
+                            startMonth = month;
+                            startDay = Integer.parseInt(holder.Sat.getText().toString());
+                            firstTouch = false;
+                        } else {
+                            endMonth = month;
+                            endDay = Integer.parseInt(holder.Sat.getText().toString());
+                            nightCount = getNights(startMonth, startDay, endMonth, endDay);
+                            if (nightCount > 0) {
+                                v.setBackground(getResources().getDrawable(R.drawable.shape_days));
+                                holder.SatDetail.setText("离店");
+                                holder.SatDetail.setVisibility(View.VISIBLE);
+                                endTime = String.valueOf(month) + "月" + holder.Sat.getText().toString() + "日";
+                                nights.setText("共" + String.valueOf(nightCount) + "晚>");
+                                shelter.setVisibility(View.INVISIBLE);
+                                panelChosenStartDate.setText(startTime);
+                                panelChosenEndDate.setText(endTime);
+                                timeChosePanelQuit.start();
+                                firstTouch = true;
+                            }
+                        }
+                    }
+                });
             }
-
-
         }
 
         @Override
@@ -449,7 +693,7 @@ public class HomeStayActivity extends AppCompatActivity {
             List<Week> weekList = transToWeek(month);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
             holder.weekRecyclerView.setLayoutManager(linearLayoutManager);
-            WeekAdapter weekAdapter = new WeekAdapter(weekList);
+            WeekAdapter weekAdapter = new WeekAdapter(weekList, Integer.parseInt(month.month));
             holder.weekRecyclerView.setAdapter(weekAdapter);
         }
 
@@ -696,5 +940,28 @@ public class HomeStayActivity extends AppCompatActivity {
                 }
         }
 
+    }
+
+    public int getNights(int startMonth, int startDay, int endMonth, int endDay) {
+        int nights = 0;
+        if (startMonth == endMonth) {
+            nights = endDay - startDay;
+        } else {
+            for (int i = 0; i < endMonth - startMonth; i++) {
+                switch (startMonth + i) {
+                    case 6:
+                        endDay += 30;
+                        break;
+                    case 7:
+                        endDay += 31;
+                        break;
+                    case 8:
+                        endDay += 31;
+                        break;
+                }
+            }
+            nights = endDay - startDay;
+        }
+        return nights;
     }
 }

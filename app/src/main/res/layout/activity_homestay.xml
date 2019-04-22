@@ -84,8 +84,8 @@
                 />
 
             <include
-                layout="@layout/panel_homestay"
-                android:id="@+id/panel_homeStay"
+                layout="@layout/panel_homestay_middle"
+                android:id="@+id/panel_homeStay_middle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reserve"
@@ -99,7 +99,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/panel_homeStay" />
+                app:layout_constraintTop_toBottomOf="@id/panel_homeStay_middle" />
 
             <ImageView
                 android:id="@+id/cutLine2"
@@ -193,6 +193,15 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <ImageView
+        android:id="@+id/shelter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0.5"
+        android:visibility="invisible"
+        />
+
     <include android:id="@+id/datePanel"
         layout="@layout/panel_timechose"
         android:layout_width="match_parent"
@@ -200,6 +209,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
         />
 
 </android.support.constraint.ConstraintLayout>

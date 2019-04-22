@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
 
-    <TextView
+    <Button
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/choseDate"
         app:layout_constraintBottom_toBottomOf="@id/choseDate"
-        android:layout_marginStart="9dp"
+        android:background="#ffffff"
         />
     <TextView
         android:id="@+id/choseDate"

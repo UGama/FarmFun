@@ -49,10 +49,11 @@
         android:orientation="vertical"
         />
 
+
     <TextView
         android:id="@+id/Sun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textColor="#000000"
         android:textSize="12sp"
         android:text="@string/test"
@@ -66,7 +67,7 @@
         android:id="@+id/Sun_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Sun"
         app:layout_constraintEnd_toEndOf="@id/Sun"
         android:textColor="#000000"
@@ -75,8 +76,8 @@
         />
     <TextView
         android:id="@+id/Mon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textColor="#000000"
         android:textSize="12sp"
         android:text="@string/test"
@@ -91,7 +92,7 @@
         android:id="@+id/Mon_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Mon"
         app:layout_constraintEnd_toEndOf="@id/Mon"
         android:textColor="#000000"
@@ -100,8 +101,8 @@
         />
     <TextView
         android:id="@+id/Tue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textColor="#000000"
         android:textSize="12sp"
         android:text="@string/test"
@@ -115,7 +116,7 @@
         android:id="@+id/Tue_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Tue"
         app:layout_constraintEnd_toEndOf="@id/Tue"
         android:textColor="#000000"
@@ -125,8 +126,8 @@
 
     <TextView
         android:id="@+id/Wed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textSize="12sp"
         android:textColor="#000000"
         android:text="@string/test"
@@ -140,7 +141,7 @@
         android:id="@+id/Wed_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Wed"
         app:layout_constraintEnd_toEndOf="@id/Wed"
         android:textColor="#000000"
@@ -150,8 +151,8 @@
 
     <TextView
         android:id="@+id/Thu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textSize="12sp"
         android:textColor="#000000"
         android:text="@string/test"
@@ -165,7 +166,7 @@
         android:id="@+id/Thu_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Thu"
         app:layout_constraintEnd_toEndOf="@id/Thu"
         android:textColor="#000000"
@@ -174,8 +175,8 @@
         />
     <TextView
         android:id="@+id/Fri"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textSize="12sp"
         android:textColor="#000000"
         android:text="@string/test"
@@ -189,7 +190,7 @@
         android:id="@+id/Fri_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Fri"
         app:layout_constraintEnd_toEndOf="@id/Fri"
         android:textColor="#000000"
@@ -198,8 +199,8 @@
         />
     <TextView
         android:id="@+id/Sat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:textSize="12sp"
         android:textColor="#000000"
         android:text="@string/test"
@@ -213,7 +214,7 @@
         android:id="@+id/Sat_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/Sun"
+        app:layout_constraintBottom_toBottomOf="@id/Sun"
         app:layout_constraintStart_toStartOf="@id/Sat"
         app:layout_constraintEnd_toEndOf="@id/Sat"
         android:textColor="#000000"
