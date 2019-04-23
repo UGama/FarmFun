@@ -34,4 +34,6 @@
     <string name="submit_order">提交订单></string>
     <string name="total_account">总计</string>
     <string name="none">无</string>
+    <string name="input_remark">请输入备注……</string>
+    <string name="finish">完成</string>
 </resources>

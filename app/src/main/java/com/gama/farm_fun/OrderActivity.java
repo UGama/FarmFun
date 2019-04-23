@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +21,17 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderActivity extends AppCompatActivity {
+public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String userId;
     private String orderId;
     private String type;
     private String project;
     private String[] items;
-    private String[] detail;
-    private int[] count;
-    private int[] price;
+    private String[] urls;
+    private String[] details;
+    private int[] counts;
+    private int[] prices;
 
     private View topBar;
     private TextView title;
@@ -56,16 +59,19 @@ public class OrderActivity extends AppCompatActivity {
         userId = orderIntent.getStringExtra("UserId");
         orderId = orderIntent.getStringExtra("OrderId");
         type = orderIntent.getStringExtra("Type");
+        Log.i("type", type);
         project = orderIntent.getStringExtra("Project");
         if (type.equals("homeStay")) {
             items = new String[1];
             items[0] = orderIntent.getStringExtra("Item");
-            detail = new String[1];
-            detail[0] = orderIntent.getStringExtra("Detail");
-            count = new int[1];
-            count[0] = orderIntent.getIntExtra("Count", 0);
-            price = new int[1];
-            price[0] = orderIntent.getIntExtra("Price", 0);
+            urls = new String[1];
+            urls[0] = orderIntent.getStringExtra("Url");
+            details = new String[1];
+            details[0] = orderIntent.getStringExtra("Detail");
+            counts = new int[1];
+            counts[0] = orderIntent.getIntExtra("Count", 0);
+            prices = new int[1];
+            prices[0] = orderIntent.getIntExtra("Price", 0);
         }
         initUI();
     }
@@ -83,6 +89,7 @@ public class OrderActivity extends AppCompatActivity {
         itemList = new ArrayList<>();
         totalPrice = findViewById(R.id.total_price);
         remarkPanel = findViewById(R.id.panel_remark);
+        remarkPanel.setOnClickListener(this);
         remark = remarkPanel.findViewById(R.id.remark);
 
         submitPanel = findViewById(R.id.submit_order);
@@ -93,7 +100,39 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void initOrderRecyclerView() {
+        for (int i = 0; i < items.length; i++) {
+            Item item = new Item(items[i], urls[i], details[i], counts[i], prices[i]);
+            Log.i("items", items[i]);
+            itemList.add(item);
+        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        orderRecyclerView.setLayoutManager(linearLayoutManager);
+        ItemAdapter itemAdapter = new ItemAdapter(itemList);
+        orderRecyclerView.setAdapter(itemAdapter);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.panel_remark:
+                Intent remarkIntent = new Intent(OrderActivity.this, EditRemarkActivity.class);
+                startActivityForResult(remarkIntent, 0);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    remark.setText(data.getStringExtra("remark"));
+                }
+                break;
+        }
+    }
+
     private class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         private List<Item> itemList;
 
@@ -106,7 +145,7 @@ public class OrderActivity extends AppCompatActivity {
         @Override
         public ItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_months, parent, false);
+                    .inflate(R.layout.item_item, parent, false);
             ItemAdapter.ViewHolder holder = new ItemAdapter.ViewHolder(view);
 
             return holder;
@@ -115,12 +154,12 @@ public class OrderActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull final ItemAdapter.ViewHolder holder, int position) {
             Item item = itemList.get(position);
+            holder.itemName.setText(item.name);
             holder.itemPic.setImageURI(Uri.parse(item.picUrl));
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
             holder.itemPic.getHierarchy().setRoundingParams(roundingParams);
-            holder.itemName.setText(item.name);
             holder.itemDetail.setText(item.detail);
-            holder.itemCount.setText(String.valueOf(item.count));
+            holder.itemCount.setText("x" + String.valueOf(item.count));
             holder.itemPrice.setText(String.valueOf(item.count * item.price));
         }
 
@@ -138,11 +177,11 @@ public class OrderActivity extends AppCompatActivity {
 
             private ViewHolder(View view) {
                 super(view);
-                itemPic = findViewById(R.id.item_pic);
-                itemName = findViewById(R.id.item_name);
-                itemDetail = findViewById(R.id.item_detail);
-                itemCount = findViewById(R.id.item_count);
-                itemPrice = findViewById(R.id.item_price);
+                itemPic = view.findViewById(R.id.item_pic);
+                itemName = view.findViewById(R.id.item_name);
+                itemDetail = view.findViewById(R.id.item_detail);
+                itemCount = view.findViewById(R.id.item_count);
+                itemPrice = view.findViewById(R.id.item_price);
             }
         }
     }

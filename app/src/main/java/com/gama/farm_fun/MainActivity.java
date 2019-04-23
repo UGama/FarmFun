@@ -329,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent homeStayIntent = new Intent(MainActivity.this, HomeStayActivity.class);
                 homeStayIntent.putExtra("UserId", userId);
                 startActivity(homeStayIntent);
+                finish();
         }
     }
 

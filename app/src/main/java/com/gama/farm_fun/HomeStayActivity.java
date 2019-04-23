@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -100,6 +101,8 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     private AVObject orderAVObject;
     private String orderRoomType;
     private int orderPrice;
+
+    private Toast toast;
 
     @Override
 
@@ -738,7 +741,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onBindViewHolder(@NonNull final RoomAdapter.ViewHolder holder, int position) {
-            Room room = roomsList.get(position);
+            final Room room = roomsList.get(position);
             Log.i(String.valueOf(position), room.roomType);
             if (room.remain == 0) {
                 holder.roomType.setText(room.roomType);
@@ -771,6 +774,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                             orderAVObject = new AVObject("Order");
                             orderAVObject.put("userId", userId);
                             orderAVObject.put("type", "HomeStay");
+                            orderAVObject.put("project", projectName);
                             orderAVObject.put("status", "待支付");
                             orderAVObject.put("item", orderRoomType);
                             orderAVObject.put("detail", startTime + " 至 " + endTime);
@@ -784,6 +788,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                                         orderIntent.putExtra("Type", "homeStay");
                                         orderIntent.putExtra("Project", projectName);
                                         orderIntent.putExtra("Item", orderRoomType);
+                                        orderIntent.putExtra("Url", holder.url);
                                         orderIntent.putExtra("Detail", startTime + " 至 " + endTime);
                                         orderIntent.putExtra("Count", nightCount);
                                         orderIntent.putExtra("Price",orderPrice);
@@ -803,6 +808,8 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             query.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject object, AVException e) {
+                    holder.setUrl(object.getString("url"));
+                    Log.i("url", holder.url);
                     Uri imageUri = Uri.parse(object.getString("url"));
                     holder.roomPic.setImageURI(imageUri);
                     RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
@@ -827,6 +834,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             private TextView storePrice;
             private SimpleDraweeView roomPic;
             private Button order;
+            private String url;
 
             private ViewHolder(View view) {
                 super(view);
@@ -838,6 +846,10 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                 storePrice = view.findViewById(R.id.physicalStorePrice);
                 roomPic = view.findViewById(R.id.roomPic);
                 order = view.findViewById(R.id.order);
+            }
+
+            private void setUrl(String url) {
+                this.url = url;
             }
         }
     }
@@ -964,6 +976,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             case 1:
                 if (resultCode == RESULT_OK) {
                     userId = data.getStringExtra("UserId");
+                    showToast("登录成功！");
                 }
         }
 
@@ -990,5 +1003,15 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             nights = endDay - startDay;
         }
         return nights;
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
+        }
     }
 }

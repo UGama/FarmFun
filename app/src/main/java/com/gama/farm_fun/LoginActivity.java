@@ -1,6 +1,7 @@
 package com.gama.farm_fun;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -245,7 +246,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void finishLogin(){
+    public void finishLogin() {
+        SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+        editor.putString("id", userId);
+        editor.apply();
+        Log.i("Id", userId);
         Intent intent = new Intent();
         intent.putExtra("UserId", userId);
         setResult(RESULT_OK, intent);
