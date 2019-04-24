@@ -100,7 +100,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
 
     private AVObject orderAVObject;
     private String orderRoomType;
-    private int orderPrice;
+    private int itemPrice;
 
     private Toast toast;
 
@@ -769,7 +769,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                             startActivityForResult(loginIntent, 1);
                         } else {
                             orderRoomType = holder.roomType.getText().toString();
-                            orderPrice = Integer.parseInt(holder.price.getText().toString());
+                            itemPrice = Integer.parseInt(holder.price.getText().toString());
                             Log.i("RoomType", orderRoomType);
                             orderAVObject = new AVObject("Order");
                             orderAVObject.put("userId", userId);
@@ -779,6 +779,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                             orderAVObject.put("item", orderRoomType);
                             orderAVObject.put("detail", startTime + " 至 " + endTime);
                             orderAVObject.put("count", nightCount);
+                            orderAVObject.put("price", nightCount * itemPrice);
                             orderAVObject.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
@@ -791,7 +792,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                                         orderIntent.putExtra("Url", holder.url);
                                         orderIntent.putExtra("Detail", startTime + " 至 " + endTime);
                                         orderIntent.putExtra("Count", nightCount);
-                                        orderIntent.putExtra("Price",orderPrice);
+                                        orderIntent.putExtra("Price", itemPrice);
                                         orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
                                         startActivityForResult(orderIntent, 0);
                                     }
@@ -973,11 +974,17 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    finish();
+                }
+                break;
             case 1:
                 if (resultCode == RESULT_OK) {
                     userId = data.getStringExtra("UserId");
                     showToast("登录成功！");
                 }
+                break;
         }
 
     }

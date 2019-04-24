@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button pick;
     private Button drift;
     private Button homeStay;
+    private Button restaurant;
 
     public Button onlineShop;
     public Button news;
@@ -206,6 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drift.setOnClickListener(this);
         homeStay = findViewById(R.id.homeStay);
         homeStay.setOnClickListener(this);
+        restaurant = findViewById(R.id.restaurant);
+        restaurant.setOnClickListener(this);
     }
 
     public void StartLocateService() {
@@ -329,7 +332,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent homeStayIntent = new Intent(MainActivity.this, HomeStayActivity.class);
                 homeStayIntent.putExtra("UserId", userId);
                 startActivity(homeStayIntent);
-                finish();
+                break;
+            case R.id.restaurant:
+                Intent restaurantIntent = new Intent(MainActivity.this, RestaurantActivity.class);
+                restaurantIntent.putExtra("UserId", userId);
+                startActivity(restaurantIntent);
+                break;
         }
     }
 

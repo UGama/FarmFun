@@ -76,6 +76,10 @@
 
         <activity android:name=".EditRemarkActivity" />
 
+        <activity android:name=".MyOrder" />
+
+        <!--<activity android:name=".MyOrder" />-->
+
 
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">

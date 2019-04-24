@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ import java.util.List;
 
 public class RestaurantActivity extends AppCompatActivity {
 
+    private String userId;
+
     private ObservableScrollView observableScrollView;
 
     private ImageView restaurantPic;
@@ -58,10 +61,12 @@ public class RestaurantActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
-
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
         initUI();
 
     }
+
     public void initUI() {
         observableScrollView = findViewById(R.id.observableScrollView);
 
@@ -89,7 +94,8 @@ public class RestaurantActivity extends AppCompatActivity {
 
         setObservableScrollView();
     }
-    public void setObservableScrollView(){
+
+    public void setObservableScrollView() {
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
@@ -110,6 +116,7 @@ public class RestaurantActivity extends AppCompatActivity {
         observableScrollView.smoothScrollTo(0, 20);
         getRestaurantInformation();
     }
+
     public void getRestaurantInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Restaurant");
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -121,7 +128,8 @@ public class RestaurantActivity extends AppCompatActivity {
             }
         });
     }
-    public void loadMainPic(){
+
+    public void loadMainPic() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereEqualTo("name", "restaurantmain.jpg");
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -147,7 +155,8 @@ public class RestaurantActivity extends AppCompatActivity {
             }
         });
     }
-    public void getSeatInformation(){
+
+    public void getSeatInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Seat");
         query.whereEqualTo("date", "2019/06/01");
         query.findInBackground(new FindCallback<AVObject>() {
@@ -178,7 +187,6 @@ public class RestaurantActivity extends AppCompatActivity {
         });
     }
 
-
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -187,11 +195,13 @@ public class RestaurantActivity extends AppCompatActivity {
         }
         return result;
     }
+
     public String NumberToDate(int year, int month, int day) {
         String date;
         date = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
         return date;
     }
+
     public int[] DateToNumber(String date) {
         int[] dateNumber = new int[3];
         char[] dateChar = date.toCharArray();
@@ -205,6 +215,7 @@ public class RestaurantActivity extends AppCompatActivity {
         }
         return dateNumber;
     }
+
     private class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         private List<Seat> seatsList;
 

@@ -14,7 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -32,6 +36,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private String[] details;
     private int[] counts;
     private int[] prices;
+    private int orderPrice;
 
     private View topBar;
     private TextView title;
@@ -47,6 +52,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private TextView totalPrice2;
     private Button submit;
 
+    private Toast toast;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +65,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         Intent orderIntent = getIntent();
         userId = orderIntent.getStringExtra("UserId");
         orderId = orderIntent.getStringExtra("OrderId");
+        Log.i("OrderId", orderId);
         type = orderIntent.getStringExtra("Type");
         Log.i("type", type);
         project = orderIntent.getStringExtra("Project");
@@ -72,6 +80,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             counts[0] = orderIntent.getIntExtra("Count", 0);
             prices = new int[1];
             prices[0] = orderIntent.getIntExtra("Price", 0);
+
+            orderPrice = prices[0] * counts[0];
         }
         initUI();
     }
@@ -88,13 +98,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         orderRecyclerView = findViewById(R.id.orderRecyclerView);
         itemList = new ArrayList<>();
         totalPrice = findViewById(R.id.total_price);
+        totalPrice.setText(String.valueOf(orderPrice));
         remarkPanel = findViewById(R.id.panel_remark);
         remarkPanel.setOnClickListener(this);
         remark = remarkPanel.findViewById(R.id.remark);
 
         submitPanel = findViewById(R.id.submit_order);
         totalPrice2 = submitPanel.findViewById(R.id.price);
+        totalPrice2.setText(String.valueOf(orderPrice));
         submit = submitPanel.findViewById(R.id.submit);
+        submit.setOnClickListener(this);
 
         initOrderRecyclerView();
     }
@@ -104,6 +117,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             Item item = new Item(items[i], urls[i], details[i], counts[i], prices[i]);
             Log.i("items", items[i]);
             itemList.add(item);
+
         }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         orderRecyclerView.setLayoutManager(linearLayoutManager);
@@ -116,7 +130,23 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.panel_remark:
                 Intent remarkIntent = new Intent(OrderActivity.this, EditRemarkActivity.class);
-                startActivityForResult(remarkIntent, 0);
+                startActivityForResult(remarkIntent, 1);
+                break;
+            case R.id.submit:
+                AVObject avObject = AVObject.createWithoutData("Order", orderId);
+                avObject.put("status", "已支付");
+                avObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            Log.i("Save", "Succeed");
+                            showToast("支付成功！");
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                });
                 break;
         }
     }
@@ -183,6 +213,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 itemCount = view.findViewById(R.id.item_count);
                 itemPrice = view.findViewById(R.id.item_price);
             }
+        }
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
         }
     }
 }
