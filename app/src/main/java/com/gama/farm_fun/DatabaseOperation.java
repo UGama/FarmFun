@@ -1,9 +1,13 @@
 package com.gama.farm_fun;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -18,8 +22,13 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 public class DatabaseOperation extends AppCompatActivity {
 
+    private TextView run;
 
     private int days = 1;
+
+    private int restaurantTimeTableSupport = 1;
+    private int s = 1;
+
 
     GeoCoder geoCoder;
 
@@ -29,17 +38,19 @@ public class DatabaseOperation extends AppCompatActivity {
         SDKInitializer.initialize(getApplicationContext());
         SDKInitializer.setCoordType(CoordType.BD09LL);
         setContentView(R.layout.activity_databaseoperation);
-
+        run = findViewById(R.id.ActivityRun);
         //uploadAmusementGeopoint();
         //LatLng latLng = new LatLng(34.7568711, 113.663221);
         //getLocationDescribeByLatLng(latLng);
 
         //upLoadRestaurantOrderInformation();
+        //upLoadSeatInformation();
         //upLoadRoomInformation();
         //reUpLoadRoomInformation();
         //upLoadRoomTimeTable();
         //upTimeTable();
 
+        SeatTimeTable();
     }
 
     public void uploadAmusementGeopoint() {
@@ -50,8 +61,79 @@ public class DatabaseOperation extends AppCompatActivity {
         Log.i("UploadAmusementGeopoint", "success!");
     }
 
+    public void SeatTimeTable() {
+        if (s < 241) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 30 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 60 == 0) {
+                AVObject avObject = new AVObject("SeatTimeTable");
+                avObject.put("type", "小桌");
+                avObject.put("date", date);
+                avObject.put("remain", 10);
+                if ((s - 1) / 30 == 0) {
+                    avObject.put("meal", "中");
+                } else {
+                    avObject.put("meal", "晚");
+                }
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 60 == 1) {
+                AVObject avObject = new AVObject("SeatTimeTable");
+                avObject.put("type", "中桌");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                if ((s - 1) / 30 == 0) {
+                    avObject.put("meal", "中");
+                } else {
+                    avObject.put("meal", "晚");
+                }
+                avObject.saveInBackground();
+            } else if ((s - 1) / 60 == 2) {
+                AVObject avObject = new AVObject("SeatTimeTable");
+                avObject.put("type", "大桌");
+                avObject.put("date", date);
+                avObject.put("remain", 6);
+                if ((s - 1) / 30 == 0) {
+                    avObject.put("meal", "中");
+                } else {
+                    avObject.put("meal", "晚");
+                }
+                avObject.saveInBackground();
+            } else {
+                AVObject avObject = new AVObject("SeatTimeTable");
+                avObject.put("type", "包厢");
+                avObject.put("date", date);
+                avObject.put("remain", 4);
+                if ((s - 1) / 30 == 0) {
+                    avObject.put("meal", "中");
+                } else {
+                    avObject.put("meal", "晚");
+                }
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(2000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    SeatTimeTable();
+                }
+            });
+            objectAnimator.start();
+        }
+    }
+
     public void upLoadRestaurantOrderInformation() {
-        for (int i = 1; i < 31; i++) {
+        if (restaurantTimeTableSupport < 31) {
+            int i = restaurantTimeTableSupport;
             String date;
             if (i <= 9) {
                 date = "2019/06/0" + String.valueOf(i);
@@ -61,59 +143,97 @@ public class DatabaseOperation extends AppCompatActivity {
             for (int k = 0; k < 2; k++) {
                 for (int j = 0; j < 4; j++) {
                     if (j == 0) {
-                        AVObject avObject = new AVObject("Seat");
+                        AVObject avObject = new AVObject("SeatTimeTable");
+                        avObject.put("type", "小桌");
                         avObject.put("date", date);
-                        avObject.put("seatNumber", 2);
-                        avObject.put("describe", "小桌（2人）");
                         avObject.put("remain", 10);
                         if (k == 0) {
-                            avObject.put("meal", "lunch");
+                            avObject.put("meal", "中");
                         } else {
-                            avObject.put("meal", "dinner");
+                            avObject.put("meal", "晚");
                         }
                         avObject.saveInBackground();
                     } else if (j == 1) {
-                        AVObject avObject = new AVObject("Seat");
+                        AVObject avObject = new AVObject("SeatTimeTable");
+                        avObject.put("type", "中桌");
                         avObject.put("date", date);
-                        avObject.put("seatNumber", 4);
-                        avObject.put("describe", "中桌（4人）");
                         avObject.put("remain", 20);
                         if (k == 0) {
-                            avObject.put("meal", "lunch");
+                            avObject.put("meal", "中");
                         } else {
-                            avObject.put("meal", "dinner");
+                            avObject.put("meal", "晚");
                         }
                         avObject.saveInBackground();
                     } else if (j == 2) {
-                        AVObject avObject = new AVObject("Seat");
+                        AVObject avObject = new AVObject("SeatTimeTable");
+                        avObject.put("type", "大桌");
                         avObject.put("date", date);
-                        avObject.put("seatNumber", 10);
-                        avObject.put("describe", "大桌（10人）");
                         avObject.put("remain", 6);
                         if (k == 0) {
-                            avObject.put("meal", "lunch");
+                            avObject.put("meal", "中");
                         } else {
-                            avObject.put("meal", "dinner");
+                            avObject.put("meal", "晚");
                         }
                         avObject.saveInBackground();
                     } else {
-                        AVObject avObject = new AVObject("Seat");
+                        AVObject avObject = new AVObject("SeatTimeTable");
+                        avObject.put("type", "包厢");
                         avObject.put("date", date);
-                        avObject.put("seatNumber", 12);
-                        avObject.put("describe", "包厢（12人）");
                         avObject.put("remain", 4);
                         if (k == 0) {
-                            avObject.put("meal", "lunch");
+                            avObject.put("meal", "中");
                         } else {
-                            avObject.put("meal", "dinner");
+                            avObject.put("meal", "晚");
                         }
                         avObject.saveInBackground();
                     }
                 }
             }
-
+            restaurantTimeTableSupport++;
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(2000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    upLoadRestaurantOrderInformation();
+                }
+            });
+            objectAnimator.start();
+        } else {
         }
 
+    }
+
+    public void upLoadSeatInformation() {
+        for (int j = 0; j < 4; j++) {
+            if (j == 0) {
+                AVObject avObject = new AVObject("Seat");
+                avObject.put("type","小桌");
+                avObject.put("seatNumber", 2);
+                avObject.put("describe", "最多可坐2人");
+                avObject.saveInBackground();
+            } else if (j == 1) {
+                AVObject avObject = new AVObject("Seat");
+                avObject.put("type","中桌");
+                avObject.put("seatNumber", 4);
+                avObject.put("describe", "最多可坐4人");
+                avObject.saveInBackground();
+            } else if (j == 2) {
+                AVObject avObject = new AVObject("Seat");
+                avObject.put("type", "大桌");
+                avObject.put("seatNumber", 10);
+                avObject.put("describe", "最多可坐10人");
+                avObject.saveInBackground();
+            } else {
+                AVObject avObject = new AVObject("Seat");
+                avObject.put("type","包厢");
+                avObject.put("seatNumber", 12);
+                avObject.put("describe", "最多可坐12人");
+                avObject.put("remain", 4);
+                avObject.saveInBackground();
+            }
+        }
     }
 
     public void upLoadRoomInformation() {

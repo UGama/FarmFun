@@ -25,17 +25,17 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateOrderActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String userId;
     private String orderId;
     private String type;
     private String project;
-    private String[] items;
-    private String[] urls;
-    private String[] details;
-    private int[] counts;
-    private int[] prices;
+    private String itemName;
+    private String url;
+    private String detail;
+    private int count;
+    private int price;
     private int orderPrice;
 
     private View topBar;
@@ -69,20 +69,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         type = orderIntent.getStringExtra("Type");
         Log.i("type", type);
         project = orderIntent.getStringExtra("Project");
-        if (type.equals("homeStay")) {
-            items = new String[1];
-            items[0] = orderIntent.getStringExtra("Item");
-            urls = new String[1];
-            urls[0] = orderIntent.getStringExtra("Url");
-            details = new String[1];
-            details[0] = orderIntent.getStringExtra("Detail");
-            counts = new int[1];
-            counts[0] = orderIntent.getIntExtra("Count", 0);
-            prices = new int[1];
-            prices[0] = orderIntent.getIntExtra("Price", 0);
+        itemName = orderIntent.getStringExtra("Item");
+        url = orderIntent.getStringExtra("Url");
+        detail = orderIntent.getStringExtra("Detail");
+        count = orderIntent.getIntExtra("Count", 0);
+        price = orderIntent.getIntExtra("Price", 0);
 
-            orderPrice = prices[0] * counts[0];
-        }
+        orderPrice = price * count;
         initUI();
     }
 
@@ -113,12 +106,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void initOrderRecyclerView() {
-        for (int i = 0; i < items.length; i++) {
-            Item item = new Item(items[i], urls[i], details[i], counts[i], prices[i]);
-            Log.i("items", items[i]);
-            itemList.add(item);
-
-        }
+        Item item = new Item(itemName, url, detail, count, price);
+        itemList.add(item);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         orderRecyclerView.setLayoutManager(linearLayoutManager);
         ItemAdapter itemAdapter = new ItemAdapter(itemList);
@@ -129,7 +118,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.panel_remark:
-                Intent remarkIntent = new Intent(OrderActivity.this, EditRemarkActivity.class);
+                Intent remarkIntent = new Intent(CreateOrderActivity.this, EditRemarkActivity.class);
                 startActivityForResult(remarkIntent, 1);
                 break;
             case R.id.submit:

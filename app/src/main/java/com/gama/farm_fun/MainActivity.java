@@ -337,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent restaurantIntent = new Intent(MainActivity.this, RestaurantActivity.class);
                 restaurantIntent.putExtra("UserId", userId);
                 startActivity(restaurantIntent);
+                finish();
                 break;
         }
     }

@@ -1,12 +1,21 @@
 package com.gama.farm_fun;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.util.List;
 
 public class MyOrder extends AppCompatActivity {
 
@@ -34,7 +43,7 @@ public class MyOrder extends AppCompatActivity {
 
     }
 
-    /*private class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHolder> {
+    private class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHolder> {
         private List<Order> orderList;
 
         private MyOrderAdapter(List<Order> orderList) {
@@ -69,7 +78,9 @@ public class MyOrder extends AppCompatActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private SimpleDraweeView itemPic;
+            private SimpleDraweeView projectPic;
+            private TextView projectName;
+            private TextView status;
             private TextView itemName;
             private TextView itemDetail;
             private TextView itemCount;
@@ -84,5 +95,5 @@ public class MyOrder extends AppCompatActivity {
                 itemPrice = view.findViewById(R.id.item_price);
             }
         }
-    }*/
+    }
 }

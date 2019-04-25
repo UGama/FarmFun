@@ -190,17 +190,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topPanel" />
 
-    <include
-        android:id="@+id/restaurantCart"
+    <ImageView
+        android:id="@+id/shelter"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        layout="@layout/panel_cart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0.5"
+        android:visibility="invisible"
         />
 
-
+    <include android:id="@+id/datePanel"
+        layout="@layout/panel_timechose"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        />
 
 </android.support.constraint.ConstraintLayout>

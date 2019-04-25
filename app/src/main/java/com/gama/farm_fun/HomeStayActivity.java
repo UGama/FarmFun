@@ -784,7 +784,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                                 @Override
                                 public void done(AVException e) {
                                     if (e == null) {
-                                        Intent orderIntent = new Intent(HomeStayActivity.this, OrderActivity.class);
+                                        Intent orderIntent = new Intent(HomeStayActivity.this, CreateOrderActivity.class);
                                         orderIntent.putExtra("UserId", userId);
                                         orderIntent.putExtra("Type", "homeStay");
                                         orderIntent.putExtra("Project", projectName);
