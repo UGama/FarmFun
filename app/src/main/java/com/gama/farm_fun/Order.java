@@ -1,6 +1,7 @@
 package com.gama.farm_fun;
 
 public class Order {
+    public String id;
     public String projectPicUrl;
     public String project;
     public String item;
@@ -10,7 +11,8 @@ public class Order {
     public int count;
     public String type;
 
-    public Order(String project, String item, String detail, int price, String status, int count, String type) {
+    public Order(String id, String project, String item, String detail, int price, String status, int count, String type) {
+        this.id = id;
         this.project = project;
         this.item = item;
         this.detail = detail;

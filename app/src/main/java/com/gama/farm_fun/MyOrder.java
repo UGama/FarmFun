@@ -74,7 +74,8 @@ public class MyOrder extends AppCompatActivity {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
-                    Order order = new Order(avObject.getString("project"),
+                    Order order = new Order(avObject.getObjectId(),
+                            avObject.getString("project"),
                             avObject.getString("item"),
                             avObject.getString("detail"),
                             avObject.getInt("price"),
@@ -152,6 +153,8 @@ public class MyOrder extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull final MyOrderAdapter.ViewHolder holder, int position) {
             Order order = orderList.get(position);
+            holder.id = order.id;
+            holder.setUrl(order.projectPicUrl);
             Uri imageUri = Uri.parse(order.projectPicUrl);
             holder.projectPic.setImageURI(imageUri);
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
@@ -172,6 +175,20 @@ public class MyOrder extends AppCompatActivity {
             holder.itemDetail.setText(order.detail);
             holder.itemName.setText(order.item);
             holder.itemPrice.setText(String.valueOf(order.price));
+
+            holder.comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MyOrder.this, EditCommentActivity.class);
+                    intent.putExtra("project", holder.projectName.getText().toString());
+                    intent.putExtra("url", holder.url);
+                    intent.putExtra("item", holder.itemName.getText().toString());
+                    intent.putExtra("detail", holder.itemDetail.getText().toString());
+                    intent.putExtra("count", holder.count.getText().toString());
+                    intent.putExtra("orderId", holder.id);
+                    startActivityForResult(intent, 0);
+                }
+            });
         }
 
         @Override
@@ -188,6 +205,8 @@ public class MyOrder extends AppCompatActivity {
             private TextView itemPrice;
             private TextView count;
             private Button comment;
+            private String id;
+            private String url;
 
             private ViewHolder(View view) {
                 super(view);
@@ -200,6 +219,26 @@ public class MyOrder extends AppCompatActivity {
                 count = view.findViewById(R.id.count);
                 comment = view.findViewById(R.id.comment);
             }
+
+            private void setUrl(String url) {
+                this.url = url;
+            }
+
+            private void setId(String id) {
+                this.id = id;
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+
+                }
+                break;
         }
     }
 }
