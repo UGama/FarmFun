@@ -50,7 +50,8 @@ public class DatabaseOperation extends AppCompatActivity {
         //upLoadRoomTimeTable();
         //upTimeTable();
 
-        SeatTimeTable();
+        //SeatTimeTable();
+        updateTicketTimeTable();
     }
 
     public void uploadAmusementGeopoint() {
@@ -447,6 +448,59 @@ public class DatabaseOperation extends AppCompatActivity {
 
     }
 
+    public void updateTicketTimeTable() {
+        if (s < 121) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 30 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 30 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江竹筏漂流");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","儿童票");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 30 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江竹筏漂流");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","成人票");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 30 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江竹筏漂流");
+                avObject.put("date", date);
+                avObject.put("remain", 80);
+                avObject.put("ticket","亲子票【1大1小】");
+                avObject.saveInBackground();
+            } else {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江竹筏漂流");
+                avObject.put("date", date);
+                avObject.put("remain", 50);
+                avObject.put("ticket","亲子票【2大1小】");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(2000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateTicketTimeTable();
+                }
+            });
+            objectAnimator.start();
+        }
+    }
 
     public void getLocationDescribeByLatLng(LatLng latLng) {
         geoCoder = GeoCoder.newInstance();

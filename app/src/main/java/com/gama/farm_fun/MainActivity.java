@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 driftIntent.putExtra("Type", "drift");
                 driftIntent.putExtra("UserId", userId);
                 startActivity(driftIntent);
+                finish();
                 break;
             case R.id.homeStay:
                 Intent homeStayIntent = new Intent(MainActivity.this, HomeStayActivity.class);
@@ -337,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent restaurantIntent = new Intent(MainActivity.this, RestaurantActivity.class);
                 restaurantIntent.putExtra("UserId", userId);
                 startActivity(restaurantIntent);
-                finish();
                 break;
         }
     }

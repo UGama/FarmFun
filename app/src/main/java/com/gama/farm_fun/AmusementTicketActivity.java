@@ -4,12 +4,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,50 +18,33 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.GetDataCallback;
-import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private String userId;
-
+public class AmusementTicketActivity extends AppCompatActivity implements View.OnClickListener {
     public int screenWidth;
     public int screenHeight;
 
-    private ObservableScrollView observableScrollView;
+    private String userId;
+    private String type;
+    private String url;
 
-    private ImageView restaurantPic;
-    private TextView restaurantName;
-    private TextView locationDescribe;
+    private RecyclerView ticketRecyclerView;
+    private List<Ticket> ticketList;
 
     private View topPanel;
-    private ConstraintLayout topPanelTopLayout;
     private TextView topPanelChosenDate;
-    private View midPanel;
-    private ConstraintLayout midPanelTopLayout;
-    private TextView midPanelChosenDate;
-    private ImageView barBottomLine;
-    private ImageView panelBottomLine;
-
-    private RecyclerView seatRecyclerView;
-    private List<Seat> seatsList;
 
     private View timeChosePanel;
     private ImageView shelter;
@@ -77,7 +57,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private String time;
 
     private AVObject orderAVObject;
-    private String orderSeatType;
+    private String orderAmusementType;
     private int orderPrice;
     private String orderDetail;
 
@@ -86,11 +66,12 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant);
-
+        setContentView(R.layout.activity_amusement_ticket);
         Intent intent = getIntent();
-        userId = intent.getStringExtra("UserId");
 
+        type = intent.getStringExtra("Type");
+        userId = intent.getStringExtra("UserId");
+        url = intent.getStringExtra("Url");
         getWindowInformation();
     }
 
@@ -111,28 +92,16 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void initUI() {
-        observableScrollView = findViewById(R.id.observableScrollView);
+        ticketRecyclerView = findViewById(R.id.ticketRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        ticketRecyclerView.setLayoutManager(linearLayoutManager);
+        ticketList = new ArrayList<>();
 
-        restaurantPic = findViewById(R.id.restaurantPic);
-        restaurantName = findViewById(R.id.restaurantName);
-        locationDescribe = findViewById(R.id.locationDescribe);
-        topPanel = findViewById(R.id.topPanel);
-        topPanelTopLayout = topPanel.findViewById(R.id.topLayout);
-        topPanelTopLayout.setOnClickListener(this);
+        topPanel = findViewById(R.id.timeChosePanel);
+        topPanel.setOnClickListener(this);
         topPanelChosenDate = topPanel.findViewById(R.id.chosenDate);
         topPanelChosenDate.setText("2019年06月01日");
-        midPanel = findViewById(R.id.midPanel);
-        midPanelTopLayout = midPanel.findViewById(R.id.topLayout);
-        midPanelTopLayout.setOnClickListener(this);
-        midPanelChosenDate = midPanel.findViewById(R.id.chosenDate);
-        midPanelChosenDate.setText("2019年06月01日");
-        barBottomLine = findViewById(R.id.barBottomLine);
-        panelBottomLine = findViewById(R.id.panelBottomLine);
-
-        seatRecyclerView = findViewById(R.id.seatRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        seatRecyclerView.setLayoutManager(linearLayoutManager);
-        seatsList = new ArrayList<>();
+        time = topPanelChosenDate.getText().toString();
 
         timeChosePanel = findViewById(R.id.datePanel);
         shelter = findViewById(R.id.shelter);
@@ -148,99 +117,34 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         quit.setDuration(500);
         timeChosePanelQuit = new AnimatorSet();
         timeChosePanelQuit.play(delay).before(quit);
-
-        time = topPanelChosenDate.getText().toString();
-
-        setObservableScrollView();
+        getTicketInformation();
     }
 
-    public void setObservableScrollView() {
-        observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
-                int[] panelLocation = new int[2];
-                midPanel.getLocationOnScreen(panelLocation);
-                int midPanelY = panelLocation[1];
-                int statusBarHeight = getStatusBarHeight();
-                if (midPanelY <= statusBarHeight + barBottomLine.getBottom()) {
-                    topPanel.setVisibility(View.VISIBLE);
-                    panelBottomLine.setVisibility(View.VISIBLE);
-                } else {
-                    topPanel.setVisibility(View.GONE);
-                    panelBottomLine.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        observableScrollView.smoothScrollTo(0, 20);
-        getRestaurantInformation();
-    }
-
-    public void getRestaurantInformation() {
-        AVQuery<AVObject> query = new AVQuery<>("Restaurant");
-        query.getFirstInBackground(new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject object, AVException e) {
-                restaurantName.setText(object.getString("name"));
-                locationDescribe.setText(object.getString("locateDescribe"));
-                loadMainPic();
-            }
-        });
-    }
-
-    public void loadMainPic() {
-        AVQuery<AVObject> query = new AVQuery<>("_File");
-        query.whereEqualTo("name", "restaurantmain.jpg");
-        query.getFirstInBackground(new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject object, AVException e) {
-                AVFile avFile = new AVFile("Type.png", object.getString("url"), new HashMap<String, Object>());
-                avFile.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, AVException e) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        Log.i("bitmap(width/height)", String.valueOf(bitmap.getWidth()) + "/" + String.valueOf(bitmap.getHeight()));
-                        restaurantPic.setImageBitmap(bitmap);
-
-                    }
-                }, new ProgressCallback() {
-                    @Override
-                    public void done(Integer percentDone) {
-                        if (percentDone == 100) {
-                            getSeatInformation();
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    public void getSeatInformation() {
-        AVQuery<AVObject> query = new AVQuery<>("Seat");
-        query.orderByAscending("seatNumber");
+    public void getTicketInformation() {
+        AVQuery<AVObject> query = new AVQuery<>("Ticket");
+        query.whereEqualTo("amusementType", type);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
-                    Seat lunchSeat = new Seat(avObject.getString("picName"),
-                            avObject.getString("type"),
-                            avObject.getString("describe"),
-                            "中");
-                    seatsList.add(lunchSeat);
-                    Log.i("test1", lunchSeat.seatType + " " + lunchSeat.picName + " " + lunchSeat.describe + " " + lunchSeat.meal);
-                    Seat dinnerSeat = new Seat(avObject.getString("picName"),
-                            avObject.getString("type"),
-                            avObject.getString("describe"),
-                            "晚");
-                    seatsList.add(dinnerSeat);
+                    Log.i("type", avObject.getString("name") + avObject.getString("type") + String.valueOf(avObject.getInt("price") + String.valueOf(avObject.getInt("sales"))));
+                    Ticket ticket = new Ticket(avObject.getString("name"), avObject.getString("type"),
+                            avObject.getInt("price"), avObject.getInt("sales"));
+                    ticketList.add(ticket);
                 }
-                getSeatRemain();
+                initTicketRecyclerView();
             }
         });
     }
 
-    public void getSeatRemain() {
-        AVQuery<AVObject> query = new AVQuery<>("SeatTimeTable");
+    public void initTicketRecyclerView() {
+        TicketAdapter ticketAdapter = new TicketAdapter(ticketList);
+        ticketRecyclerView.setAdapter(ticketAdapter);
+        getTicketRemain();
+    }
+
+    public void getTicketRemain() {
+        AVQuery<AVObject> query = new AVQuery<>("TicketTimeTable");
         query.whereEqualTo("date", changeToSymbolDate(time));
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -248,21 +152,20 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 Log.i("test4", String.valueOf(avObjects.size()));
                 int i = 0;
                 for (AVObject avObject : avObjects) {
-                    for (Seat seat : seatsList) {
-                        if (seat.seatType.equals(avObject.getString("type")) & seat.meal.equals(avObject.getString("meal"))) {
-                            seatsList.get(i).setRemain(avObject.getInt("remain"));
-                            Log.i("test2", seatsList.get(i).seatType + " " + seatsList.get(i).remain);
+                    for (Ticket ticket : ticketList) {
+                        if (ticket.ticketType.equals(avObject.getString("ticket"))) {
+
+                            ticketList.get(i).setRemain(avObject.getInt("remain"));
+                            Log.i("test2", ticketList.get(i).ticketType + " " + ticketList.get(i).remain);
                         }
                     }
                     i++;
                 }
-                SeatAdapter seatAdapter = new SeatAdapter(seatsList);
-                seatRecyclerView.setAdapter(seatAdapter);
+
                 getDateInformation();
             }
         });
     }
-
     public void getDateInformation() {
         AVQuery<AVObject> query = new AVQuery<>("TimeTable");
         query.orderByAscending("date");
@@ -277,7 +180,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
-
     public void initTimePanel() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         monthRecyclerView.setLayoutManager(linearLayoutManager);
@@ -288,6 +190,129 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         Log.i("Test", "setAdapterSuccess!");
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.timeChosePanel:
+                initTimePanel();
+                timeChosePanel.setVisibility(View.VISIBLE);
+                ObjectAnimator objectAnimator = ofFloat(timeChosePanel, "translationY", screenHeight, 0);
+                objectAnimator.setDuration(1000);
+                objectAnimator.start();
+                shelter.setVisibility(View.VISIBLE);
+                break;
+            case R.id.shelter:
+            case R.id.cancel:
+                timeChosePanel.setVisibility(View.INVISIBLE);
+                shelter.setVisibility(View.INVISIBLE);
+                timeChosePanelQuit.start();
+                break;
+        }
+    }
+
+    private class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
+        private List<Ticket> ticketList;
+
+        private TicketAdapter(List<Ticket> ticketList) {
+            this.ticketList = ticketList;
+        }
+
+        @Override
+        public TicketAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_order_ticket, parent, false);
+            TicketAdapter.ViewHolder holder = new TicketAdapter.ViewHolder(view);
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(final TicketAdapter.ViewHolder holder, int position) {
+            Ticket ticket = ticketList.get(position);
+            Log.i(String.valueOf(position), ticket.ticketType);
+            holder.ticketType.setText(ticket.ticketType);
+            holder.sales.setText("已售" + String.valueOf(ticket.sales));
+            holder.price.setText(String.valueOf(ticket.price));
+            holder.setProject(ticket.projectName);
+            holder.order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (userId.equals("tourist")) {
+                        Intent loginIntent = new Intent(AmusementTicketActivity.this, LoginActivity.class);
+                        startActivityForResult(loginIntent, 1);
+                    } else {
+                        orderAmusementType = holder.ticketType.getText().toString();
+                        orderPrice = Integer.parseInt(holder.price.getText().toString());
+                        orderDetail = topPanelChosenDate.getText().toString();
+                        orderAVObject = new AVObject("Order");
+                        orderAVObject.put("userId", userId);
+                        orderAVObject.put("type", type);
+                        orderAVObject.put("project", holder.project);
+                        orderAVObject.put("status", "待支付");
+                        orderAVObject.put("item", orderAmusementType);
+                        orderAVObject.put("detail", orderDetail);
+                        orderAVObject.put("price", orderPrice);
+                        orderAVObject.put("count", 1);
+                        orderAVObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    Intent orderIntent = new Intent(AmusementTicketActivity.this, CreateOrderActivity.class);
+                                    orderIntent.putExtra("UserId", userId);
+                                    orderIntent.putExtra("Type", type);
+                                    orderIntent.putExtra("Project", holder.project);
+                                    orderIntent.putExtra("Item", orderAmusementType);
+                                    orderIntent.putExtra("Url", url);
+                                    orderIntent.putExtra("Detail", orderDetail);
+                                    orderIntent.putExtra("Count", 1);
+                                    orderIntent.putExtra("Price", orderPrice);
+                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                    startActivityForResult(orderIntent, 0);
+                                }
+                            }
+                        });
+
+
+                    }
+                }
+            });
+            holder.payOnline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return ticketList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView ticketType;
+            private TextView price;
+            private TextView sales;
+            private Button payOnline;
+            private Button order;
+            private String project;
+
+            private ViewHolder(View view) {
+                super(view);
+                ticketType = view.findViewById(R.id.ticketType);
+                price = view.findViewById(R.id.price);
+                sales = view.findViewById(R.id.sales);
+                payOnline = view.findViewById(R.id.payOnline);
+                order = view.findViewById(R.id.order);
+            }
+
+            private void setProject(String project) {
+                this.project = project;
+            }
+        }
+
+
+    }
     private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         private List<Week> weeksList;
         private int month;
@@ -318,7 +343,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.SunDetail.setText("就餐");
+                        holder.SunDetail.setText("游玩");
                         holder.SunDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -330,7 +355,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -345,7 +369,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.MonDetail.setText("就餐");
+                        holder.MonDetail.setText("游玩");
                         holder.MonDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -357,7 +381,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -372,7 +395,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.TueDetail.setText("就餐");
+                        holder.TueDetail.setText("游玩");
                         holder.TueDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -384,7 +407,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -399,7 +421,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.WedDetail.setText("就餐");
+                        holder.WedDetail.setText("游玩");
                         holder.WedDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -411,7 +433,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -426,7 +447,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.ThuDetail.setText("就餐");
+                        holder.ThuDetail.setText("游玩");
                         holder.ThuDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -438,7 +459,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -453,7 +473,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.FriDetail.setText("就餐");
+                        holder.FriDetail.setText("游玩");
                         holder.FriDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -465,7 +485,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -480,7 +499,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(View v) {
                         v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.SatDetail.setText("就餐");
+                        holder.SatDetail.setText("游玩");
                         holder.SatDetail.setVisibility(View.VISIBLE);
                         String timeMonth = String.valueOf(month);
                         if (month < 10) {
@@ -492,7 +511,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
                         time = "2019年" + timeMonth + "月" + timeDay + "日";
                         topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
                         Log.i("Time", time);
                         shelter.setVisibility(View.INVISIBLE);
                         timeChosePanelQuit.start();
@@ -665,247 +683,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 //        }
         return weeks;
     }
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-    public String NumberToDate(int year, int month, int day) {
-        String date;
-        date = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
-        return date;
-    }
-
-    public int[] DateToNumber(String date) {
-        int[] dateNumber = new int[3];
-        char[] dateChar = date.toCharArray();
-        int j = 0;
-        for (int i = 0; i < dateChar.length; i++) {
-            if (dateChar[i] != '/') {
-                dateNumber[j] = dateNumber[j] * 10 + Integer.parseInt(String.valueOf(dateChar[i]));
-            } else {
-                j++;
-            }
-        }
-        return dateNumber;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.topLayout:
-                initTimePanel();
-                timeChosePanel.setVisibility(View.VISIBLE);
-                ObjectAnimator objectAnimator = ofFloat(timeChosePanel, "translationY", screenHeight, 0);
-                objectAnimator.setDuration(1000);
-                objectAnimator.start();
-                shelter.setVisibility(View.VISIBLE);
-                break;
-            case R.id.shelter:
-            case R.id.cancel:
-                timeChosePanel.setVisibility(View.INVISIBLE);
-                shelter.setVisibility(View.INVISIBLE);
-                timeChosePanelQuit.start();
-                break;
-        }
-    }
-
-    private class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
-        private List<Seat> seatsList;
-
-        private SeatAdapter(List<Seat> seatsList) {
-            this.seatsList = seatsList;
-        }
-
-        @Override
-        public SeatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_seat, parent, false);
-            final SeatAdapter.ViewHolder holder = new SeatAdapter.ViewHolder(view);
-            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });*/
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(final SeatAdapter.ViewHolder holder, int position) {
-            Seat seat = seatsList.get(position);
-            Log.i(String.valueOf(position), seat.seatType);
-            holder.seatType.setText(seat.seatType);
-            holder.remain.setText(String.valueOf(seat.remain));
-            holder.meal.setText("(" + seat.meal + ")");
-            holder.describe.setText(seat.describe);
-            final ImageView seatPic = holder.seatPic;
-            AVQuery<AVObject> query = new AVQuery<>("_File");
-            query.whereEqualTo("name", seat.picName);
-            query.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject object, AVException e) {
-                    AVFile avFile = new AVFile("seat.png", object.getString("url"), new HashMap<String, Object>());
-                    holder.setUrl(object.getString("url"));
-                    avFile.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, AVException e) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                            seatPic.setImageBitmap(bitmap);
-                        }
-                    }, new ProgressCallback() {
-                        @Override
-                        public void done(Integer percentDone) {
-                            if (percentDone == 100) {
-
-                            }
-                        }
-                    });
-                }
-            });
-            holder.payOnline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (userId.equals("tourist")) {
-                        Intent loginIntent = new Intent(RestaurantActivity.this, LoginActivity.class);
-                        startActivityForResult(loginIntent, 1);
-                    } else {
-                        orderSeatType = holder.seatType.getText().toString();
-                        orderPrice = holder.price;
-                        orderDetail = midPanelChosenDate.getText().toString();
-                        orderAVObject = new AVObject("Order");
-                        orderAVObject.put("userId", userId);
-                        orderAVObject.put("type", "Restaurant");
-                        orderAVObject.put("project", restaurantName.getText().toString());
-                        orderAVObject.put("status", "待支付");
-                        orderAVObject.put("item", orderSeatType);
-                        orderAVObject.put("detail", orderDetail);
-                        orderAVObject.put("price", orderPrice);
-                        orderAVObject.put("count", 1);
-                        orderAVObject.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    Intent orderIntent = new Intent(RestaurantActivity.this, CreateOrderActivity.class);
-                                    orderIntent.putExtra("UserId", userId);
-                                    orderIntent.putExtra("Type", "restaurant");
-                                    orderIntent.putExtra("Project", restaurantName.getText().toString());
-                                    orderIntent.putExtra("Item", orderSeatType);
-                                    orderIntent.putExtra("Url", holder.url);
-                                    orderIntent.putExtra("Detail", orderDetail);
-                                    orderIntent.putExtra("Count", 1);
-                                    orderIntent.putExtra("Price", orderPrice);
-                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
-                                    startActivityForResult(orderIntent, 0);
-                                }
-                            }
-                        });
-
-
-                    }
-                }
-            });
-            holder.order.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (userId.equals("tourist")) {
-                        Intent loginIntent = new Intent(RestaurantActivity.this, LoginActivity.class);
-                        startActivityForResult(loginIntent, 1);
-                    } else {
-                        orderSeatType = holder.seatType.getText().toString();
-                        orderPrice = holder.price;
-                        orderDetail = midPanelChosenDate.getText().toString();
-                        orderAVObject = new AVObject("Order");
-                        orderAVObject.put("userId", userId);
-                        orderAVObject.put("type", "Restaurant");
-                        orderAVObject.put("project", restaurantName.getText().toString());
-                        orderAVObject.put("status", "待支付");
-                        orderAVObject.put("item", orderSeatType);
-                        orderAVObject.put("detail", orderDetail);
-                        orderAVObject.put("price", orderPrice);
-                        orderAVObject.put("count", 1);
-                        orderAVObject.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    Intent orderIntent = new Intent(RestaurantActivity.this, CreateOrderActivity.class);
-                                    orderIntent.putExtra("UserId", userId);
-                                    orderIntent.putExtra("Type", "restaurant");
-                                    orderIntent.putExtra("Project", restaurantName.getText().toString());
-                                    orderIntent.putExtra("Item", orderSeatType);
-                                    orderIntent.putExtra("Url", holder.url);
-                                    orderIntent.putExtra("Detail", orderDetail);
-                                    orderIntent.putExtra("Count", 1);
-                                    orderIntent.putExtra("Price", orderPrice);
-                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
-                                    startActivityForResult(orderIntent, 0);
-                                }
-                            }
-                        });
-
-
-                    }
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return seatsList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView seatType;
-            private TextView remain;
-            private TextView meal;
-            private ImageView seatPic;
-            private TextView describe;
-            private Button payOnline;
-            private Button order;
-            private int price;
-            private String url;
-
-            private ViewHolder(View view) {
-                super(view);
-                seatType = view.findViewById(R.id.seatType);
-                remain = view.findViewById(R.id.remainSeats);
-                meal = view.findViewById(R.id.meal);
-                seatPic = view.findViewById(R.id.seatPic);
-                describe = view.findViewById(R.id.describe);
-                payOnline = view.findViewById(R.id.payOnline);
-                order = view.findViewById(R.id.order);
-                price = 20;
-            }
-            private void setUrl(String url) {
-                this.url = url;
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    finish();
-                }
-                break;
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    userId = data.getStringExtra("UserId");
-                    showToast("登录成功！");
-                }
-                break;
-        }
-    }
-
     public String changeToSymbolDate(String date) {
         char[] dateChar = date.toCharArray();
         char[] dateChar2 = new char[dateChar.length - 1];
@@ -921,7 +698,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         return String.valueOf(dateChar2);
     }
 
-
     private void showToast(String msg) {
         if (toast == null) {
             toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
@@ -931,4 +707,5 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             toast.show();
         }
     }
+
 }

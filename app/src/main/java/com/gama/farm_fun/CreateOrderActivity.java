@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -57,7 +58,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        Fresco.initialize(this);
+        setContentView(R.layout.activity_createorder);
 
         getOrderInformation();
     }
@@ -84,6 +86,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         title = topBar.findViewById(R.id.title);
         if (type.equals("homeStay")) {
             title.setText("民宿订单");
+        } else if (type.equals("restaurant")) {
+            title.setText("用餐订单");
         }
 
         projectName = findViewById(R.id.project_name);

@@ -79,7 +79,7 @@
             />
 
         <TextView
-            android:id="@+id/items"
+            android:id="@+id/item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,12 +92,12 @@
             />
 
         <TextView
-            android:id="@+id/type"
+            android:id="@+id/detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/items"
-            app:layout_constraintBottom_toBottomOf="@id/items"
-            app:layout_constraintStart_toEndOf="@id/items"
+            app:layout_constraintTop_toTopOf="@id/item"
+            app:layout_constraintBottom_toBottomOf="@id/item"
+            app:layout_constraintStart_toEndOf="@id/item"
             android:layout_marginStart="10dp"
             android:textSize="12sp"
             android:textColor="@color/colorTextGray"
@@ -109,8 +109,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/items"
-            app:layout_constraintBottom_toBottomOf="@id/items"
+            app:layout_constraintTop_toTopOf="@id/item"
+            app:layout_constraintBottom_toBottomOf="@id/item"
             android:text="@string/test"
             android:textColor="#000000"
             android:textSize="14sp"

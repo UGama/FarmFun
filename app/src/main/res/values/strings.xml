@@ -36,4 +36,5 @@
     <string name="none">无</string>
     <string name="input_remark">请输入备注……</string>
     <string name="finish">完成</string>
+    <string name="ticket">门票</string>
 </resources>

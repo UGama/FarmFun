@@ -35,13 +35,14 @@ import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class AmusementActivity extends AppCompatActivity {
+public class AmusementActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
 
     public int screenWidth;
     public int screenHeight;
 
     private String type;
+    private String url;
 
     private View topBar;
     private float alphaStorage;
@@ -68,11 +69,8 @@ public class AmusementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amusement);
         Intent intent = getIntent();
-        if (intent.getStringExtra("Type") == null) {
-            type = "drift";
-        } else {
-            type = intent.getStringExtra("Type");
-        }
+
+        type = intent.getStringExtra("Type");
         userId = intent.getStringExtra("UserId");
 
         getWindowInformation();
@@ -89,8 +87,6 @@ public class AmusementActivity extends AppCompatActivity {
         // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         float width = screenWidth / density;  // 屏幕宽度(dp)
         float height = screenHeight / density;// 屏幕高度(dp)
-        Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
-        Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
         getProject();
     }
 
@@ -135,6 +131,7 @@ public class AmusementActivity extends AppCompatActivity {
         ticket = findViewById(R.id.ticket);
         ticket.setText("门票预订");
         allTicketType = findViewById(R.id.allTicketType);
+        allTicketType.setOnClickListener(this);
         ticketList = new ArrayList<>();
         ticketRecyclerView = findViewById(R.id.ticketRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -150,9 +147,6 @@ public class AmusementActivity extends AppCompatActivity {
                 int[] mainPicLocationOnScreen = new int[2];
                 mainPic.getLocationOnScreen(mainPicLocationOnScreen);
                 int mainPicY = mainPicLocationOnScreen[1] - getStatusBarHeight();
-                Log.i("mainPicY", String.valueOf(-mainPicY));
-                Log.i("mainPic.getBottom", String.valueOf(mainPic.getBottom()));
-                Log.i("topBar.getBottom", String.valueOf(topBar.getBottom()));
                 if (-mainPicY >= mainPic.getBottom() - topBar.getBottom()) {
                     topBar.setVisibility(View.VISIBLE);
                 } else if (-mainPicY < mainPic.getBottom() - topBar.getBottom()) {
@@ -190,6 +184,7 @@ public class AmusementActivity extends AppCompatActivity {
             @Override
             public void done(AVObject object, AVException e) {
                 AVFile avFile = new AVFile("Type.png", object.getString("url"), new HashMap<String, Object>());
+                url = object.getString("url");
                 avFile.getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] data, AVException e) {
@@ -211,7 +206,7 @@ public class AmusementActivity extends AppCompatActivity {
     }
 
     public void getTicket() {
-        AVQuery<AVObject> ticketQuery = new AVQuery<>("Price");
+        AVQuery<AVObject> ticketQuery = new AVQuery<>("Ticket");
         ticketQuery.whereEqualTo("name", projectName.getText().toString());
         ticketQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -220,7 +215,7 @@ public class AmusementActivity extends AppCompatActivity {
                 if (avObjects.size() <= 3) {
                     for (int i = 0; i < avObjects.size(); i++) {
                         AVObject avObject = avObjects.get(i);
-                        Ticket ticket = new Ticket(avObject.getString("name"), avObject.getString("ticketType"),
+                        Ticket ticket = new Ticket(avObject.getString("name"), avObject.getString("type"),
                                 avObject.getInt("price"), avObject.getInt("sales"));
                         ticketList.add(ticket);
                         Log.i("票型：", ticket.ticketType);
@@ -228,7 +223,7 @@ public class AmusementActivity extends AppCompatActivity {
                 } else {
                     for (int i = 0; i < 3; i++) {
                         AVObject avObject = avObjects.get(i);
-                        Ticket ticket = new Ticket(avObject.getString("name"), avObject.getString("ticketType"),
+                        Ticket ticket = new Ticket(avObject.getString("name"), avObject.getString("type"),
                                 avObject.getInt("price"), avObject.getInt("sales"));
                         ticketList.add(ticket);
                     }
@@ -246,6 +241,18 @@ public class AmusementActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.allTicketType:
+                Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
+                allTicketIntent.putExtra("Type", type);
+                allTicketIntent.putExtra("Url", url);
+                allTicketIntent.putExtra("UserId", userId);
+                startActivity(allTicketIntent);
+                break;
+        }
+    }
 
     private class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
         private List<Ticket> ticketList;
@@ -259,6 +266,13 @@ public class AmusementActivity extends AppCompatActivity {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_ticket, parent, false);
             final TicketAdapter.ViewHolder holder = new TicketAdapter.ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
+                    startActivity(allTicketIntent);
+                }
+            });
             /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

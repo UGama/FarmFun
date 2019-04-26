@@ -3,7 +3,7 @@ package com.gama.farm_fun;
 public class Ticket {
     public String projectName;
     public int price;
-    public String detail;
+    public int remain;
     public String ticketType;
     public int sales;
 
@@ -12,5 +12,9 @@ public class Ticket {
         this.ticketType = ticketType;
         this.price = price;
         this.sales = sales;
+    }
+
+    public void setRemain(int remain) {
+        this.remain = remain;
     }
 }
