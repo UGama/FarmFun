@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,12 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private View submitPanel;
     private TextView totalPrice2;
     private Button submit;
+
+    private ConstraintLayout countChose;
+    private ImageView plus;
+    private ImageView minus;
+    private TextView numberTextView;
+    private int number;
 
     private Toast toast;
 
@@ -106,6 +114,17 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         submit = submitPanel.findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
+        if (!type.equals("homeStay")) {
+            countChose = findViewById(R.id.countChose);
+            countChose.setVisibility(View.VISIBLE);
+            plus = countChose.findViewById(R.id.plus);
+            plus.setOnClickListener(this);
+            minus = countChose.findViewById(R.id.minus);
+            minus.setOnClickListener(this);
+            numberTextView = countChose.findViewById(R.id.count);
+            numberTextView.setText("1");
+            number = Integer.parseInt(numberTextView.getText().toString());
+        }
         initOrderRecyclerView();
     }
 
@@ -128,6 +147,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             case R.id.submit:
                 AVObject avObject = AVObject.createWithoutData("Order", orderId);
                 avObject.put("status", "已支付");
+                avObject.put("count", number);
+                avObject.put("price", price * number);
                 avObject.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {
@@ -140,6 +161,26 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                         }
                     }
                 });
+                break;
+            case R.id.plus:
+                number++;
+                numberTextView.setText(String.valueOf(number));
+                totalPrice.setText(String.valueOf(price * number));
+                totalPrice2.setText(String.valueOf(price * number));
+                if (number == 2) {
+                    minus.setBackground(getResources().getDrawable(R.drawable.shape_circle));
+                }
+                break;
+            case R.id.minus:
+                if (number > 1) {
+                    number--;
+                    totalPrice.setText(String.valueOf(price * number));
+                    totalPrice2.setText(String.valueOf(price * number));
+                    numberTextView.setText(String.valueOf(number));
+                    if (number == 1) {
+                        minus.setBackground(getResources().getDrawable(R.drawable.shape_circle2));
+                    }
+                }
                 break;
         }
     }
@@ -182,7 +223,11 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
             holder.itemPic.getHierarchy().setRoundingParams(roundingParams);
             holder.itemDetail.setText(item.detail);
-            holder.itemCount.setText("x" + String.valueOf(item.count));
+            if (type.equals("homeStay")) {
+                holder.itemCount.setText("共" + String.valueOf(item.count) + "晚");
+            } else {
+                holder.itemCount.setText("x" + String.valueOf(item.count));
+            }
             holder.itemPrice.setText(String.valueOf(item.count * item.price));
         }
 

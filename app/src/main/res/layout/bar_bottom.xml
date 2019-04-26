@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="55dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#ffffff">
-
+    android:background="#ffffff"
+    >
+    <ImageView
+        android:id="@+id/bottomGuideLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="#f6f6f6"
+        />
     <android.support.constraint.Guideline
         android:id="@+id/oneFourthGuideLine"
         android:layout_width="wrap_content"
@@ -41,16 +50,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintGuide_percent="0.8"
         />
-
-    <ImageView
-        android:id="@+id/bottomGuideLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="55dp"
-        android:src="#f6f6f6"
-        />
     <Button
         android:id="@+id/homePage"
         android:layout_width="30dp"
@@ -85,7 +84,7 @@
         />
     <Button
         android:id="@+id/news"
-        android:background="@drawable/news1"
+        android:background="@drawable/news"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +133,7 @@
         android:id="@+id/newsText"
         android:text="资讯"
         android:textSize="12sp"
-        android:textColor="@color/colorTheme"
+        android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

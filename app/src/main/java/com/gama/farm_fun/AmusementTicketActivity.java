@@ -67,9 +67,11 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amusement_ticket);
+
         Intent intent = getIntent();
 
         type = intent.getStringExtra("Type");
+        Log.i("Type", String.valueOf(type));
         userId = intent.getStringExtra("UserId");
         url = intent.getStringExtra("Url");
         getWindowInformation();

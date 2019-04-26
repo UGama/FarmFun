@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button drift;
     private Button homeStay;
     private Button restaurant;
+    private Button fishing;
+    private Button barbecue;
 
     public Button onlineShop;
     public Button news;
@@ -138,15 +140,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         locationPic = findViewById(R.id.locationPic);
         locationPic.setOnClickListener(this);
 
-        onlineShop = findViewById(R.id.onlineStore);
-        onlineShop.setOnClickListener(this);
-
-        news = findViewById(R.id.news);
-        news.setOnClickListener(this);
-
-        mine = findViewById(R.id.mine);
-        mine.setOnClickListener(this);
-
         Log.i("test1", "success");
         travelJournalRecycler = findViewById(R.id.travelJournalRecyclerView);
         travelJournalRecycler.setNestedScrollingEnabled(false);
@@ -209,6 +202,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         homeStay.setOnClickListener(this);
         restaurant = findViewById(R.id.restaurant);
         restaurant.setOnClickListener(this);
+        fishing = findViewById(R.id.fishing);
+        fishing.setOnClickListener(this);
+        barbecue = findViewById(R.id.barbecue);
+        barbecue.setOnClickListener(this);
+
+        onlineShop = findViewById(R.id.onlineStore);
+        onlineShop.setOnClickListener(this);
+
+        news = findViewById(R.id.news);
+        news.setOnClickListener(this);
+
+        mine = findViewById(R.id.mine);
+        mine.setOnClickListener(this);
     }
 
     public void StartLocateService() {
@@ -327,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 driftIntent.putExtra("Type", "drift");
                 driftIntent.putExtra("UserId", userId);
                 startActivity(driftIntent);
-                finish();
                 break;
             case R.id.homeStay:
                 Intent homeStayIntent = new Intent(MainActivity.this, HomeStayActivity.class);
@@ -338,6 +343,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent restaurantIntent = new Intent(MainActivity.this, RestaurantActivity.class);
                 restaurantIntent.putExtra("UserId", userId);
                 startActivity(restaurantIntent);
+                break;
+            case R.id.fishing:
+                Intent fishingIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                fishingIntent.putExtra("Type", "fishing");
+                fishingIntent.putExtra("UserId", userId);
+                startActivity(fishingIntent);
+                break;
+            case R.id.barbecue:
+                Intent barbecueIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                barbecueIntent.putExtra("Type", "barbecue");
+                barbecueIntent.putExtra("UserId", userId);
+                startActivity(barbecueIntent);
+                break;
+            case R.id.mine:
+                Intent mineIntent = new Intent(MainActivity.this, MineActivity.class);
+                mineIntent.putExtra("UserId", userId);
+                startActivity(mineIntent);
+                finish();
                 break;
         }
     }

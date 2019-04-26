@@ -70,7 +70,7 @@
         />
 
     <android.support.constraint.Guideline
-        android:id="@+id/oneFifthGuideLine"
+        android:id="@+id/oneFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -79,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/twoFifthGuideLine"
+        android:id="@+id/twoFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -88,7 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/threeFifthGuideLine"
+        android:id="@+id/threeFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -110,8 +110,8 @@
         android:id="@+id/firstSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/oneFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/oneFourthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/oneFourthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.4"
@@ -122,8 +122,8 @@
         android:id="@+id/secondSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/twoFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/twoFourthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="#000000"
@@ -135,8 +135,8 @@
         android:id="@+id/thirdSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/threeFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/threeFourthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/threeFourthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="#000000"

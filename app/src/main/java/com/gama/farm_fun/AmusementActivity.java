@@ -71,6 +71,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         Intent intent = getIntent();
 
         type = intent.getStringExtra("Type");
+        Log.i("Type", type);
         userId = intent.getStringExtra("UserId");
 
         getWindowInformation();
@@ -151,7 +152,6 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                     topBar.setVisibility(View.VISIBLE);
                 } else if (-mainPicY < mainPic.getBottom() - topBar.getBottom()) {
                     float alpha = (float) (-mainPicY) / (mainPic.getBottom() - topBar.getBottom());
-                    Log.i("alpha", String.valueOf(alpha));
                     ObjectAnimator objectAnimator = ofFloat(topBar, "alpha", alphaStorage, alpha);
                     alphaStorage = alpha;
                     objectAnimator.setDuration(100);
@@ -185,6 +185,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
             public void done(AVObject object, AVException e) {
                 AVFile avFile = new AVFile("Type.png", object.getString("url"), new HashMap<String, Object>());
                 url = object.getString("url");
+                Log.i("Url", object.getString("url"));
                 avFile.getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] data, AVException e) {
@@ -246,6 +247,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.allTicketType:
                 Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
+                Log.i("Type", type);
                 allTicketIntent.putExtra("Type", type);
                 allTicketIntent.putExtra("Url", url);
                 allTicketIntent.putExtra("UserId", userId);

@@ -7,7 +7,7 @@
     >
 
     <android.support.constraint.Guideline
-        android:id="@+id/oneFifthGuideLine"
+        android:id="@+id/oneFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -16,7 +16,7 @@
         app:layout_constraintGuide_percent="0.2"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/twoFifthGuideLine"
+        android:id="@+id/twoFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -25,7 +25,7 @@
         app:layout_constraintGuide_percent="0.4"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/threeFifthGuideLine"
+        android:id="@+id/threeFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -60,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
-        app:layout_constraintEnd_toStartOf="@id/oneFifthGuideLine"
+        app:layout_constraintEnd_toStartOf="@id/oneFourthGuideLine"
         app:layout_constraintVertical_bias="0.2"
         />
     <Button
@@ -70,8 +70,8 @@
         android:background="@drawable/onlinestore1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
-        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/oneFourthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         app:layout_constraintVertical_bias="0.2"
         />
     <Button
@@ -90,7 +90,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/threeFourthGuideLine"
         app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
         app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
         app:layout_constraintVertical_bias="0.2"
@@ -115,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/oneFifthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/oneFourthGuideLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homePage"
         />
@@ -128,8 +128,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/onlineStore"
-        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/oneFourthGuideLine"
+        app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         />
     <TextView
         android:id="@+id/newsText"
@@ -140,7 +140,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/news"
-        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
+        app:layout_constraintStart_toStartOf="@id/threeFourthGuideLine"
         app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
         />
     <TextView

@@ -9,7 +9,7 @@
     >
 
     <android.support.constraint.Guideline
-        android:id="@+id/oneFifthGuideLine"
+        android:id="@+id/oneFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -18,7 +18,7 @@
         app:layout_constraintGuide_percent="0.2"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/twoFifthGuideLine"
+        android:id="@+id/twoFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,7 +27,7 @@
         app:layout_constraintGuide_percent="0.4"
         />
     <android.support.constraint.Guideline
-        android:id="@+id/threeFifthGuideLine"
+        android:id="@+id/threeFourthGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -393,7 +393,7 @@
                 android:id="@+id/travelJournal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="精品游记"
                 android:textColor="#000000"
                 android:textSize="25sp"
@@ -437,108 +437,15 @@
 
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/homePage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/homepage1"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <include
+        android:id="@+id/bottom_bar"
+        layout="@layout/bar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
-        app:layout_constraintEnd_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintVertical_bias="0.2"
-        />
-    <Button
-        android:id="@+id/onlineStore"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/onlinestore"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
-        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
-        app:layout_constraintVertical_bias="0.2"
-        />
-    <Button
-        android:id="@+id/post"
-        android:background="@drawable/post"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <Button
-        android:id="@+id/news"
-        android:background="@drawable/news"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
-        app:layout_constraintVertical_bias="0.2"
-        />
-    <Button
-        android:id="@+id/mine"
-        android:background="@drawable/mine"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/fourFifthGuideLine"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.3"
         />
 
-    <TextView
-        android:id="@+id/homePageText"
-        android:text="首页"
-        android:textSize="12sp"
-        android:textColor="@color/colorTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/oneFifthGuideLine"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homePage"
-        />
-    <TextView
-        android:id="@+id/onlineStoreText"
-        android:text="线上商城"
-        android:textSize="12sp"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/onlineStore"
-        app:layout_constraintStart_toStartOf="@id/oneFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/twoFifthGuideLine"
-        />
-    <TextView
-        android:id="@+id/newsText"
-        android:text="资讯"
-        android:textSize="12sp"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/news"
-        app:layout_constraintStart_toStartOf="@id/threeFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
-        />
-    <TextView
-        android:id="@+id/mineText"
-        android:text="我的"
-        android:textSize="12sp"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine"
-        app:layout_constraintStart_toStartOf="@id/fourFifthGuideLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+
+
 </android.support.constraint.ConstraintLayout>
