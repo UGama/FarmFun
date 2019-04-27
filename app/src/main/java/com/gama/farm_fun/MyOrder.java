@@ -70,32 +70,37 @@ public class MyOrder extends AppCompatActivity {
         } else if (type.equals("HomeStay")) {
             query.whereEqualTo("type", type);
         }
+        query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                for (AVObject avObject : avObjects) {
-                    Order order = new Order(avObject.getObjectId(),
-                            avObject.getString("project"),
-                            avObject.getString("item"),
-                            avObject.getString("detail"),
-                            avObject.getInt("price"),
-                            avObject.getString("status"),
-                            avObject.getInt("count"),
-                            avObject.getString("type"));
-                    if (type.equals("Amusement")) {
-                        if (avObject.getString("type").equals("HomeStay") ||
-                                avObject.getString("type").equals("Restaurant")) {
+                if (avObjects.size() == 0) {
+                } else {
+                    for (AVObject avObject : avObjects) {
+                        Order order = new Order(avObject.getObjectId(),
+                                avObject.getString("project"),
+                                avObject.getString("item"),
+                                avObject.getString("detail"),
+                                avObject.getInt("price"),
+                                avObject.getString("status"),
+                                avObject.getInt("count"),
+                                avObject.getString("type"),
+                                avObject.getBoolean("comment"));
+                        if (type.equals("Amusement")) {
+                            if (avObject.getString("type").equals("HomeStay") ||
+                                    avObject.getString("type").equals("Restaurant")) {
+                            } else {
+                                orderList.add(order);
+                                Log.i("order", order.item);
+                            }
                         } else {
                             orderList.add(order);
-                            Log.i("order", order.item);
                         }
-                    } else {
-                        orderList.add(order);
                     }
+                    Log.i("orderList", String.valueOf(orderList.size()));
+                    projectPicSupport = 0;
+                    getProjectPic();
                 }
-                Log.i("orderList", String.valueOf(orderList.size()));
-                projectPicSupport = 0;
-                getProjectPic();
             }
         });
     }
@@ -153,7 +158,13 @@ public class MyOrder extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull final MyOrderAdapter.ViewHolder holder, int position) {
             Order order = orderList.get(position);
-            holder.id = order.id;
+            holder.setId(order.id);
+            holder.setCommentJudge(order.comment);
+            if (holder.commentJudge) {
+                holder.comment.setVisibility(View.VISIBLE);
+            } else {
+                holder.comment.setVisibility(View.INVISIBLE);
+            }
             holder.setUrl(order.projectPicUrl);
             Uri imageUri = Uri.parse(order.projectPicUrl);
             holder.projectPic.setImageURI(imageUri);
@@ -166,6 +177,8 @@ public class MyOrder extends AppCompatActivity {
                 holder.status.setTextColor(getResources().getColor(R.color.colorGreen));
             } else if (order.status.equals("待支付")) {
                 holder.status.setTextColor(getResources().getColor(R.color.colorRemind));
+            } else if (order.status.equals("已评价")) {
+                holder.status.setTextColor(getResources().getColor(R.color.colorBlack));
             }
             if (order.type.equals("HomeStay")) {
                 holder.count.setText("共" + String.valueOf(order.count) + "晚");
@@ -175,6 +188,8 @@ public class MyOrder extends AppCompatActivity {
             holder.itemDetail.setText(order.detail);
             holder.itemName.setText(order.item);
             holder.itemPrice.setText(String.valueOf(order.price));
+
+            holder.setType(order.type);
 
             holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -186,6 +201,7 @@ public class MyOrder extends AppCompatActivity {
                     intent.putExtra("detail", holder.itemDetail.getText().toString());
                     intent.putExtra("count", holder.count.getText().toString());
                     intent.putExtra("orderId", holder.id);
+                    intent.putExtra("type", holder.type);
                     startActivityForResult(intent, 0);
                 }
             });
@@ -207,6 +223,8 @@ public class MyOrder extends AppCompatActivity {
             private Button comment;
             private String id;
             private String url;
+            private boolean commentJudge;
+            private String type;
 
             private ViewHolder(View view) {
                 super(view);
@@ -227,6 +245,14 @@ public class MyOrder extends AppCompatActivity {
             private void setId(String id) {
                 this.id = id;
             }
+
+            private void setCommentJudge(boolean commentJudge) {
+                this.commentJudge = commentJudge;
+            }
+
+            private void setType(String type) {
+                this.type = type;
+            }
         }
     }
 
@@ -236,7 +262,7 @@ public class MyOrder extends AppCompatActivity {
         switch (requestCode) {
             case 0:
                 if (resultCode == RESULT_OK) {
-
+                    finish();
                 }
                 break;
         }

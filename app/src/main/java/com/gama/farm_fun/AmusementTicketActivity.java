@@ -255,6 +255,7 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
                         orderAVObject.put("detail", orderDetail);
                         orderAVObject.put("price", orderPrice);
                         orderAVObject.put("count", 1);
+                        orderAVObject.put("comment", false);
                         orderAVObject.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(AVException e) {

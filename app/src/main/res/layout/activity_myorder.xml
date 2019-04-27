@@ -23,5 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <TextView
+        android:id="@+id/no_more_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/myorderRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="没有更多订单了～"
+        android:textColor="@color/colorTextGray"
+        android:textSize="14sp"
+        />
 
 </android.support.constraint.ConstraintLayout>

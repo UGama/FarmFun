@@ -36,6 +36,19 @@ import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.model.LatLng;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -46,9 +59,11 @@ import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class HomeStayActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeStayActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMapClickListener {
     private String userId;
     private String projectName;
+    private String addressString;
+    private String projectPicUrl;
 
     public int screenWidth;
     public int screenHeight;
@@ -104,13 +119,22 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
 
     private Toast toast;
 
+    private MapView mapView;
+    private float longitude;
+    private float latitude;
+
+
     @Override
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
+        SDKInitializer.initialize(this);
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
         setContentView(R.layout.activity_homestay);
-
+        mapView = findViewById(R.id.mapView);
         getWindowInformation();
 
     }
@@ -235,6 +259,10 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                 address.setText(object.getString("locateDescribe"));
                 mainPicName = object.getString("mainPicName");
 
+                addressString = object.getString("locateDescribe");
+                longitude = Float.parseFloat(object.getString("longitude"));
+                latitude = Float.parseFloat(object.getString("latitude"));
+
                 loadMainPic();
             }
         });
@@ -247,6 +275,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void done(AVObject object, AVException e) {
                 AVFile avFile = new AVFile("HomeStay.png", object.getString("url"), new HashMap<String, Object>());
+                projectPicUrl = object.getString("url");
                 avFile.getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] data, AVException e) {
@@ -259,7 +288,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void done(Integer percentDone) {
                         if (percentDone == 100) {
-                            getRoomInformation();
+                            loadMapView();
                         }
                     }
                 });
@@ -339,6 +368,27 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         Log.i("Test", "setAdapterSuccess!");
     }
 
+    public void loadMapView() {
+        mapView = findViewById(R.id.mapView);
+        BaiduMap baiduMap = mapView.getMap();
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(18).build();
+
+        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
+        baiduMap.setMapStatus(mapStatusUpdate);
+
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
+                .fromResource(R.drawable.locate_overlay);
+        // 构建MarkerOption，用于在地图上添加Marker
+        OverlayOptions option = new MarkerOptions().position(latLng)
+                .icon(bitmapDescriptor).zIndex(8).draggable(true);
+        baiduMap.addOverlay(option);
+
+        baiduMap.setOnMapClickListener(this);
+        getRoomInformation();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -361,6 +411,22 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                 timeChosePanelQuit.start();
                 break;
         }
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Intent intent = new Intent(HomeStayActivity.this, MapActivity.class);
+        intent.putExtra("longitude", longitude);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("project", projectName);
+        intent.putExtra("address", addressString);
+        intent.putExtra("url", projectPicUrl);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onMapPoiClick(MapPoi mapPoi) {
+        return false;
     }
 
     private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
@@ -794,6 +860,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                                         orderIntent.putExtra("Count", nightCount);
                                         orderIntent.putExtra("Price", itemPrice);
                                         orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                        orderIntent.putExtra("comment", false);
                                         startActivityForResult(orderIntent, 0);
                                     }
                                 }
@@ -1020,5 +1087,23 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             toast.setText(msg);
             toast.show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
     }
 }

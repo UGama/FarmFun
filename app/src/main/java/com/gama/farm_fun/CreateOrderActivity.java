@@ -147,8 +147,11 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             case R.id.submit:
                 AVObject avObject = AVObject.createWithoutData("Order", orderId);
                 avObject.put("status", "已支付");
-                avObject.put("count", number);
-                avObject.put("price", price * number);
+                if (!type.equals("homeStay")) {
+                    avObject.put("count", number);
+                    avObject.put("price", price * number);
+                }
+                avObject.put("comment", true);
                 avObject.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {

@@ -843,6 +843,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                                     orderIntent.putExtra("Count", 1);
                                     orderIntent.putExtra("Price", orderPrice);
                                     orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                    orderIntent.putExtra("comment", false);
                                     startActivityForResult(orderIntent, 0);
                                 }
                             }
