@@ -2,6 +2,8 @@ package com.gama.farm_fun;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -26,6 +33,7 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -55,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Button mine;
 
     public RecyclerView recommendProjectsRecycler;
-    List<Project> recommendProjectsList = null;
+    List<RecommendProject> recommendProjectsList;
 
     public RecyclerView travelJournalRecycler;
     List<TravelJournal> travelJournalsList = null;
@@ -170,18 +178,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         recommendProjectsRecycler.setLayoutManager(linearLayoutManager1);
         recommendProjectsList = new ArrayList<>();
-        Project project = new Project("test", "test", "test");
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        recommendProjectsList.add(project);
-        RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
-        recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
 
         getUserInformation();
     }
@@ -190,10 +186,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         userId = sharedPreferences.getString("id", "tourist");
         Log.i("userId", userId);
-        InitUI();
+        getRecommendProject();
     }
 
-    public void InitUI() {
+    public void getRecommendProject() {
+        AVQuery<AVObject> query = new AVQuery<>("RecommendProject");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    RecommendProject recommendProject = new RecommendProject(avObject.getString("name"),
+                            avObject.getString("type"),
+                            avObject.getString("picName"));
+                    recommendProjectsList.add(recommendProject);
+                }
+                RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
+                recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
+
+                initUI();
+            }
+        });
+    }
+
+    public void getTravelJournal() {
+        
+    }
+
+    public void initUI() {
         pick = findViewById(R.id.pick);
         pick.setOnClickListener(this);
         drift = findViewById(R.id.drift);
@@ -451,9 +470,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private class RecommendProjectsAdapter extends RecyclerView.Adapter<RecommendProjectsAdapter.ViewHolder> {
-        private List<Project> projectsList;
+        private List<RecommendProject> projectsList;
 
-        private RecommendProjectsAdapter(List<Project> projectsList) {
+        private RecommendProjectsAdapter(List<RecommendProject> projectsList) {
             this.projectsList = projectsList;
         }
 
@@ -472,10 +491,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public void onBindViewHolder(RecommendProjectsAdapter.ViewHolder holder, int position) {
-            Project project = projectsList.get(position);
-            Log.i(String.valueOf(position), project.title);
-            holder.recommendProjectText.setText(project.title);
+        public void onBindViewHolder(final RecommendProjectsAdapter.ViewHolder holder, int position) {
+            RecommendProject recommendProject = recommendProjectsList.get(position);
+            Log.i(String.valueOf(position), recommendProject.name);
+            holder.recommendProjectText.setText(recommendProject.name);
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.whereEqualTo("name", recommendProject.picName);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    AVFile avFile = new AVFile("test.jpg", object.getString("url"), new HashMap<String, Object>());
+                    avFile.getThumbnailUrl(true, 100, 120);
+                    avFile.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, AVException e) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            holder.recommendProjectPic.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            });
+            holder.setType(recommendProject.type);
         }
 
         @Override
@@ -486,11 +522,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public class ViewHolder extends RecyclerView.ViewHolder {
             private ImageView recommendProjectPic;
             private TextView recommendProjectText;
+            private String type;
 
             private ViewHolder(View view) {
                 super(view);
                 recommendProjectPic = view.findViewById(R.id.projectPic);
                 recommendProjectText = view.findViewById(R.id.projectText);
+            }
+
+            private void setType(String type) {
+                this.type = type;
             }
         }
 

@@ -4,11 +4,15 @@ public class TravelJournal {
     public String title;
     public String subTitle;
     public String article;
-    public String id;
+    public int number;
 
-    public TravelJournal(String id, String title, String subTitle) {
-        this.id = id;
+    public TravelJournal(int number, String title, String subTitle) {
+        this.number = number;
         this.title = title;
         this.subTitle = subTitle;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
     }
 }

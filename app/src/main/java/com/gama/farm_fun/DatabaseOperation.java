@@ -51,7 +51,9 @@ public class DatabaseOperation extends AppCompatActivity {
         //upTimeTable();
 
         //SeatTimeTable();
-        updateTicketTimeTable();
+        //updateTicketTimeTable3();
+
+
     }
 
     public void uploadAmusementGeopoint() {
@@ -449,16 +451,16 @@ public class DatabaseOperation extends AppCompatActivity {
     }
 
     public void updateTicketTimeTable() {
-        if (s < 121) {
+        if (s < 125) {
             String date;
             if (s % 30 <= 9 & s % 30 > 0) {
-                date = "2019/06/0" + String.valueOf(s % 30);
-            } else if (s % 30 == 0) {
-                date = "2019/06/" + String.valueOf(30);
+                date = "2019/07/0" + String.valueOf(s % 30);
+            } else if (s % 31 == 0) {
+                date = "2019/07/" + String.valueOf(30);
             } else {
-                date = "2019/06/" + String.valueOf(s % 30);
+                date = "2019/07/" + String.valueOf(s % 30);
             }
-            if ((s - 1) / 30 == 0) {
+            if ((s - 1) / 31 == 0) {
                 AVObject avObject = new AVObject("TicketTimeTable");
                 avObject.put("projectName", "楠溪江竹筏漂流");
                 avObject.put("date", date);
@@ -466,14 +468,14 @@ public class DatabaseOperation extends AppCompatActivity {
                 avObject.put("ticket","儿童票");
                 avObject.saveInBackground();
 
-            } else if ((s - 1) / 30 == 1) {
+            } else if ((s - 1) / 31 == 1) {
                 AVObject avObject = new AVObject("TicketTimeTable");
                 avObject.put("projectName", "楠溪江竹筏漂流");
                 avObject.put("date", date);
                 avObject.put("remain", 200);
                 avObject.put("ticket","成人票");
                 avObject.saveInBackground();
-            } else if ((s - 1) / 30 == 2) {
+            } else if ((s - 1) / 31 == 2) {
                 AVObject avObject = new AVObject("TicketTimeTable");
                 avObject.put("projectName", "楠溪江竹筏漂流");
                 avObject.put("date", date);
@@ -496,6 +498,119 @@ public class DatabaseOperation extends AppCompatActivity {
                     super.onAnimationEnd(animation);
                     s++;
                     updateTicketTimeTable();
+                }
+            });
+            objectAnimator.start();
+        }
+    }
+    public void updateTicketTimeTable2() {
+        if (s < 95) {
+            String date;
+            if (s % 31 <= 9 & s % 31 > 0) {
+                date = "2019/07/0" + String.valueOf(s % 31);
+            } else if (s % 31 == 0) {
+                date = "2019/07/" + String.valueOf(31);
+            } else {
+                date = "2019/07/" + String.valueOf(s % 31);
+            }
+            if ((s - 1) / 31 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江巨俊农庄（枫叶蓝莓基地）");
+                avObject.put("date", date);
+                avObject.put("remain", 40);
+                avObject.put("ticket","蓝莓采摘");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 31 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江巨俊农庄（枫叶蓝莓基地）");
+                avObject.put("date", date);
+                avObject.put("remain", 40);
+                avObject.put("ticket","蓝莓采摘+外带两斤蓝莓");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 31 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江巨俊农庄（枫叶蓝莓基地）");
+                avObject.put("date", date);
+                avObject.put("remain", 40);
+                avObject.put("ticket","蓝莓采摘+外带五斤蓝莓");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(2000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateTicketTimeTable2();
+                }
+            });
+            objectAnimator.start();
+        }
+    }
+    public void updateTicketTimeTable3() {
+        if (s < 181) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 31 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 31 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket","综合鱼塘（3小时）");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 31 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket","综合鱼塘（6小时）");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 31 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket","综合鱼塘（天）");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 31 == 3) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket", "综合鱼塘（3小时）+半斤高级鱼饵");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 31 == 4) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket", "综合鱼塘（6小时）+1斤高级鱼饵");
+                avObject.saveInBackground();
+            } else {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "枫林鱼塘垂钓中心(合作社)");
+                avObject.put("date", date);
+                avObject.put("remain", 20);
+                avObject.put("ticket", "综合鱼塘（天）+2斤高级鱼饵");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(2000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateTicketTimeTable3();
                 }
             });
             objectAnimator.start();
@@ -530,4 +645,6 @@ public class DatabaseOperation extends AppCompatActivity {
         Log.i("reverse", String.valueOf(tf));
 
     }
+
+
 }
