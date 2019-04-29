@@ -9,11 +9,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.GetCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class MineActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
+    private String netName;
 
     private ConstraintLayout userLayout;
     private SimpleDraweeView headPic;
@@ -44,7 +49,20 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
 
-        initUI();
+        if (!userId.equals("tourist")) {
+            AVQuery<AVObject> query = new AVQuery<>("Users");
+            query.whereEqualTo("objectId", userId);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    netName = object.getString("netName");
+
+                    initUI();
+                }
+            });
+        }
+
+
     }
     public void initUI() {
         userLayout = findViewById(R.id.userLayout);
@@ -52,11 +70,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         headPic = userLayout.findViewById(R.id.headPic);
         headPic.setImageResource(R.drawable.male);
         userName = userLayout.findViewById(R.id.userName);
-
-        if (!userId.equals("tourist")){
-            userName.setText("小农" + userId);
-
-        }
+        userName.setText(netName);
 
         localSpecialtyOrder = findViewById(R.id.localSpecialtyOrder);
         localSpecialtyOrder.setOnClickListener(this);

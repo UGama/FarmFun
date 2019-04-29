@@ -19,6 +19,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -276,11 +277,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void finishRegister(){
-        AVObject avObject = new AVObject("Users");
+        final AVObject avObject = new AVObject("Users");
         avObject.put("name", userName.getText().toString());
         avObject.put("password", password.getText().toString());
         avObject.put("mobilePhone", mobile.getText().toString());
-        avObject.saveInBackground();
-        showToast("注册成功！");
+        avObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    char[] netNameArray = avObject.getObjectId().toCharArray();
+                    char[] netNameArray2 = new char[7];
+                    for (int i = 0; i < 7; i++) {
+                        netNameArray2[i] = netNameArray[i];
+                    }
+                    String netName = "小农" + String.valueOf(netNameArray2);
+                    Log.i("netName", netName);
+                    AVObject avObject1 = AVObject.createWithoutData("Users", avObject.getObjectId());
+                    avObject1.put("netName", netName);
+                    avObject1.saveInBackground();
+                    showToast("注册成功！");
+                    finish();
+                }
+            }
+        });
     }
 }

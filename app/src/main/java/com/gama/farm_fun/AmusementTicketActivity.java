@@ -39,9 +39,13 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
     private String userId;
     private String type;
     private String url;
+    private String projectName;
 
     private RecyclerView ticketRecyclerView;
     private List<Ticket> ticketList;
+
+    private View topBar;
+    private TextView title;
 
     private View topPanel;
     private TextView topPanelChosenDate;
@@ -71,7 +75,8 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
         Intent intent = getIntent();
 
         type = intent.getStringExtra("Type");
-        Log.i("Type", String.valueOf(type));
+        Log.i("getType", String.valueOf(type));
+        projectName = intent.getStringExtra("Project");
         userId = intent.getStringExtra("UserId");
         url = intent.getStringExtra("Url");
         getWindowInformation();
@@ -98,6 +103,10 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         ticketRecyclerView.setLayoutManager(linearLayoutManager);
         ticketList = new ArrayList<>();
+
+        topBar = findViewById(R.id.bar_top);
+        title = topBar.findViewById(R.id.title);
+        title.setText(projectName);
 
         topPanel = findViewById(R.id.timeChosePanel);
         topPanel.setOnClickListener(this);
@@ -147,6 +156,7 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
 
     public void getTicketRemain() {
         AVQuery<AVObject> query = new AVQuery<>("TicketTimeTable");
+        query.whereEqualTo("projectName", projectName);
         query.whereEqualTo("date", changeToSymbolDate(time));
         query.findInBackground(new FindCallback<AVObject>() {
             @Override

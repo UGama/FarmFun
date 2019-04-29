@@ -42,6 +42,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     public int screenHeight;
 
     private String type;
+    private String projectNameString;
     private String url;
 
     private View topBar;
@@ -62,6 +63,10 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     private TextView allTicketType;
     private RecyclerView ticketRecyclerView;
     private List<Ticket> ticketList;
+
+    private RecyclerView commentRecyclerView;
+    private List<Comment> commentList;
+    private int commentNumber;
 
 
     @Override
@@ -98,8 +103,8 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject object, AVException e) {
-                String projectName = object.getString("name");
-                Log.i("ProjectName", projectName);
+                projectNameString = object.getString("name");
+                Log.i("ProjectName", projectNameString);
                 initUI();
             }
         });
@@ -138,6 +143,12 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         ticketRecyclerView.setLayoutManager(linearLayoutManager);
         setObservableScrollView();
+
+        commentRecyclerView = findViewById(R.id.commentRecyclerView);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(linearLayoutManager1);
+        commentList = new ArrayList<>();
+
         getProjectInformation();
     }
 
@@ -174,8 +185,6 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
-
-    ;
 
     public void loadMainPic() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
@@ -235,11 +244,59 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                 ticketRecyclerView.setLayoutManager(linearLayout);
                 TicketAdapter ticketAdapter = new TicketAdapter(ticketList);
                 ticketRecyclerView.setAdapter(ticketAdapter);
-
+                getComment();
 
             }
         });
 
+    }
+
+    public void getComment() {
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        query.whereEqualTo("type", type);
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Comment comment = new Comment(avObject.getString("userId"),
+                            avObject.getString("comment"),
+                            avObject.getInt("rank"),
+                            avObject.getString("item"),
+                            String.valueOf(avObject.getDate("createdAt")));
+                    Log.i("userId", comment.userId);
+                    Log.i("comment", avObject.getString("comment"));
+                    Log.i("createdAt", comment.createdAt);
+                    commentList.add(comment);
+                }
+                getUserName();
+            }
+        });
+    }
+    public void getUserName() {
+        commentNumber = 0;
+        Log.i("commentList.size()", String.valueOf(commentList.size()));
+        for (int i = 0; i < commentList.size(); i++) {
+            AVQuery<AVObject> query = new AVQuery<>("Users");
+            query.whereEqualTo("objectId", commentList.get(i).userId);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    commentList.get(commentNumber).setUserName(object.getString("netName"));
+                    Log.i("netName", commentList.get(commentNumber).userName);
+                    commentNumber++;
+                    if (commentNumber == commentList.size()) {
+                        setCommentRecyclerView();
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void setCommentRecyclerView() {
+        CommentAdapter commentAdapter = new CommentAdapter(commentList);
+        commentRecyclerView.setAdapter(commentAdapter);
     }
 
     @Override
@@ -247,8 +304,10 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.allTicketType:
                 Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
-                Log.i("Type", type);
                 allTicketIntent.putExtra("Type", type);
+                allTicketIntent.putExtra("Project", projectNameString);
+                Log.i("intentType", type);
+                Log.i("intentProjectName", projectNameString);
                 allTicketIntent.putExtra("Url", url);
                 allTicketIntent.putExtra("UserId", userId);
                 startActivity(allTicketIntent);
@@ -321,6 +380,103 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    private class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+        private List<Comment> commentList;
+
+        private CommentAdapter(List<Comment> commentList) {
+            this.commentList = commentList;
+        }
+
+        @Override
+        public CommentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_comment, parent, false);
+            final CommentAdapter.ViewHolder holder = new CommentAdapter.ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });*/
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(CommentAdapter.ViewHolder holder, int position) {
+            Comment comment = commentList.get(position);
+            holder.userName.setText(comment.userName);
+            holder.comment.setText(comment.comment);
+            holder.item.setText(comment.item);
+            holder.time.setText(comment.createdAt);
+            holder.setRank(comment.rank);
+            if (holder.rank == 1) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 2) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 3) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 4) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star5.setBackground(getResources().getDrawable(R.drawable.star2));
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return commentList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView userName;
+            private TextView comment;
+            private int rank;
+            private TextView item;
+            private TextView time;
+            private ImageView star1;
+            private ImageView star2;
+            private ImageView star3;
+            private ImageView star4;
+            private ImageView star5;
+
+            private ViewHolder(View view) {
+                super(view);
+                userName = view.findViewById(R.id.userName);
+                comment = view.findViewById(R.id.commentText);
+                item = view.findViewById(R.id.item);
+                time = view.findViewById(R.id.time);
+
+                star1 = view.findViewById(R.id.star1);
+                star2 = view.findViewById(R.id.star2);
+                star3 = view.findViewById(R.id.star3);
+                star4 = view.findViewById(R.id.star4);
+                star5 = view.findViewById(R.id.star5);
+            }
+
+            public void setRank(int rank) {
+                this.rank = rank;
+            }
+        }
+
+
     }
 
 }

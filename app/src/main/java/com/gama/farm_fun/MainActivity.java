@@ -58,9 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button fishing;
     private Button barbecue;
 
-    public Button onlineShop;
+    public View bottomBar;
+    public Button homePage;
+    public TextView homePageText;
+    public Button post;
     public Button news;
     public Button mine;
+    public Button order;
 
     public RecyclerView recommendProjectsRecycler;
     List<RecommendProject> recommendProjectsList;
@@ -156,21 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         travelJournalRecycler.setLayoutManager(linearLayoutManager2);
         Log.i("test2", "success");
         travelJournalsList = new ArrayList<>();
-        TravelJournal travelJournal = new TravelJournal("test", "test", "test");
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        travelJournalsList.add(travelJournal);
-        Log.i("test3", "success");
-        TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalsList);
-        Log.i("test4", "success");
-        travelJournalRecycler.setAdapter(travelJournalsAdapter);
-        Log.i("test5", "success");
 
         recommendProjectsRecycler = findViewById(R.id.recommendProjectsRecyclerView);
         recommendProjectsRecycler.setNestedScrollingEnabled(false);
@@ -203,13 +192,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
                 recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
 
-                initUI();
+                getTravelJournal();
             }
         });
     }
 
     public void getTravelJournal() {
-        
+        AVQuery<AVObject> query = new AVQuery<>("TravelJournal");
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    TravelJournal travelJournal = new TravelJournal(avObject.getInt("number"),
+                            avObject.getString("title"),
+                            avObject.getString("subTitle"));
+                    travelJournalsList.add(travelJournal);
+                    if (travelJournalsList.size() > 5) {
+                        break;
+                    }
+                }
+                TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalsList);
+                travelJournalRecycler.setAdapter(travelJournalsAdapter);
+
+                initUI();
+            }
+        });
     }
 
     public void initUI() {
@@ -226,13 +234,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         barbecue = findViewById(R.id.barbecue);
         barbecue.setOnClickListener(this);
 
-        onlineShop = findViewById(R.id.onlineStore);
-        onlineShop.setOnClickListener(this);
-
-        news = findViewById(R.id.news);
+        bottomBar = findViewById(R.id.bottom_bar);
+        homePage = bottomBar.findViewById(R.id.homePage);
+        homePage.setOnClickListener(this);
+        homePage.setBackground(getResources().getDrawable(R.drawable.homepage1));
+        homePageText = bottomBar.findViewById(R.id.homePageText);
+        homePageText.setTextColor(getResources().getColor(R.color.colorTheme));
+        post = bottomBar.findViewById(R.id.post);
+        post.setOnClickListener(this);
+        news = bottomBar.findViewById(R.id.news);
         news.setOnClickListener(this);
-
-        mine = findViewById(R.id.mine);
+        order = bottomBar.findViewById(R.id.order);
+        order.setOnClickListener(this);
+        mine = bottomBar.findViewById(R.id.mine);
         mine.setOnClickListener(this);
     }
 
@@ -336,16 +350,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.onlineStore:
-                Intent onlineStoreIntent = new Intent(MainActivity.this, OnlineShopActivity.class);
-                onlineStoreIntent.putExtra("UserId", userId);
-                startActivity(onlineStoreIntent);
-                break;
             case R.id.pick:
                 Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 pickIntent.putExtra("Type", "pick");
                 pickIntent.putExtra("UserId", userId);
                 startActivity(pickIntent);
+                finish();
                 break;
             case R.id.drift:
                 Intent driftIntent = new Intent(MainActivity.this, AmusementActivity.class);
@@ -379,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent mineIntent = new Intent(MainActivity.this, MineActivity.class);
                 mineIntent.putExtra("UserId", userId);
                 startActivity(mineIntent);
-                finish();
                 break;
         }
     }
@@ -584,5 +593,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 travelJournalView = view.findViewById(R.id.travelJournalBackground);
             }
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        userId = sharedPreferences.getString("id", "tourist");
+        Log.i("userId", userId);
     }
 }

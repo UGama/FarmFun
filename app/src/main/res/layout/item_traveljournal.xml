@@ -5,33 +5,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
 
-    <ImageView
-        android:id="@+id/leftTop"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:background="#ffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/rightBottom"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:background="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
 
     <ImageView
         android:id="@+id/travelJournalBackground"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/traveljournalbackground"
-        app:layout_constraintStart_toEndOf="@id/leftTop"
-        app:layout_constraintEnd_toStartOf="@id/rightBottom"
-        app:layout_constraintTop_toBottomOf="@id/leftTop"
-        app:layout_constraintBottom_toTopOf="@id/rightBottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         />
     <TextView
         android:id="@+id/travelJournalTitle"
@@ -43,8 +30,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="Test"
         android:textColor="#ffffff"
-        android:textSize="35sp"
-        app:layout_constraintVertical_bias="0.35"
+        android:textSize="20sp"
+        app:layout_constraintVertical_bias="0.25"
         />
     <TextView
         android:id="@+id/travelJournalSubtitle"
@@ -55,6 +42,11 @@
         app:layout_constraintTop_toBottomOf="@id/travelJournalTitle"
         android:text="Test"
         android:textColor="#ffffff"
-        android:textSize="20sp"
+        android:textSize="12sp"
+        android:layout_marginTop="14dp"
+        android:singleLine="false"
+        android:maxEms="22"
+        android:maxLength="40"
+        android:gravity="center_horizontal"
         />
 </android.support.constraint.ConstraintLayout>

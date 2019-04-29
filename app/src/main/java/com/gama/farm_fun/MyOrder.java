@@ -202,6 +202,7 @@ public class MyOrder extends AppCompatActivity {
                     intent.putExtra("count", holder.count.getText().toString());
                     intent.putExtra("orderId", holder.id);
                     intent.putExtra("type", holder.type);
+                    intent.putExtra("userId", userId);
                     startActivityForResult(intent, 0);
                 }
             });

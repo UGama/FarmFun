@@ -35,6 +35,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private String orderCount;
     private String orderItem;
     private String orderType;
+    private String userId;
 
     private SimpleDraweeView projectPic;
     private TextView name;
@@ -69,6 +70,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         orderCount = intent.getStringExtra("count");
         orderItem = intent.getStringExtra("item");
         orderType = intent.getStringExtra("type");
+        userId = intent.getStringExtra("userId");
 
         initUI();
     }
@@ -153,6 +155,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         avObject.put("comment", comment.getText().toString());
                         avObject.put("type", orderType);
                         avObject.put("item", orderItem);
+                        avObject.put("userId", userId);
                         avObject.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(AVException e) {
