@@ -108,7 +108,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.restaurantOrder:
                 Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                restaurantOrderIntent.putExtra("Type", "Restaurant");
+                restaurantOrderIntent.putExtra("Type", "RestaurantActivity");
                 restaurantOrderIntent.putExtra("UserId", userId);
                 startActivity(restaurantOrderIntent);
                 break;

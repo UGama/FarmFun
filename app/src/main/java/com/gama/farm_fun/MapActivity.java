@@ -26,6 +26,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
@@ -33,8 +34,8 @@ import java.util.List;
 public class MapActivity extends AppCompatActivity implements View.OnClickListener {
 
     public MapView mMapView;
-    public float longitude;
-    public float latitude;
+    public Double longitude;
+    public Double latitude;
     public String projectName;
     public String addressString;
     public String url;
@@ -54,11 +55,12 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_map);
         Log.i("MapActivity", "success!");
         Intent intent = getIntent();
-        longitude = intent.getFloatExtra("longitude", 0);
-        latitude = intent.getFloatExtra("latitude", 0);
+        longitude = intent.getDoubleExtra("longitude", 0);
+        latitude = intent.getDoubleExtra("latitude", 0);
         Log.i("Longitude", String.valueOf(longitude));
         Log.i("Latitude", String.valueOf(latitude));
         projectName = intent.getStringExtra("project");

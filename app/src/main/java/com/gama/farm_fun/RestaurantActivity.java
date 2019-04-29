@@ -1,15 +1,12 @@
 package com.gama.farm_fun;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,21 +16,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
-import com.avos.avoscloud.SaveCallback;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,54 +47,53 @@ import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener {
-
+public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMapClickListener {
     private String userId;
 
     public int screenWidth;
     public int screenHeight;
 
+    private String type;
+    private String projectNameString;
+    private String url;
+    private String addressString;
+
+    private View topBar;
+    private float alphaStorage;
+    private TextView title;
+    private ImageView titleIcon;
+    private TextView firstSubTitle;
+    private TextView secondSubTitle;
+    private TextView thirdSubTitle;
+    private TextView fourthSubTitle;
+
     private ObservableScrollView observableScrollView;
-
-    private ImageView restaurantPic;
-    private TextView restaurantName;
-    private TextView locationDescribe;
-
-    private View topPanel;
-    private ConstraintLayout topPanelTopLayout;
-    private TextView topPanelChosenDate;
-    private View midPanel;
-    private ConstraintLayout midPanelTopLayout;
-    private TextView midPanelChosenDate;
-    private ImageView barBottomLine;
-    private ImageView panelBottomLine;
-
+    private ImageView mainPic;
+    private TextView projectName;
+    private TextView describe;
+    private TextView address;
+    private TextView Seat;
+    private TextView allSeatType;
     private RecyclerView seatRecyclerView;
-    private List<Seat> seatsList;
+    private List<Seat> seatList;
+    private int seatNumber;
 
-    private View timeChosePanel;
-    private ImageView shelter;
-    private Button cancelDateChose;
-    private RecyclerView monthRecyclerView;
-    private List<Date> dateList;
-    private List<Month> monthList;
-    private AnimatorSet timeChosePanelQuit;
+    private RecyclerView commentRecyclerView;
+    private List<Comment> commentList;
+    private int commentNumber;
 
-    private String time;
+    private MapView mapView;
+    private Double longitude;
+    private Double latitude;
 
-    private AVObject orderAVObject;
-    private String orderSeatType;
-    private int orderPrice;
-    private String orderDetail;
-
-    private Toast toast;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
-
         Intent intent = getIntent();
+
+        type = "Restaurant";
         userId = intent.getStringExtra("UserId");
 
         getWindowInformation();
@@ -105,84 +110,99 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         float width = screenWidth / density;  // 屏幕宽度(dp)
         float height = screenHeight / density;// 屏幕高度(dp)
-        Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
-        Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
-        initUI();
+        getProject();
+    }
+
+    public void getProject() {
+        Log.i("initData", "Start");
+        AVQuery<AVObject> query = new AVQuery<>("Restaurant");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                projectNameString = object.getString("name");
+                AVGeoPoint avGeoPoint = object.getAVGeoPoint("locate");
+                latitude = avGeoPoint.getLatitude();
+                longitude = avGeoPoint.getLongitude();
+
+                Log.i("longitude", String.valueOf(longitude));
+
+                Log.i("ProjectName", projectNameString);
+                initUI();
+            }
+        });
+
     }
 
     public void initUI() {
+        topBar = findViewById(R.id.topBar);
+        topBar.setVisibility(View.VISIBLE);
+        topBar.setAlpha(0);
+        alphaStorage = 0f;
+        title = topBar.findViewById(R.id.title);
+        title.setText("餐饮");
+        titleIcon = topBar.findViewById(R.id.titleIcon);
+        titleIcon.setImageResource(R.drawable.amusementtitle);
+        firstSubTitle = topBar.findViewById(R.id.firstSubTitle);
+        secondSubTitle = topBar.findViewById(R.id.secondSubTitle);
+        thirdSubTitle = topBar.findViewById(R.id.thirdSubTitle);
+        fourthSubTitle = topBar.findViewById(R.id.fourthSubTitle);
+        firstSubTitle.setText("餐厅概况");
+        secondSubTitle.setText("桌位预订");
+        thirdSubTitle.setText("用户评论");
+        fourthSubTitle.setText("地图导览");
+
         observableScrollView = findViewById(R.id.observableScrollView);
-
-        restaurantPic = findViewById(R.id.restaurantPic);
-        restaurantName = findViewById(R.id.restaurantName);
-        locationDescribe = findViewById(R.id.locationDescribe);
-        topPanel = findViewById(R.id.topPanel);
-        topPanelTopLayout = topPanel.findViewById(R.id.topLayout);
-        topPanelTopLayout.setOnClickListener(this);
-        topPanelChosenDate = topPanel.findViewById(R.id.chosenDate);
-        topPanelChosenDate.setText("2019年06月01日");
-        midPanel = findViewById(R.id.midPanel);
-        midPanelTopLayout = midPanel.findViewById(R.id.topLayout);
-        midPanelTopLayout.setOnClickListener(this);
-        midPanelChosenDate = midPanel.findViewById(R.id.chosenDate);
-        midPanelChosenDate.setText("2019年06月01日");
-        barBottomLine = findViewById(R.id.barBottomLine);
-        panelBottomLine = findViewById(R.id.panelBottomLine);
-
+        mainPic = findViewById(R.id.mainPic);
+        projectName = findViewById(R.id.projectName);
+        describe = findViewById(R.id.describe);
+        address = findViewById(R.id.address);
+        Seat = findViewById(R.id.seat);
+        Seat.setText("桌位预订");
+        allSeatType = findViewById(R.id.allSeatType);
+        allSeatType.setOnClickListener(this);
+        seatList = new ArrayList<>();
         seatRecyclerView = findViewById(R.id.seatRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         seatRecyclerView.setLayoutManager(linearLayoutManager);
-        seatsList = new ArrayList<>();
-
-        timeChosePanel = findViewById(R.id.datePanel);
-        shelter = findViewById(R.id.shelter);
-        shelter.setOnClickListener(this);
-        cancelDateChose = timeChosePanel.findViewById(R.id.cancel);
-        cancelDateChose.setOnClickListener(this);
-        monthRecyclerView = findViewById(R.id.timeChoseRecyclerView);
-        dateList = new ArrayList<>();
-        monthList = new ArrayList<>();
-        ObjectAnimator delay = ofFloat(timeChosePanel, "rotation", 0, 0);
-        delay.setDuration(500);
-        ObjectAnimator quit = ofFloat(timeChosePanel, "translationY", 0, screenHeight);
-        quit.setDuration(500);
-        timeChosePanelQuit = new AnimatorSet();
-        timeChosePanelQuit.play(delay).before(quit);
-
-        time = topPanelChosenDate.getText().toString();
-
         setObservableScrollView();
+
+        commentRecyclerView = findViewById(R.id.commentRecyclerView);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(linearLayoutManager1);
+        commentList = new ArrayList<>();
+
+        getProjectInformation();
     }
 
     public void setObservableScrollView() {
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
-                int[] panelLocation = new int[2];
-                midPanel.getLocationOnScreen(panelLocation);
-                int midPanelY = panelLocation[1];
-                int statusBarHeight = getStatusBarHeight();
-                if (midPanelY <= statusBarHeight + barBottomLine.getBottom()) {
-                    topPanel.setVisibility(View.VISIBLE);
-                    panelBottomLine.setVisibility(View.VISIBLE);
-                } else {
-                    topPanel.setVisibility(View.GONE);
-                    panelBottomLine.setVisibility(View.GONE);
+                int[] mainPicLocationOnScreen = new int[2];
+                mainPic.getLocationOnScreen(mainPicLocationOnScreen);
+                int mainPicY = mainPicLocationOnScreen[1] - getStatusBarHeight();
+                if (-mainPicY >= mainPic.getBottom() - topBar.getBottom()) {
+                    topBar.setVisibility(View.VISIBLE);
+                } else if (-mainPicY < mainPic.getBottom() - topBar.getBottom()) {
+                    float alpha = (float) (-mainPicY) / (mainPic.getBottom() - topBar.getBottom());
+                    ObjectAnimator objectAnimator = ofFloat(topBar, "alpha", alphaStorage, alpha);
+                    alphaStorage = alpha;
+                    objectAnimator.setDuration(100);
+                    objectAnimator.start();
                 }
             }
         });
-
-        observableScrollView.smoothScrollTo(0, 20);
-        getRestaurantInformation();
     }
 
-    public void getRestaurantInformation() {
-        AVQuery<AVObject> query = new AVQuery<>("Restaurant");
-        query.getFirstInBackground(new GetCallback<AVObject>() {
+    public void getProjectInformation() {
+        AVQuery<AVObject> projectQuery = new AVQuery<>("Restaurant");
+        projectQuery.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject object, AVException e) {
-                restaurantName.setText(object.getString("name"));
-                locationDescribe.setText(object.getString("locateDescribe"));
+                projectName.setText(object.getString("name"));
+                describe.setText(object.getString("describe"));
+                address.setText(object.getString("locateDescribe"));
+                addressString = object.getString("locateDescribe");
                 loadMainPic();
             }
         });
@@ -195,19 +215,21 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void done(AVObject object, AVException e) {
                 AVFile avFile = new AVFile("Type.png", object.getString("url"), new HashMap<String, Object>());
+                url = object.getString("url");
+                Log.i("Url", object.getString("url"));
                 avFile.getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] data, AVException e) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                         Log.i("bitmap(width/height)", String.valueOf(bitmap.getWidth()) + "/" + String.valueOf(bitmap.getHeight()));
-                        restaurantPic.setImageBitmap(bitmap);
+                        mainPic.setImageBitmap(bitmap);
 
                     }
                 }, new ProgressCallback() {
                     @Override
                     public void done(Integer percentDone) {
                         if (percentDone == 100) {
-                            getSeatInformation();
+                            getSeat();
                         }
                     }
                 });
@@ -215,504 +237,62 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    public void getSeatInformation() {
-        AVQuery<AVObject> query = new AVQuery<>("Seat");
-        query.orderByAscending("seatNumber");
-        query.findInBackground(new FindCallback<AVObject>() {
+    public void getSeat() {
+        seatNumber = 0;
+        AVQuery<AVObject> seatQuery = new AVQuery<>("Seat");
+        seatQuery.orderByAscending("seatNumber");
+        seatQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
+                allSeatType.setText("全部8种座位");
                 for (AVObject avObject : avObjects) {
-                    Seat lunchSeat = new Seat(avObject.getString("picName"),
-                            avObject.getString("type"),
-                            avObject.getString("describe"),
-                            "中");
-                    seatsList.add(lunchSeat);
-                    Log.i("test1", lunchSeat.seatType + " " + lunchSeat.picName + " " + lunchSeat.describe + " " + lunchSeat.meal);
-                    Seat dinnerSeat = new Seat(avObject.getString("picName"),
-                            avObject.getString("type"),
-                            avObject.getString("describe"),
-                            "晚");
-                    seatsList.add(dinnerSeat);
-                }
-                getSeatRemain();
-            }
-        });
-    }
-
-    public void getSeatRemain() {
-        AVQuery<AVObject> query = new AVQuery<>("SeatTimeTable");
-        query.whereEqualTo("date", changeToSymbolDate(time));
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
-                Log.i("test4", String.valueOf(avObjects.size()));
-                int i = 0;
-                for (AVObject avObject : avObjects) {
-                    for (Seat seat : seatsList) {
-                        if (seat.seatType.equals(avObject.getString("type")) & seat.meal.equals(avObject.getString("meal"))) {
-                            seatsList.get(i).setRemain(avObject.getInt("remain"));
-                            Log.i("test2", seatsList.get(i).seatType + " " + seatsList.get(i).remain);
-                        }
+                    if (seatNumber < 2) {
+                        Seat lunchSeat = new Seat(avObject.getString("picName"),
+                                avObject.getString("type"),
+                                avObject.getString("describe"),
+                                "中");
+                        seatList.add(lunchSeat);
+                        Log.i("test1", lunchSeat.seatType + " " + lunchSeat.picName + " " + lunchSeat.describe + " " + lunchSeat.meal);
+                        Seat dinnerSeat = new Seat(avObject.getString("picName"),
+                                avObject.getString("type"),
+                                avObject.getString("describe"),
+                                "晚");
+                        seatList.add(dinnerSeat);
+                        seatNumber++;
+                    } else {
+                        break;
                     }
-                    i++;
+
                 }
-                SeatAdapter seatAdapter = new SeatAdapter(seatsList);
+                Log.i("SeatList.size", String.valueOf(seatList.size()));
+                seatRecyclerView = findViewById(R.id.seatRecyclerView);
+                LinearLayoutManager linearLayout = new LinearLayoutManager(RestaurantActivity.this);
+                seatRecyclerView.setLayoutManager(linearLayout);
+                SeatAdapter seatAdapter = new SeatAdapter(seatList);
                 seatRecyclerView.setAdapter(seatAdapter);
-                getDateInformation();
+
+                getComment();
+
             }
         });
-    }
 
-    public void getDateInformation() {
-        AVQuery<AVObject> query = new AVQuery<>("TimeTable");
-        query.orderByAscending("date");
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
-                for (AVObject avObject : avObjects) {
-                    Date date = new Date(avObject.getString("date"), avObject.getInt("week"));
-                    dateList.add(date);
-                }
-                initTimePanel();
-            }
-        });
-    }
-
-    public void initTimePanel() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        monthRecyclerView.setLayoutManager(linearLayoutManager);
-        monthList = transToMonth(dateList);
-        Log.i("monthList", String.valueOf(monthList.size()));
-        MonthAdapter monthAdapter = new MonthAdapter(monthList);
-        monthRecyclerView.setAdapter(monthAdapter);
-        Log.i("Test", "setAdapterSuccess!");
-    }
-
-    private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
-        private List<Week> weeksList;
-        private int month;
-
-        private WeekAdapter(List<Week> weeksList, int month) {
-            this.weeksList = weeksList;
-            this.month = month;
-        }
-
-        @NonNull
-        @Override
-        public WeekAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_week, parent, false);
-            WeekAdapter.ViewHolder holder = new WeekAdapter.ViewHolder(view);
-
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final WeekAdapter.ViewHolder holder, int position) {
-            Week week = weeksList.get(position);
-            if (week.weekArray[0] == 0) {
-                holder.Sun.setText("");
-            } else {
-                holder.Sun.setText(String.valueOf(week.weekArray[0]));
-                holder.Sun.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.SunDetail.setText("就餐");
-                        holder.SunDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Sun.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[1] == 0) {
-                holder.Mon.setText("");
-            } else {
-                holder.Mon.setText(String.valueOf(week.weekArray[1]));
-                holder.Mon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.MonDetail.setText("就餐");
-                        holder.MonDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Mon.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[2] == 0) {
-                holder.Tue.setText("");
-            } else {
-                holder.Tue.setText(String.valueOf(week.weekArray[2]));
-                holder.Tue.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.TueDetail.setText("就餐");
-                        holder.TueDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Tue.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[3] == 0) {
-                holder.Wed.setText("");
-            } else {
-                holder.Wed.setText(String.valueOf(week.weekArray[3]));
-                holder.Wed.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.WedDetail.setText("就餐");
-                        holder.WedDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Wed.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[4] == 0) {
-                holder.Thu.setText("");
-            } else {
-                holder.Thu.setText(String.valueOf(week.weekArray[4]));
-                holder.Thu.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.ThuDetail.setText("就餐");
-                        holder.ThuDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Thu.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[5] == 0) {
-                holder.Fri.setText("");
-            } else {
-                holder.Fri.setText(String.valueOf(week.weekArray[5]));
-                holder.Fri.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.FriDetail.setText("就餐");
-                        holder.FriDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Fri.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-            if (week.weekArray[6] == 0) {
-                holder.Sat.setText("");
-            } else {
-                holder.Sat.setText(String.valueOf(week.weekArray[6]));
-                holder.Sat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v.setBackground(getResources().getDrawable(R.drawable.shape_days));
-                        holder.SatDetail.setText("就餐");
-                        holder.SatDetail.setVisibility(View.VISIBLE);
-                        String timeMonth = String.valueOf(month);
-                        if (month < 10) {
-                            timeMonth = '0' + timeMonth;
-                        }
-                        String timeDay = holder.Sat.getText().toString();
-                        if (Integer.parseInt(timeDay) < 10) {
-                            timeDay = '0' + timeDay;
-                        }
-                        time = "2019年" + timeMonth + "月" + timeDay + "日";
-                        topPanelChosenDate.setText(time);
-                        midPanelChosenDate.setText(time);
-                        Log.i("Time", time);
-                        shelter.setVisibility(View.INVISIBLE);
-                        timeChosePanelQuit.start();
-                    }
-                });
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return weeksList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView Sun;
-            private TextView Mon;
-            private TextView Tue;
-            private TextView Wed;
-            private TextView Thu;
-            private TextView Fri;
-            private TextView Sat;
-            private TextView SunDetail;
-            private TextView MonDetail;
-            private TextView TueDetail;
-            private TextView WedDetail;
-            private TextView ThuDetail;
-            private TextView FriDetail;
-            private TextView SatDetail;
-
-            private ViewHolder(View view) {
-                super(view);
-                Sun = view.findViewById(R.id.Sun);
-                Mon = view.findViewById(R.id.Mon);
-                Tue = view.findViewById(R.id.Tue);
-                Wed = view.findViewById(R.id.Wed);
-                Thu = view.findViewById(R.id.Thu);
-                Fri = view.findViewById(R.id.Fri);
-                Sat = view.findViewById(R.id.Sat);
-                SunDetail = view.findViewById(R.id.Sun_detail);
-                MonDetail = view.findViewById(R.id.Mon_detail);
-                TueDetail = view.findViewById(R.id.Tue_detail);
-                WedDetail = view.findViewById(R.id.Wed_detail);
-                ThuDetail = view.findViewById(R.id.Thu_detail);
-                FriDetail = view.findViewById(R.id.Fri_detail);
-                SatDetail = view.findViewById(R.id.Sat_detail);
-            }
-        }
-
-    }
-
-    private class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.ViewHolder> {
-        private List<Month> monthList;
-
-        private MonthAdapter(List<Month> monthList) {
-            this.monthList = monthList;
-        }
-
-
-        @NonNull
-        @Override
-        public MonthAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_months, parent, false);
-            MonthAdapter.ViewHolder holder = new MonthAdapter.ViewHolder(view);
-
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final MonthAdapter.ViewHolder holder, int position) {
-            Month month = monthList.get(position);
-            holder.month.setText(month.month);
-            List<Week> weekList = transToWeek(month);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
-            holder.weekRecyclerView.setLayoutManager(linearLayoutManager);
-            WeekAdapter weekAdapter = new WeekAdapter(weekList, Integer.parseInt(month.month));
-            holder.weekRecyclerView.setAdapter(weekAdapter);
-        }
-
-        @Override
-        public int getItemCount() {
-            return monthList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView month;
-            private RecyclerView weekRecyclerView;
-
-            private ViewHolder(View view) {
-                super(view);
-                month = view.findViewById(R.id.month);
-                weekRecyclerView = view.findViewById(R.id.week);
-            }
-        }
-    }
-
-    public List<Month> transToMonth(List<Date> dateList) {
-        List<Month> months = new ArrayList<>();
-        int days[] = new int[6];
-        int j = -1;
-        for (int i = 0; i < dateList.size(); i++) {
-            char[] dateChar = dateList.get(i).day.toCharArray();
-            Date date = dateList.get(i);
-            if (i == 0) {
-                Log.i("dateExample", date.day);
-            }
-            //example:"2019/06/01"
-            if (dateChar[8] == '0' & dateChar[9] == '1') {
-//                Log.i("dateInformation", String.valueOf(dateChar[5]));
-//                Log.i("dateInformation", String.valueOf(dateChar[6]));
-//                Log.i("dateInformation", String.valueOf(dateChar[5] + String.valueOf(dateChar[6])));
-                Month month = new Month(date.week, String.valueOf(dateChar[5] + String.valueOf(dateChar[6])), 0);
-                Log.i("monthInformation", month.month + " " + String.valueOf(month.firstDayWeek));
-                months.add(month);
-                j++;
-                days[j] = 1;
-            } else {
-                days[j]++;
-            }
-        }
-        for (int k = 0; k < months.size(); k++) {
-            months.get(k).setDays(days[k]);
-        }
-        return months;
-    }
-
-    public List<Week> transToWeek(Month month) {
-        List<Week> weeks = new ArrayList<>();
-        if (month.firstDayWeek == 7) {
-            month.firstDayWeek = 0;
-        }
-        int[] firstWeekArray = new int[7];
-        int k = 1;
-        for (int j = 0; j < 7; j++) {
-            if (j < month.firstDayWeek) {
-                firstWeekArray[j] = 0;
-            } else {
-                firstWeekArray[j] = k;
-                k++;
-            }
-        }
-        Week firstWeek = new Week(firstWeekArray);
-        weeks.add(firstWeek);
-
-        int[] weekArray=new int[7];
-        int l = 0;
-        for (int i = 8 - month.firstDayWeek; i <= month.days; i++) {
-            if ((i + month.firstDayWeek) % 7 == 1) {
-                weekArray[0] = i;
-//                Log.i("weekFirst", String.valueOf(weekArray[0]));
-                l = 1;
-            } else {
-                weekArray[l] = i;
-                if (l == 6) {
-                    Week week = new Week(weekArray);
-//                    Log.i("weekFinal", String.valueOf(weekArray[l]));
-//                    Log.i("week.weekArray", String.valueOf(week.weekArray[l]));
-                    weeks.add(week);
-                    weekArray = new int[7];
-                }
-                l++;
-            }
-            if (i == month.days) {
-                Week week = new Week(weekArray);
-                weeks.add(week);
-            }
-        }
-//        for (int i = 0; i < weeks.size(); i++) {
-//            Log.i("weeks", String.valueOf(weeks.get(i).weekArray[0]));
-//        }
-        return weeks;
-    }
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-    public String NumberToDate(int year, int month, int day) {
-        String date;
-        date = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
-        return date;
-    }
-
-    public int[] DateToNumber(String date) {
-        int[] dateNumber = new int[3];
-        char[] dateChar = date.toCharArray();
-        int j = 0;
-        for (int i = 0; i < dateChar.length; i++) {
-            if (dateChar[i] != '/') {
-                dateNumber[j] = dateNumber[j] * 10 + Integer.parseInt(String.valueOf(dateChar[i]));
-            } else {
-                j++;
-            }
-        }
-        return dateNumber;
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.topLayout:
-                initTimePanel();
-                timeChosePanel.setVisibility(View.VISIBLE);
-                ObjectAnimator objectAnimator = ofFloat(timeChosePanel, "translationY", screenHeight, 0);
-                objectAnimator.setDuration(1000);
-                objectAnimator.start();
-                shelter.setVisibility(View.VISIBLE);
-                break;
-            case R.id.shelter:
-            case R.id.cancel:
-                timeChosePanel.setVisibility(View.INVISIBLE);
-                shelter.setVisibility(View.INVISIBLE);
-                timeChosePanelQuit.start();
-                break;
-        }
+    public void onMapClick(LatLng latLng) {
+
+        Intent intent = new Intent(RestaurantActivity.this, MapActivity.class);
+        intent.putExtra("longitude", longitude);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("project", projectNameString);
+        intent.putExtra("address", addressString);
+        intent.putExtra("url", url);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onMapPoiClick(MapPoi mapPoi) {
+        return false;
     }
 
     private class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
@@ -741,7 +321,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             Seat seat = seatsList.get(position);
             Log.i(String.valueOf(position), seat.seatType);
             holder.seatType.setText(seat.seatType);
-            holder.remain.setText(String.valueOf(seat.remain));
             holder.meal.setText("(" + seat.meal + ")");
             holder.describe.setText(seat.describe);
             final ImageView seatPic = holder.seatPic;
@@ -768,91 +347,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     });
                 }
             });
-            holder.payOnline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (userId.equals("tourist")) {
-                        Intent loginIntent = new Intent(RestaurantActivity.this, LoginActivity.class);
-                        startActivityForResult(loginIntent, 1);
-                    } else {
-                        orderSeatType = holder.seatType.getText().toString();
-                        orderPrice = holder.price;
-                        orderDetail = midPanelChosenDate.getText().toString();
-                        orderAVObject = new AVObject("Order");
-                        orderAVObject.put("userId", userId);
-                        orderAVObject.put("type", "Restaurant");
-                        orderAVObject.put("project", restaurantName.getText().toString());
-                        orderAVObject.put("status", "待支付");
-                        orderAVObject.put("item", orderSeatType);
-                        orderAVObject.put("detail", orderDetail);
-                        orderAVObject.put("price", orderPrice);
-                        orderAVObject.put("count", 1);
-                        orderAVObject.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    Intent orderIntent = new Intent(RestaurantActivity.this, CreateOrderActivity.class);
-                                    orderIntent.putExtra("UserId", userId);
-                                    orderIntent.putExtra("Type", "restaurant");
-                                    orderIntent.putExtra("Project", restaurantName.getText().toString());
-                                    orderIntent.putExtra("Item", orderSeatType);
-                                    orderIntent.putExtra("Url", holder.url);
-                                    orderIntent.putExtra("Detail", orderDetail);
-                                    orderIntent.putExtra("Count", 1);
-                                    orderIntent.putExtra("Price", orderPrice);
-                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
-                                    startActivityForResult(orderIntent, 0);
-                                }
-                            }
-                        });
-
-
-                    }
-                }
-            });
-            holder.order.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (userId.equals("tourist")) {
-                        Intent loginIntent = new Intent(RestaurantActivity.this, LoginActivity.class);
-                        startActivityForResult(loginIntent, 1);
-                    } else {
-                        orderSeatType = holder.seatType.getText().toString();
-                        orderPrice = holder.price;
-                        orderDetail = midPanelChosenDate.getText().toString();
-                        orderAVObject = new AVObject("Order");
-                        orderAVObject.put("userId", userId);
-                        orderAVObject.put("type", "Restaurant");
-                        orderAVObject.put("project", restaurantName.getText().toString());
-                        orderAVObject.put("status", "待支付");
-                        orderAVObject.put("item", orderSeatType);
-                        orderAVObject.put("detail", orderDetail);
-                        orderAVObject.put("price", orderPrice);
-                        orderAVObject.put("count", 1);
-                        orderAVObject.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    Intent orderIntent = new Intent(RestaurantActivity.this, CreateOrderActivity.class);
-                                    orderIntent.putExtra("UserId", userId);
-                                    orderIntent.putExtra("Type", "restaurant");
-                                    orderIntent.putExtra("Project", restaurantName.getText().toString());
-                                    orderIntent.putExtra("Item", orderSeatType);
-                                    orderIntent.putExtra("Url", holder.url);
-                                    orderIntent.putExtra("Detail", orderDetail);
-                                    orderIntent.putExtra("Count", 1);
-                                    orderIntent.putExtra("Price", orderPrice);
-                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
-                                    orderIntent.putExtra("comment", false);
-                                    startActivityForResult(orderIntent, 0);
-                                }
-                            }
-                        });
-
-
-                    }
-                }
-            });
+            holder.price.setText("20");
 
         }
 
@@ -863,73 +358,214 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView seatType;
-            private TextView remain;
             private TextView meal;
             private ImageView seatPic;
             private TextView describe;
-            private Button payOnline;
-            private Button order;
-            private int price;
+            private TextView price;
             private String url;
 
             private ViewHolder(View view) {
                 super(view);
                 seatType = view.findViewById(R.id.seatType);
-                remain = view.findViewById(R.id.remainSeats);
                 meal = view.findViewById(R.id.meal);
                 seatPic = view.findViewById(R.id.seatPic);
                 describe = view.findViewById(R.id.describe);
-                payOnline = view.findViewById(R.id.payOnline);
-                order = view.findViewById(R.id.order);
-                price = 20;
+                price = view.findViewById(R.id.price);
+
             }
-            private void setUrl(String url) {
+
+            public void setUrl(String url) {
                 this.url = url;
             }
         }
     }
 
+    public void getComment() {
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        query.whereEqualTo("type", "Restaurant");
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Comment comment = new Comment(avObject.getString("userId"),
+                            avObject.getString("comment"),
+                            avObject.getInt("rank"),
+                            avObject.getString("item"),
+                            String.valueOf(avObject.getDate("createdAt")));
+                    Log.i("userId", comment.userId);
+                    Log.i("comment", avObject.getString("comment"));
+                    Log.i("createdAt", comment.createdAt);
+                    commentList.add(comment);
+                    if (commentList.size() > 4) {
+                        break;
+                    }
+                }
+                getUserName();
+            }
+        });
+    }
+    public void getUserName() {
+        commentNumber = 0;
+        Log.i("commentList.size()", String.valueOf(commentList.size()));
+        for (int i = 0; i < commentList.size(); i++) {
+            AVQuery<AVObject> query = new AVQuery<>("Users");
+            query.whereEqualTo("objectId", commentList.get(i).userId);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    commentList.get(commentNumber).setUserName(object.getString("netName"));
+                    Log.i("netName", commentList.get(commentNumber).userName);
+                    commentNumber++;
+                    if (commentNumber == commentList.size()) {
+                        setCommentRecyclerView();
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void setCommentRecyclerView() {
+        RestaurantActivity.CommentAdapter commentAdapter = new RestaurantActivity.CommentAdapter(commentList);
+        commentRecyclerView.setAdapter(commentAdapter);
+        loadMapView();
+    }
+    public void loadMapView() {
+        mapView = findViewById(R.id.mapView);
+        BaiduMap baiduMap = mapView.getMap();
+        LatLng latLng = new LatLng(latitude, longitude);
+        Log.i("longitude2", String.valueOf(longitude));
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(18).build();
+
+        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
+        baiduMap.setMapStatus(mapStatusUpdate);
+
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
+                .fromResource(R.drawable.locate_overlay);
+        // 构建MarkerOption，用于在地图上添加Marker
+        OverlayOptions option = new MarkerOptions().position(latLng)
+                .icon(bitmapDescriptor).zIndex(8).draggable(true);
+        baiduMap.addOverlay(option);
+
+        baiduMap.setOnMapClickListener(this);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    finish();
-                }
-                break;
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    userId = data.getStringExtra("UserId");
-                    showToast("登录成功！");
-                }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.allSeatType:
+                Intent allSeatIntent = new Intent(RestaurantActivity.this, RestaurantTicketActivity.class);
+                allSeatIntent.putExtra("UserId", userId);
+                startActivity(allSeatIntent);
                 break;
         }
     }
 
-    public String changeToSymbolDate(String date) {
-        char[] dateChar = date.toCharArray();
-        char[] dateChar2 = new char[dateChar.length - 1];
-        for (int i = 0; i < dateChar.length; i++) {
-            if (dateChar[i] < '0' || dateChar[i] > '9') {
-                dateChar[i] = '/';
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    private class CommentAdapter extends RecyclerView.Adapter<RestaurantActivity.CommentAdapter.ViewHolder> {
+        private List<Comment> commentList;
+
+        private CommentAdapter(List<Comment> commentList) {
+            this.commentList = commentList;
+        }
+
+        @Override
+        public RestaurantActivity.CommentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_comment, parent, false);
+            final RestaurantActivity.CommentAdapter.ViewHolder holder = new RestaurantActivity.CommentAdapter.ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });*/
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(RestaurantActivity.CommentAdapter.ViewHolder holder, int position) {
+            Comment comment = commentList.get(position);
+            holder.userName.setText(comment.userName);
+            holder.comment.setText(comment.comment);
+            holder.item.setText(comment.item);
+            holder.time.setText(comment.createdAt);
+            holder.setRank(comment.rank);
+            if (holder.rank == 1) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 2) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 3) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 4) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star5.setBackground(getResources().getDrawable(R.drawable.star2));
             }
         }
-        for (int j = 0; j < dateChar2.length; j++) {
-            dateChar2[j] = dateChar[j];
+
+        @Override
+        public int getItemCount() {
+            return commentList.size();
         }
 
-        return String.valueOf(dateChar2);
-    }
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView userName;
+            private TextView comment;
+            private int rank;
+            private TextView item;
+            private TextView time;
+            private ImageView star1;
+            private ImageView star2;
+            private ImageView star3;
+            private ImageView star4;
+            private ImageView star5;
 
+            private ViewHolder(View view) {
+                super(view);
+                userName = view.findViewById(R.id.userName);
+                comment = view.findViewById(R.id.commentText);
+                item = view.findViewById(R.id.item);
+                time = view.findViewById(R.id.time);
 
-    private void showToast(String msg) {
-        if (toast == null) {
-            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
-            toast.show();
-        } else {
-            toast.setText(msg);
-            toast.show();
+                star1 = view.findViewById(R.id.star1);
+                star2 = view.findViewById(R.id.star2);
+                star3 = view.findViewById(R.id.star3);
+                star4 = view.findViewById(R.id.star4);
+                star5 = view.findViewById(R.id.star5);
+            }
+
+            public void setRank(int rank) {
+                this.rank = rank;
+            }
         }
+
+
     }
+
 }

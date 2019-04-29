@@ -60,7 +60,7 @@
         android:layout_height="60dp"
         />
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/ticketRecyclerView"
+        android:id="@+id/seatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

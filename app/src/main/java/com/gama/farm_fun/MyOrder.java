@@ -65,7 +65,7 @@ public class MyOrder extends AppCompatActivity {
     public void getOrderInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("userId", userId);
-        if (type.equals("Restaurant")) {
+        if (type.equals("RestaurantActivity")) {
             query.whereEqualTo("type", type);
         } else if (type.equals("HomeStay")) {
             query.whereEqualTo("type", type);
@@ -88,7 +88,7 @@ public class MyOrder extends AppCompatActivity {
                                 avObject.getBoolean("comment"));
                         if (type.equals("Amusement")) {
                             if (avObject.getString("type").equals("HomeStay") ||
-                                    avObject.getString("type").equals("Restaurant")) {
+                                    avObject.getString("type").equals("RestaurantActivity")) {
                             } else {
                                 orderList.add(order);
                                 Log.i("order", order.item);
@@ -109,7 +109,7 @@ public class MyOrder extends AppCompatActivity {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         if (orderList.get(projectPicSupport).type.equals("HomeStay")) {
             query.whereEqualTo("name", "homestaymain.jpg");
-        } else if (orderList.get(projectPicSupport).type.equals("Restaurant")) {
+        } else if (orderList.get(projectPicSupport).type.equals("RestaurantActivity")) {
             query.whereEqualTo("name", "restaurantmain.jpg");
         } else {
             query.whereEqualTo("name", orderList.get(projectPicSupport).type + "main.jpg");

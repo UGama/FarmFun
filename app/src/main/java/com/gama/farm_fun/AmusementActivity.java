@@ -22,12 +22,24 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +47,7 @@ import java.util.List;
 
 import static android.animation.ObjectAnimator.ofFloat;
 
-public class AmusementActivity extends AppCompatActivity implements View.OnClickListener {
+public class AmusementActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMapClickListener {
     private String userId;
 
     public int screenWidth;
@@ -44,6 +56,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     private String type;
     private String projectNameString;
     private String url;
+    private String addressString;
 
     private View topBar;
     private float alphaStorage;
@@ -67,6 +80,10 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView commentRecyclerView;
     private List<Comment> commentList;
     private int commentNumber;
+
+    private MapView mapView;
+    private Double longitude;
+    private Double latitude;
 
 
     @Override
@@ -104,6 +121,10 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void done(AVObject object, AVException e) {
                 projectNameString = object.getString("name");
+                AVGeoPoint avGeoPoint = object.getAVGeoPoint("locate");
+                latitude = avGeoPoint.getLatitude();
+                longitude = avGeoPoint.getLongitude();
+
                 Log.i("ProjectName", projectNameString);
                 initUI();
             }
@@ -134,12 +155,12 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         projectName = findViewById(R.id.projectName);
         describe = findViewById(R.id.describe);
         address = findViewById(R.id.address);
-        ticket = findViewById(R.id.ticket);
+        ticket = findViewById(R.id.seat);
         ticket.setText("门票预订");
-        allTicketType = findViewById(R.id.allTicketType);
+        allTicketType = findViewById(R.id.allSeatType);
         allTicketType.setOnClickListener(this);
         ticketList = new ArrayList<>();
-        ticketRecyclerView = findViewById(R.id.ticketRecyclerView);
+        ticketRecyclerView = findViewById(R.id.seatRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         ticketRecyclerView.setLayoutManager(linearLayoutManager);
         setObservableScrollView();
@@ -181,6 +202,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                 projectName.setText(object.getString("name"));
                 describe.setText(object.getString("describe"));
                 address.setText(object.getString("locateDescribe"));
+                addressString = object.getString("locateDescribe");
                 loadMainPic();
             }
         });
@@ -239,7 +261,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                     }
                 }
                 Log.i("TicketList.size", String.valueOf(ticketList.size()));
-                ticketRecyclerView = findViewById(R.id.ticketRecyclerView);
+                ticketRecyclerView = findViewById(R.id.seatRecyclerView);
                 LinearLayoutManager linearLayout = new LinearLayoutManager(AmusementActivity.this);
                 ticketRecyclerView.setLayoutManager(linearLayout);
                 TicketAdapter ticketAdapter = new TicketAdapter(ticketList);
@@ -268,6 +290,9 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                     Log.i("comment", avObject.getString("comment"));
                     Log.i("createdAt", comment.createdAt);
                     commentList.add(comment);
+                    if (commentList.size() > 4) {
+                        break;
+                    }
                 }
                 getUserName();
             }
@@ -297,12 +322,32 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     public void setCommentRecyclerView() {
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
         commentRecyclerView.setAdapter(commentAdapter);
+        loadMapView();
+    }
+    public void loadMapView() {
+        mapView = findViewById(R.id.mapView);
+        BaiduMap baiduMap = mapView.getMap();
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(18).build();
+
+        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
+        baiduMap.setMapStatus(mapStatusUpdate);
+
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
+                .fromResource(R.drawable.locate_overlay);
+        // 构建MarkerOption，用于在地图上添加Marker
+        OverlayOptions option = new MarkerOptions().position(latLng)
+                .icon(bitmapDescriptor).zIndex(8).draggable(true);
+        baiduMap.addOverlay(option);
+
+        baiduMap.setOnMapClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.allTicketType:
+            case R.id.allSeatType:
                 Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
                 allTicketIntent.putExtra("Type", type);
                 allTicketIntent.putExtra("Project", projectNameString);
@@ -313,6 +358,23 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                 startActivity(allTicketIntent);
                 break;
         }
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+        Intent intent = new Intent(AmusementActivity.this, MapActivity.class);
+        intent.putExtra("longitude", longitude);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("project", projectNameString);
+        intent.putExtra("address", addressString);
+        intent.putExtra("url", url);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onMapPoiClick(MapPoi mapPoi) {
+        return false;
     }
 
     private class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
