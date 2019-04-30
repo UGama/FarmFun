@@ -27,6 +27,8 @@
         <activity android:name=".MapActivity" />
         <activity android:name=".OnlineShopActivity" />
         <activity android:name=".RestaurantActivity" />
+        <activity android:name=".OrderDetail" />
+        <activity android:name=".Payment" />
 
 
         <activity android:name=".MainActivity">

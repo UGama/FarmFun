@@ -145,11 +145,23 @@
             android:id="@+id/comment"
             android:layout_width="60dp"
             android:layout_height="30dp"
+            app:layout_constraintEnd_toStartOf="@id/orderDetail"
+            app:layout_constraintTop_toBottomOf="@id/price"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/shape_normal_button"
+            android:text="@string/comment"
+            android:textColor="#000000"
+            />
+        <Button
+            android:id="@+id/orderDetail"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             app:layout_constraintEnd_toEndOf="@id/price"
             app:layout_constraintTop_toBottomOf="@id/price"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_normal_button"
-            android:text="@string/comment"
+            android:text="详情"
             android:textColor="#000000"
             />
 

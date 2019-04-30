@@ -61,6 +61,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private TextView numberTextView;
     private int number;
 
+    private String way;
+
     private Toast toast;
 
     @Override
@@ -145,25 +147,9 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(remarkIntent, 1);
                 break;
             case R.id.submit:
-                AVObject avObject = AVObject.createWithoutData("Order", orderId);
-                avObject.put("status", "已支付");
-                if (!type.equals("homeStay")) {
-                    avObject.put("count", number);
-                    avObject.put("price", price * number);
-                }
-                avObject.put("comment", true);
-                avObject.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if (e == null) {
-                            Log.i("Save", "Succeed");
-                            showToast("支付成功！");
-                            Intent intent = new Intent();
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                });
+                Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
+                intent.putExtra("price", orderPrice);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.plus:
                 number++;
@@ -195,6 +181,31 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             case 0:
                 if (resultCode == RESULT_OK) {
                     remark.setText(data.getStringExtra("remark"));
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    way = data.getStringExtra("way");
+                    AVObject avObject = AVObject.createWithoutData("Order", orderId);
+                    avObject.put("status", "已支付");
+                    if (!type.equals("homeStay")) {
+                        avObject.put("count", number);
+                        avObject.put("price", price * number);
+                    }
+                    avObject.put("payment", way);
+                    avObject.put("comment", true);
+                    avObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                Log.i("Save", "Succeed");
+                                showToast("支付成功！");
+                                Intent intent = new Intent();
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        }
+                    });
                 }
                 break;
         }

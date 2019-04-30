@@ -20,6 +20,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -40,6 +41,7 @@ public class MyOrder extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_myorder);
 
         Intent intent = getIntent();
@@ -65,7 +67,7 @@ public class MyOrder extends AppCompatActivity {
     public void getOrderInformation() {
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("userId", userId);
-        if (type.equals("RestaurantActivity")) {
+        if (type.equals("Restaurant")) {
             query.whereEqualTo("type", type);
         } else if (type.equals("HomeStay")) {
             query.whereEqualTo("type", type);
@@ -88,7 +90,7 @@ public class MyOrder extends AppCompatActivity {
                                 avObject.getBoolean("comment"));
                         if (type.equals("Amusement")) {
                             if (avObject.getString("type").equals("HomeStay") ||
-                                    avObject.getString("type").equals("RestaurantActivity")) {
+                                    avObject.getString("type").equals("Restaurant")) {
                             } else {
                                 orderList.add(order);
                                 Log.i("order", order.item);
@@ -109,7 +111,7 @@ public class MyOrder extends AppCompatActivity {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         if (orderList.get(projectPicSupport).type.equals("HomeStay")) {
             query.whereEqualTo("name", "homestaymain.jpg");
-        } else if (orderList.get(projectPicSupport).type.equals("RestaurantActivity")) {
+        } else if (orderList.get(projectPicSupport).type.equals("Restaurant")) {
             query.whereEqualTo("name", "restaurantmain.jpg");
         } else {
             query.whereEqualTo("name", orderList.get(projectPicSupport).type + "main.jpg");
@@ -206,6 +208,25 @@ public class MyOrder extends AppCompatActivity {
                     startActivityForResult(intent, 0);
                 }
             });
+
+            holder.checkDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MyOrder.this, OrderDetail.class);
+                    intent.putExtra("project", holder.projectName.getText().toString());
+                    intent.putExtra("url", holder.url);
+                    intent.putExtra("item", holder.itemName.getText().toString());
+                    intent.putExtra("detail", holder.itemDetail.getText().toString());
+                    intent.putExtra("count", holder.count.getText().toString());
+                    Log.i("count", holder.count.getText().toString());
+                    intent.putExtra("orderId", holder.id);
+                    intent.putExtra("type", holder.type);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("totalPrice", Integer.parseInt(holder.itemPrice.getText().toString()));
+                    startActivityForResult(intent,1);
+                    finish();
+                }
+            });
         }
 
         @Override
@@ -222,6 +243,7 @@ public class MyOrder extends AppCompatActivity {
             private TextView itemPrice;
             private TextView count;
             private Button comment;
+            private Button checkDetail;
             private String id;
             private String url;
             private boolean commentJudge;
@@ -237,6 +259,7 @@ public class MyOrder extends AppCompatActivity {
                 itemPrice = view.findViewById(R.id.price);
                 count = view.findViewById(R.id.count);
                 comment = view.findViewById(R.id.comment);
+                checkDetail = view.findViewById(R.id.orderDetail);
             }
 
             private void setUrl(String url) {
@@ -262,6 +285,11 @@ public class MyOrder extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 0:
+                if (resultCode == RESULT_OK) {
+                    finish();
+                }
+                break;
+            case 1:
                 if (resultCode == RESULT_OK) {
                     finish();
                 }

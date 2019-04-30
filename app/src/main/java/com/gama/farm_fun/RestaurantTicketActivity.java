@@ -787,6 +787,7 @@ public class RestaurantTicketActivity extends AppCompatActivity implements View.
                         orderAVObject.put("detail", orderDetail);
                         orderAVObject.put("price", orderPrice);
                         orderAVObject.put("count", 1);
+                        orderAVObject.put("comment",false);
                         orderAVObject.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(AVException e) {

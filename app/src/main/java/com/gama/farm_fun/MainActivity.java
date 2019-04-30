@@ -355,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 pickIntent.putExtra("Type", "pick");
                 pickIntent.putExtra("UserId", userId);
                 startActivity(pickIntent);
-                finish();
                 break;
             case R.id.drift:
                 Intent driftIntent = new Intent(MainActivity.this, AmusementActivity.class);
@@ -372,7 +371,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent restaurantIntent = new Intent(MainActivity.this, RestaurantActivity.class);
                 restaurantIntent.putExtra("UserId", userId);
                 startActivity(restaurantIntent);
-                finish();
                 break;
             case R.id.fishing:
                 Intent fishingIntent = new Intent(MainActivity.this, AmusementActivity.class);
@@ -382,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.barbecue:
                 Intent barbecueIntent = new Intent(MainActivity.this, AmusementActivity.class);
-                barbecueIntent.putExtra("Type", "barbecue");
+                barbecueIntent.putExtra("Type","barbecue");
                 barbecueIntent.putExtra("UserId", userId);
                 startActivity(barbecueIntent);
                 break;

@@ -909,6 +909,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                             orderAVObject.put("detail", startTime + " 至 " + endTime);
                             orderAVObject.put("count", nightCount);
                             orderAVObject.put("price", nightCount * itemPrice);
+                            orderAVObject.put("comment", false);
                             orderAVObject.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,17 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private View setting;
     private ImageView settingIcon;
     private TextView settingText;
+    private View allOrder;
+    private ImageView allOrderIcon;
+    private TextView allOrderText;
+
+    private View bottomBar;
+    private Button homePage;
+    private Button news;
+    private Button order;
+    private Button mine;
+    private TextView mineText;
+    private Button post;
 
 
     @Override
@@ -90,8 +102,29 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         setting = findViewById(R.id.setting);
         setting.setOnClickListener(this);
         settingIcon = setting.findViewById(R.id.common_icon);
+        settingIcon.setImageResource(R.drawable.setting);
         settingText = setting.findViewById(R.id.common_name);
         settingText.setText("设置");
+        allOrder = findViewById(R.id.all_order);
+        allOrder.setOnClickListener(this);
+        allOrderIcon = allOrder.findViewById(R.id.common_icon);
+        allOrderIcon.setImageResource(R.drawable.allorder);
+        allOrderText = allOrder.findViewById(R.id.common_name);
+        allOrderText.setText("全部订单");
+        bottomBar = findViewById(R.id.bottom_bar);
+        homePage = bottomBar.findViewById(R.id.homePage);
+        homePage.setOnClickListener(this);
+        post = bottomBar.findViewById(R.id.post);
+        post.setOnClickListener(this);
+        news = bottomBar.findViewById(R.id.news);
+        news.setOnClickListener(this);
+        order = bottomBar.findViewById(R.id.order);
+        order.setOnClickListener(this);
+        mine = bottomBar.findViewById(R.id.mine);
+        mine.setOnClickListener(this);
+        mine.setBackground(getResources().getDrawable(R.drawable.mine1));
+        mineText = bottomBar.findViewById(R.id.mineText);
+        mineText.setTextColor(getResources().getColor(R.color.colorTheme));
     }
 
     @Override
@@ -108,9 +141,10 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.restaurantOrder:
                 Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                restaurantOrderIntent.putExtra("Type", "RestaurantActivity");
+                restaurantOrderIntent.putExtra("Type", "Restaurant");
                 restaurantOrderIntent.putExtra("UserId", userId);
                 startActivity(restaurantOrderIntent);
+                finish();
                 break;
             case R.id.projectOrder:
                 Intent amusementOrderIntent = new Intent(MineActivity.this, MyOrder.class);
@@ -121,6 +155,11 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.comment:
                 break;
             case R.id.setting:
+                break;
+            case R.id.all_order:
+                Intent allOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                allOrderIntent.putExtra("Type", "all");
+                startActivity(allOrderIntent);
                 break;
         }
     }
