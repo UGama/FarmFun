@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,8 +21,10 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+    private SimpleDraweeView themePic;
 
     private Toast toast;
 
@@ -51,6 +54,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void initUI() {
+        themePic = findViewById(R.id.themePic);
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", "begin2.jpg");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                Uri uri = Uri.parse(object.getString("url"));
+                themePic.setImageURI(uri);
+            }
+        });
         userNameLayout = findViewById(R.id.userNamePanel);
         userName = findViewById(R.id.userName);
         userName.addTextChangedListener(new TextWatcher() {
@@ -190,10 +203,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private boolean checkMobileNumber(String mobileNumber) {
-        if (mobileNumber.length() != 11||mobileNumber.toCharArray()[0]!='1') {
+        if (mobileNumber.length() != 11 || mobileNumber.toCharArray()[0] != '1') {
             showToast("请输入正确的手机号！");
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -260,7 +273,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void checkMobileRepeat(){
+    private void checkMobileRepeat() {
         AVQuery<AVObject> query = new AVQuery<>("Users");
         query.whereEqualTo("mobilePhone", mobileString);
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -276,7 +289,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void finishRegister(){
+    private void finishRegister() {
         final AVObject avObject = new AVObject("Users");
         avObject.put("name", userName.getText().toString());
         avObject.put("password", password.getText().toString());

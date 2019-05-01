@@ -53,6 +53,109 @@ public class DatabaseOperation extends AppCompatActivity {
         //SeatTimeTable();
         //updateTicketTimeTable3();
 
+        //updateBarbecue();
+        //updateChess();
+
+    }
+    public void updateChess() {
+        if (s < 91) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 30 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 30 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "林溪小院客栈棋牌室");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","小厅（可容纳4人）");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 30 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "林溪小院客栈棋牌室");
+                avObject.put("date", date);
+                avObject.put("remain", 100);
+                avObject.put("ticket","中厅（可容纳8人）");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 30 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "林溪小院客栈棋牌室");
+                avObject.put("date", date);
+                avObject.put("remain", 50);
+                avObject.put("ticket","大厅（可容纳15人）");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(1000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateChess();
+                }
+            });
+            objectAnimator.start();
+        }
+    }
+
+    public void updateBarbecue() {
+        if (s < 121) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 30 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 30 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "江边自助烧烤");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","户外单人烧烤套餐");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 30 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "江边自助烧烤");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","户外双人烧烤套餐");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 30 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "江边自助烧烤");
+                avObject.put("date", date);
+                avObject.put("remain", 80);
+                avObject.put("ticket","户外四人烧烤套餐");
+                avObject.saveInBackground();
+            } else {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "江边自助烧烤");
+                avObject.put("date", date);
+                avObject.put("remain", 50);
+                avObject.put("ticket","户外八人烧烤套餐");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(1000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateBarbecue();
+                }
+            });
+            objectAnimator.start();
+        }
 
     }
 

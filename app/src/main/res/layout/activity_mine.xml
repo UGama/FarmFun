@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.1"
-            fresco:placeholderImage="@drawable/male"
+            android:background="@drawable/male"
             fresco:placeholderImageScaleType="fitCenter"
             />
         <TextView

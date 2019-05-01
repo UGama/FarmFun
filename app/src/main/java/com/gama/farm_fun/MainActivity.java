@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -54,12 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LocationClient mLocationClient = null;
     private MyLocationListener myListener = new MyLocationListener();
 
-    private Button pick;
-    private Button drift;
-    private Button homeStay;
-    private Button restaurant;
-    private Button fishing;
-    private Button barbecue;
+    private ImageView pick;
+    private ImageView drift;
+    private ImageView homeStay;
+    private ImageView restaurant;
+    private ImageView fishing;
+    private ImageView barbecue;
 
     public View bottomBar;
     public Button homePage;
@@ -210,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (AVObject avObject : avObjects) {
                     TravelJournal travelJournal = new TravelJournal(avObject.getInt("number"),
                             avObject.getString("title"),
-                            avObject.getString("subTitle"));
+                            avObject.getString("subTitle"),
+                            "journal" + String.valueOf(avObject.getInt("number")) + ":1.jpg");
+                    Log.i("journal", travelJournal.firstPic);
                     travelJournalsList.add(travelJournal);
                     if (travelJournalsList.size() > 5) {
                         break;
@@ -584,6 +587,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             holder.travelJournalTitle.setText(travelJournal.title);
             holder.travelJournalSubtitle.setText(travelJournal.subTitle);
             holder.setNumber(travelJournal.number);
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.whereEqualTo("name", travelJournal.firstPic);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    Uri uri = Uri.parse(object.getString("url"));
+                    holder.travelJournalView.setImageURI(uri);
+                    RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+                    holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
+                }
+            });
+
             holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -592,8 +607,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
-            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-            holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
+
         }
 
         @Override

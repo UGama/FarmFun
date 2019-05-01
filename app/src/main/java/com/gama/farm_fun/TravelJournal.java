@@ -5,11 +5,13 @@ public class TravelJournal {
     public String subTitle;
     public String article;
     public int number;
+    public String firstPic;
 
-    public TravelJournal(int number, String title, String subTitle) {
+    public TravelJournal(int number, String title, String subTitle,String firstPic) {
         this.number = number;
         this.title = title;
         this.subTitle = subTitle;
+        this.firstPic = firstPic;
     }
 
     public void setArticle(String article) {

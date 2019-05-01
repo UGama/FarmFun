@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -160,6 +161,34 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 Intent allOrderIntent = new Intent(MineActivity.this, MyOrder.class);
                 allOrderIntent.putExtra("Type", "all");
                 startActivity(allOrderIntent);
+                break;
+            case R.id.userLayout:
+                if (userId.equals("tourist")) {
+                    Intent loginIntent = new Intent(MineActivity.this, LoginActivity.class);
+                    startActivityForResult(loginIntent, 0);
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    userId = data.getStringExtra("UserId");
+                    Log.i("userId", userId);
+                    AVQuery<AVObject> query = new AVQuery<>("Users");
+                    query.whereEqualTo("objectId", userId);
+                    query.getFirstInBackground(new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject object, AVException e) {
+                            netName = object.getString("netName");
+
+                        }
+                    });
+                }
                 break;
         }
     }

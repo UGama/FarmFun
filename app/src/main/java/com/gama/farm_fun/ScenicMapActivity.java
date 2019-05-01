@@ -19,6 +19,10 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -32,6 +36,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -62,6 +67,7 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
 
     public boolean firstTouch;
 
+    public LocationClient mLocationClient;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,6 +197,44 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
         baiduMap.setMapStatus(mapStatusUpdate);
         baiduMap.setOnMarkerClickListener(this);
+
+        setMyLocation();
+    }
+
+    public void setMyLocation() {
+        baiduMap.setMyLocationEnabled(true);
+
+        mLocationClient = new LocationClient(this);
+
+//通过LocationClientOption设置LocationClient相关参数
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(1000);
+
+//设置locationClientOption
+        mLocationClient.setLocOption(option);
+
+//注册LocationListener监听器
+        MyLocationListener myLocationListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(myLocationListener);
+//开启地图定位图层
+        mLocationClient.start();
+    }
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //mapView 销毁后不在处理新接收的位置
+            if (location == null || mMapView == null){
+                return;
+            }
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(location.getDirection()).latitude(location.getLatitude())
+                    .longitude(location.getLongitude()).build();
+            baiduMap.setMyLocationData(locData);
+        }
     }
 
     @Override
@@ -272,8 +316,10 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+        mLocationClient.stop();
+        baiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
+        mMapView = null;
     }
 
     @Override
@@ -311,4 +357,6 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
         }
         return false;
     }
+
+
 }

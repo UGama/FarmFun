@@ -74,22 +74,13 @@
         android:layout_marginTop="50dp"
         android:src="#f6f6f6"
         />
-    <ImageView
-        android:id="@+id/bottomGuideLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="55dp"
-        android:src="#f6f6f6"
-        />
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/bottomGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topGuideLine"
@@ -98,15 +89,10 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/topGuideLine2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTheme"
-                android:src="#f6f6f6"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
 
             <android.support.constraint.Guideline
                 android:id="@+id/oneFifthGuideLine2"
@@ -148,8 +134,7 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/topGuideLine2" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.gama.farm_fun.ViewPagerIndicator
                 android:id="@+id/indicator"
@@ -161,12 +146,13 @@
                 app:layout_constraintTop_toTopOf="@+id/viewPager"
                 app:layout_constraintVertical_bias="0.95" />
 
-            <Button
+            <ImageView
                 android:id="@+id/pick"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/pick"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/pick"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/viewPager" />
@@ -182,15 +168,15 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/homeStay"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/homestay"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/homestay"
                 app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine2"
-                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+                app:layout_constraintTop_toTopOf="@id/pick" />
             <TextView
                 android:id="@+id/homeStayText"
                 android:layout_width="wrap_content"
@@ -203,15 +189,15 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/restaurant"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/restaurant"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/restaurant"
                 app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine2"
-                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+                app:layout_constraintTop_toTopOf="@id/pick" />
 
             <TextView
                 android:id="@+id/restaurantText"
@@ -224,15 +210,15 @@
                 android:text="餐厅"
                 android:textColor="#888888"
                 />
-            <Button
+            <ImageView
                 android:id="@+id/drift"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/waterplay"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/waterplay"
                 app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
-                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+                app:layout_constraintTop_toTopOf="@id/pick" />
             <TextView
                 android:id="@+id/driftText"
                 android:layout_width="wrap_content"
@@ -245,15 +231,15 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/ktv"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ktv"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/ktv"
                 app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/viewPager" />
+                app:layout_constraintTop_toTopOf="@id/pick" />
             <TextView
                 android:id="@+id/ktvText"
                 android:layout_width="wrap_content"
@@ -266,12 +252,13 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/fishing"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/fishing"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/fishing"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="@id/oneFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -287,12 +274,13 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/chess"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/chess"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/chess"
                 app:layout_constraintLeft_toLeftOf="@id/oneFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/twoFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -308,12 +296,13 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/barbecue"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/barbecue"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/barbecue"
                 app:layout_constraintLeft_toLeftOf="@id/twoFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/threeFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -329,12 +318,13 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/shooting"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/shooting"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/shooting"
                 app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -350,12 +340,13 @@
                 android:textColor="#888888"
                 />
 
-            <Button
+            <ImageView
                 android:id="@+id/all"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/all"
+                android:background="@drawable/shape_ring"
+                android:src="@drawable/all"
                 app:layout_constraintLeft_toLeftOf="@id/fourFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -371,6 +362,17 @@
                 android:textColor="#888888"
                 />
 
+            <ImageView
+                android:id="@+id/cutLine"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/colorTheme"
+                app:layout_constraintTop_toBottomOf="@id/fishingText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                />
+
 
             <TextView
                 android:id="@+id/recommendProjects"
@@ -381,8 +383,8 @@
                 android:textColor="#000000"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fishingText"
-                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/cutLine"
+                android:layout_marginTop="20dp"
                 />
 
 
@@ -394,6 +396,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 />
 
+            <ImageView
+                android:id="@id/cutLine2"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recommendProjectsRecyclerView"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorTheme"
+                />
             <TextView
                 android:id="@+id/travelJournal"
                 android:layout_width="wrap_content"
@@ -403,7 +415,9 @@
                 android:textColor="#000000"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recommendProjectsRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/cutLine2"
+                android:layout_marginTop="20dp"
+                />
 
 
             <android.support.v7.widget.RecyclerView
@@ -414,6 +428,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/travelJournal"
                 android:background="#ffffff"
+                android:layout_marginTop="10dp"
                 />
 
             <TextView

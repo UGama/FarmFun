@@ -2,6 +2,7 @@ package com.gama.farm_fun;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -22,8 +23,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private SimpleDraweeView themePic;
 
     private Toast toast;
 
@@ -49,7 +52,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         initUI();
     }
+
     public void initUI() {
+        themePic = findViewById(R.id.themePic);
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", "begin1.jpg");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                Uri uri = Uri.parse(object.getString("url"));
+                themePic.setImageURI(uri);
+            }
+        });
         userNameLayout = findViewById(R.id.userNamePanel);
         userName = findViewById(R.id.userName);
         userName.addTextChangedListener(new TextWatcher() {
@@ -153,6 +167,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             toast.show();
         }
     }
+
     private Animation shakeAnimation() {
         Animation translateAnimation = new TranslateAnimation(0, 10, 0, 0);
         translateAnimation.setInterpolator(new CycleInterpolator(5));
@@ -182,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return userCharBoolean;
         }
     }
+
     private boolean checkPassword(String password) {
         if (password.length() >= 14) {
             showToast("密码错误！");
@@ -225,7 +241,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-    public void checkMobileMatch(){
+
+    public void checkMobileMatch() {
         AVQuery<AVObject> query = new AVQuery<>("Users");
         query.whereEqualTo("mobilePhone", userNameString);
         query.getFirstInBackground(new GetCallback<AVObject>() {
