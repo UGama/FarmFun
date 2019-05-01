@@ -31,6 +31,9 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         SDKInitializer.setCoordType(CoordType.BD09LL);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_main);
 
         StartLocateService();
@@ -332,8 +336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
             String locationDescribe = location.getLocationDescribe();
-            Log.i("locateDescribe", locationDescribe);
-            Log.i("address", addr);
+            /*Log.i("locateDescribe", locationDescribe);
+            Log.i("address", addr);*/
             locationString = locationDescribe;
             locationText = findViewById(R.id.locationText);
             if (locationString != null) {
@@ -347,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationPic:
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                Intent intent = new Intent(MainActivity.this, ScenicMapActivity.class);
                 startActivity(intent);
                 break;
             case R.id.pick:
@@ -388,6 +392,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent mineIntent = new Intent(MainActivity.this, MineActivity.class);
                 mineIntent.putExtra("UserId", userId);
                 startActivity(mineIntent);
+                break;
+            case R.id.order:
+                Intent orderIntent = new Intent(MainActivity.this, MyOrder.class);
+                orderIntent.putExtra("UserId", userId);
+                orderIntent.putExtra("Type", "all");
+                startActivity(orderIntent);
                 break;
         }
     }
@@ -568,11 +578,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public void onBindViewHolder(TravelJournalsAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final TravelJournalsAdapter.ViewHolder holder, int position) {
             TravelJournal travelJournal = travelJournalsList.get(position);
             Log.i(String.valueOf(position), "TravelJournal" + travelJournal.title);
             holder.travelJournalTitle.setText(travelJournal.title);
             holder.travelJournalSubtitle.setText(travelJournal.subTitle);
+            holder.setNumber(travelJournal.number);
+            holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, TravelJournalActivity.class);
+                    intent.putExtra("number", holder.number);
+                    startActivity(intent);
+                }
+            });
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+            holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
         }
 
         @Override
@@ -583,13 +604,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView travelJournalTitle;
             private TextView travelJournalSubtitle;
-            private View travelJournalView;
+            private SimpleDraweeView travelJournalView;
+            private int number;
 
             private ViewHolder(View view) {
                 super(view);
                 travelJournalTitle = view.findViewById(R.id.travelJournalTitle);
                 travelJournalSubtitle = view.findViewById(R.id.travelJournalSubtitle);
                 travelJournalView = view.findViewById(R.id.travelJournalBackground);
+            }
+
+            public void setNumber(int number) {
+                this.number = number;
             }
         }
     }

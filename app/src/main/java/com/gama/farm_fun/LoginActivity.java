@@ -15,6 +15,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String passwordString;
 
     private Button login;
-    private Button register;
+    private TextView register;
 
     private String userId;
 

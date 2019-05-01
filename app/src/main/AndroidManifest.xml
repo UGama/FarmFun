@@ -29,6 +29,8 @@
         <activity android:name=".RestaurantActivity" />
         <activity android:name=".OrderDetail" />
         <activity android:name=".Payment" />
+        <activity android:name=".TravelJournalActivity" />
+        <activity android:name=".ScenicMapActivity" />
 
 
         <activity android:name=".MainActivity">

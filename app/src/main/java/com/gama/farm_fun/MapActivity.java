@@ -67,11 +67,11 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         addressString = intent.getStringExtra("address");
         url = intent.getStringExtra("url");
 
-        mMapView = findViewById(R.id.mapView);
         initUI();
     }
 
     public void initUI() {
+        mMapView = findViewById(R.id.mapView);
         back = findViewById(R.id.back);
         back.setOnClickListener(this);
 
@@ -150,16 +150,13 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         if (installedPackages != null) {
             for (PackageInfo info : installedPackages) {
                 if (info.packageName.equals(packageName)) {
-                    Log.i("Test3", "true");
                     return true;
                 }
             }
         }
-        Log.i("Test4", "false");
         return false;
     }
     private void goToBaiduMap() {
-        Log.i("Test1", "Succeed");
         if (!isInstalled("com.baidu.BaiduMap")) {
             Log.i("test5", "failed");
             return;
