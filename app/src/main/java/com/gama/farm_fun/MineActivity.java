@@ -69,10 +69,13 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void done(AVObject object, AVException e) {
                     netName = object.getString("netName");
-
+                    userName = userLayout.findViewById(R.id.userName);
+                    userName.setText(netName);
                     initUI();
                 }
             });
+        } else {
+            initUI();
         }
 
 
@@ -82,8 +85,6 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         userLayout.setOnClickListener(this);
         headPic = userLayout.findViewById(R.id.headPic);
         headPic.setImageResource(R.drawable.male);
-        userName = userLayout.findViewById(R.id.userName);
-        userName.setText(netName);
 
         localSpecialtyOrder = findViewById(R.id.localSpecialtyOrder);
         localSpecialtyOrder.setOnClickListener(this);

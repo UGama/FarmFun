@@ -61,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView restaurant;
     private ImageView fishing;
     private ImageView barbecue;
+    private ImageView ktv;
+    private ImageView chess;
+    private ImageView sightseeing;
+    private ImageView all;
 
     public View bottomBar;
     public Button homePage;
@@ -240,6 +244,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fishing.setOnClickListener(this);
         barbecue = findViewById(R.id.barbecue);
         barbecue.setOnClickListener(this);
+        ktv = findViewById(R.id.ktv);
+        ktv.setOnClickListener(this);
+        chess = findViewById(R.id.chess);
+        chess.setOnClickListener(this);
+        sightseeing = findViewById(R.id.sightseeing);
+        sightseeing.setOnClickListener(this);
+        all = findViewById(R.id.all);
+        all.setOnClickListener(this);
 
         bottomBar = findViewById(R.id.bottom_bar);
         homePage = bottomBar.findViewById(R.id.homePage);
@@ -402,6 +414,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 orderIntent.putExtra("Type", "all");
                 startActivity(orderIntent);
                 break;
+            case R.id.ktv:
+                Intent ktvIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                ktvIntent.putExtra("UserId", userId);
+                ktvIntent.putExtra("Type", "ktv");
+                startActivity(ktvIntent);
+                break;
+            case R.id.chess:
+                Intent chessIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                chessIntent.putExtra("UserId", userId);
+                chessIntent.putExtra("Type", "card");
+                startActivity(chessIntent);
+                break;
+            case R.id.sightseeing:
+                Intent sightSeeingIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                sightSeeingIntent.putExtra("UserId", userId);
+                sightSeeingIntent.putExtra("Type", "sightseeing");
+                startActivity(sightSeeingIntent);
+                break;
+            case R.id.news:
+                Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
+                newsIntent.putExtra("UserId", userId);
+                startActivity(newsIntent);
         }
     }
 

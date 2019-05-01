@@ -55,7 +55,104 @@ public class DatabaseOperation extends AppCompatActivity {
 
         //updateBarbecue();
         //updateChess();
+        //updateKTV();
 
+    }
+
+    public void updateKTV() {
+        if (s < 301) {
+            String date;
+            if (s % 30 <= 9 & s % 30 > 0) {
+                date = "2019/06/0" + String.valueOf(s % 30);
+            } else if (s % 30 == 0) {
+                date = "2019/06/" + String.valueOf(30);
+            } else {
+                date = "2019/06/" + String.valueOf(s % 30);
+            }
+            if ((s - 1) / 30 == 0) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 200);
+                avObject.put("ticket","黄金场欢唱2小时（小包）");
+                avObject.saveInBackground();
+
+            } else if ((s - 1) / 30 == 1) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 100);
+                avObject.put("ticket","阳光场欢唱3小时（小包）");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 30 == 2) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 80);
+                avObject.put("ticket","阳光场欢唱7小时（小包）");
+                avObject.saveInBackground();
+            } else if ((s - 1) / 30 == 3) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 100);
+                avObject.put("ticket","午夜场欢唱3小时（小包）");
+                avObject.saveInBackground();
+            }else if ((s - 1) / 30 == 4) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 80);
+                avObject.put("ticket","午夜场欢唱7小时（小包）");
+                avObject.saveInBackground();
+            }else if ((s - 1) / 30 == 5) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 100);
+                avObject.put("ticket","黄金场欢唱2小时（大包）");
+                avObject.saveInBackground();
+            }else if ((s - 1) / 30 == 6) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 50);
+                avObject.put("ticket","阳光场欢唱3小时（大包）");
+                avObject.saveInBackground();
+            }else if ((s - 1) / 30 == 7) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 40);
+                avObject.put("ticket","阳光场欢唱7小时（大包）");
+                avObject.saveInBackground();
+            }else if ((s - 1) / 30 == 8) {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 50);
+                avObject.put("ticket","午夜场欢唱3小时（大包）");
+                avObject.saveInBackground();
+            }else {
+                AVObject avObject = new AVObject("TicketTimeTable");
+                avObject.put("projectName", "楠溪江音乐工厂");
+                avObject.put("date", date);
+                avObject.put("remain", 40);
+                avObject.put("ticket","午夜场欢唱7小时（大包）");
+                avObject.saveInBackground();
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(run, "translationX", 0, 100, 0);
+            objectAnimator.setDuration(1000);
+            objectAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    s++;
+                    updateKTV();
+                }
+            });
+            objectAnimator.start();
+        }
     }
     public void updateChess() {
         if (s < 91) {

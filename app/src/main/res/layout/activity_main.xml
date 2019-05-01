@@ -319,12 +319,12 @@
                 />
 
             <ImageView
-                android:id="@+id/shooting"
+                android:id="@+id/sightseeing"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_ring"
-                android:src="@drawable/shooting"
+                android:src="@drawable/sightseeing"
                 app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
                 app:layout_constraintTop_toBottomOf="@id/pickText" />
@@ -336,7 +336,7 @@
                 app:layout_constraintLeft_toLeftOf="@id/threeFifthGuideLine2"
                 app:layout_constraintRight_toRightOf="@id/fourFifthGuideLine2"
                 android:textSize="15sp"
-                android:text="靶场"
+                android:text="景点"
                 android:textColor="#888888"
                 />
 
@@ -373,16 +373,25 @@
                 android:layout_marginTop="20dp"
                 />
 
+            <ImageView
+                android:id="@+id/tip"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
+                android:background="@color/colorTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/recommendProjects"
+                app:layout_constraintBottom_toBottomOf="@id/recommendProjects"
+                />
 
             <TextView
                 android:id="@+id/recommendProjects"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:text="推荐项目"
                 android:textColor="#000000"
                 android:textSize="25sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tip"
                 app:layout_constraintTop_toBottomOf="@id/cutLine"
                 android:layout_marginTop="20dp"
                 />
@@ -406,15 +415,25 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/colorTheme"
                 />
+
+            <ImageView
+                android:id="@+id/tip2"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
+                android:background="@color/colorTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/travelJournal"
+                app:layout_constraintBottom_toBottomOf="@id/travelJournal"
+                />
             <TextView
                 android:id="@+id/travelJournal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:text="精品游记"
                 android:textColor="#000000"
                 android:textSize="25sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tip2"
                 app:layout_constraintTop_toBottomOf="@id/cutLine2"
                 android:layout_marginTop="20dp"
                 />
