@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,12 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     public TextView projectName;
     public TextView projectLocate;
     public TextView detail;
+
+    public ViewPager viewPager;
+    public PosterPagerAdapter posterPagerAdapter;
+    public List<Poster> posterList;
+    public ViewPagerIndicator indicator;
+
 
     public RecyclerView typeRecyclerView;
     public List<Type> typeList;
@@ -143,10 +150,49 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                     projectName.setText(object.getString("name"));
                     projectLocate.setText(object.getString("locateDescribe"));
 
-                    initCommentRecyclerView();
+                    initViewPager();
                 }
             });
         }
+    }
+
+    public void initViewPager() {
+        viewPager = findViewById(R.id.viewPager);
+        posterList = new ArrayList<>();
+
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereStartsWith("name", "pick");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Poster poster = new Poster(avObject.getString("url"), "");
+                    posterList.add(poster);
+                }
+                posterPagerAdapter = new PosterPagerAdapter(posterList);
+                viewPager.setAdapter(posterPagerAdapter);
+                viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
+                indicator = findViewById(R.id.indicator);
+                indicator.setLength(posterList.size());
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        indicator.setSelected(position);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+                initCommentRecyclerView();
+            }
+        });
     }
 
     public void initCommentRecyclerView() {
@@ -190,12 +236,27 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                     Log.i("netName", commentList.get(commentNumber).userName);
                     commentNumber++;
                     if (commentNumber == commentList.size()) {
-                        setCommentRecyclerView();
+                        getProjectPic();
                     }
                 }
             });
         }
 
+    }
+
+    public void getProjectPic() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", projectPicNameString);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                Uri uri = Uri.parse(object.getString("url"));
+                projectPic.setImageURI(uri);
+                RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+                projectPic.getHierarchy().setRoundingParams(roundingParams);
+                setCommentRecyclerView();
+            }
+        });
     }
     public void setCommentRecyclerView() {
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
@@ -237,6 +298,43 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+    }
+
+    private class PosterPagerAdapter extends android.support.v4.view.PagerAdapter {
+
+        List<Poster> posterList;
+
+        public PosterPagerAdapter(List<Poster> posterList) {
+            this.posterList = posterList;
+        }
+
+        @Override
+        public int getCount() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            position = position % posterList.size();
+            View view = LayoutInflater.from(NewsActivity.this).inflate(R.layout.item_poster, null);
+            SimpleDraweeView poster = view.findViewById(R.id.poster);
+            Uri uri = Uri.parse(posterList.get(position).url);
+            poster.setImageURI(uri);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+            poster.getHierarchy().setRoundingParams(roundingParams);
+            container.addView(view);
+            return view;
+        }
     }
 
     private class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
@@ -479,4 +577,5 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
 }

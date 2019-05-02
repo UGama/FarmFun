@@ -236,8 +236,8 @@
         />
 
     <include
-        android:id="@+id/panel_time_chosen"
-        layout="@layout/panel_customized_timechose"
+        android:id="@+id/panel_time_show"
+        layout="@layout/panel_customized_timeshow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choseDate"
@@ -247,11 +247,11 @@
         />
 
     <include
-        android:id="@+id/panel_people_chosen"
+        android:id="@+id/panel_people_show"
         layout="@layout/panel_customized_people"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/panel_time_chosen"
+        app:layout_constraintTop_toBottomOf="@id/panel_time_show"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         />
@@ -263,7 +263,7 @@
         android:background="@color/colorLineGray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/panel_people_chosen"
+        app:layout_constraintTop_toBottomOf="@id/panel_people_show"
         android:layout_marginTop="10dp"
         />
 
@@ -313,6 +313,15 @@
         app:layout_constraintBottom_toBottomOf="@id/customized"
         />
 
+    <ImageView
+        android:id="@+id/shelter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0.5"
+        android:visibility="invisible"
+        />
+
     <include android:id="@+id/datePanel"
         layout="@layout/panel_timechose"
         android:layout_width="match_parent"
@@ -320,6 +329,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        />
+
+    <include
+        android:id="@+id/panel_people_chose"
+        layout="@layout/panel_person_chose"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"
         />
 

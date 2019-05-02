@@ -437,6 +437,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 newsIntent.putExtra("UserId", userId);
                 startActivity(newsIntent);
                 finish();
+                break;
             case R.id.post:
                 Intent postIntent = new Intent(MainActivity.this, CustomizedActivity.class);
                 postIntent.putExtra("UserId", userId);
