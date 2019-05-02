@@ -136,8 +136,30 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getProjectInformation() {
         if (typeShowing.equals("HomeStay")) {
-
+            AVQuery<AVObject> query = new AVQuery<>("HomeStay");
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    Log.i("project", object.getString("name"));
+                    projectPicNameString = object.getString("mainPicName");
+                    projectName.setText(object.getString("name"));
+                    projectLocate.setText(object.getString("locateDescribe"));
+                    initViewPager();
+                }
+            });
         } else if (typeShowing.equals("Restaurant")) {
+            AVQuery<AVObject> query = new AVQuery<>("Restaurant");
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    Log.i("project", object.getString("name"));
+                    projectPicNameString = object.getString("mainPicName");
+                    projectName.setText(object.getString("name"));
+                    projectLocate.setText(object.getString("locateDescribe"));
+
+                    initViewPager();
+                }
+            });
 
         } else {
             AVQuery<AVObject> query = new AVQuery<>("Amusement");
@@ -158,10 +180,18 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
     public void initViewPager() {
         viewPager = findViewById(R.id.viewPager);
+        indicator = findViewById(R.id.indicator);
         posterList = new ArrayList<>();
-
+        String picType;
+        if (typeShowing.equals("HomeStay")) {
+            picType = "homestay";
+        } else if (typeShowing.equals("Restaurant")) {
+            picType = "restaurant";
+        } else {
+            picType = typeShowing;
+        }
         AVQuery<AVObject> query = new AVQuery<>("_File");
-        query.whereStartsWith("name", "pick");
+        query.whereStartsWith("name", picType);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
@@ -172,7 +202,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 posterPagerAdapter = new PosterPagerAdapter(posterList);
                 viewPager.setAdapter(posterPagerAdapter);
                 viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
-                indicator = findViewById(R.id.indicator);
                 indicator.setLength(posterList.size());
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -297,7 +326,34 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.detail:
+                if (typeShowing.equals("HomeStay")) {
+                    Intent intent = new Intent(NewsActivity.this, HomeStayActivity.class);
+                    intent.putExtra("UserId", userId);
+                    startActivity(intent);
+                } else if (typeShowing.equals("Restaurant")) {
+                    Intent intent = new Intent(NewsActivity.this, RestaurantActivity.class);
+                    intent.putExtra("UserId", userId);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(NewsActivity.this, AmusementActivity.class);
+                    intent.putExtra("UserId", userId);
+                    intent.putExtra("Type", typeShowing);
+                    startActivity(intent);
 
+                }
+                break;
+            case R.id.mine:
+                Intent intent = new Intent(NewsActivity.this, MineActivity.class);
+                intent.putExtra("UserId", userId);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.homePage:
+                finish();
+                break;
+        }
     }
 
     private class PosterPagerAdapter extends android.support.v4.view.PagerAdapter {
@@ -330,8 +386,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             SimpleDraweeView poster = view.findViewById(R.id.poster);
             Uri uri = Uri.parse(posterList.get(position).url);
             poster.setImageURI(uri);
-            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-            poster.getHierarchy().setRoundingParams(roundingParams);
             container.addView(view);
             return view;
         }
