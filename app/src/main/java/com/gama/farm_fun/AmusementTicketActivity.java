@@ -721,4 +721,16 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    userId = data.getStringExtra("UserId");
+                    showToast("登录成功！");
+                }
+                break;
+        }
+    }
 }

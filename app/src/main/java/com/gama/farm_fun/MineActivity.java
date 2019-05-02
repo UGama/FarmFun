@@ -69,6 +69,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void done(AVObject object, AVException e) {
                     netName = object.getString("netName");
+                    userLayout = findViewById(R.id.userLayout);
                     userName = userLayout.findViewById(R.id.userName);
                     userName.setText(netName);
                     initUI();

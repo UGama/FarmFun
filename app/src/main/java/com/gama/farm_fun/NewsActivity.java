@@ -89,15 +89,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
         detail = findViewById(R.id.detail);
         detail.setOnClickListener(this);
 
-        commentRecyclerView = findViewById(R.id.commentRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        commentRecyclerView.setLayoutManager(linearLayoutManager);
-        commentList = new ArrayList<>();
-
-        travelJournalRecyclerView = findViewById(R.id.travelJournalRecyclerView);
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
-        travelJournalRecyclerView.setLayoutManager(linearLayoutManager1);
-        travelJournalList = new ArrayList<>();
 
         initTypeRecyclerView();
     }
@@ -159,6 +150,10 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initCommentRecyclerView() {
+        commentRecyclerView = findViewById(R.id.commentRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(linearLayoutManager);
+        commentList = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Comment");
         query.whereEqualTo("type", typeShowing);
         query.findInBackground(new FindCallback<AVObject>() {
@@ -210,6 +205,11 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initTravelJournalRecyclerView() {
+        travelJournalRecyclerView = findViewById(R.id.travelJournalRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        travelJournalRecyclerView.setLayoutManager(linearLayoutManager);
+        travelJournalList = new ArrayList<>();
+
         AVQuery<AVObject> query = new AVQuery<>("TravelJournal");
         query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {

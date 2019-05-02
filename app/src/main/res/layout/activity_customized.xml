@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff">
+
+    <include 
+        android:id="@+id/top_bar" 
+        layout="@layout/bar_simpletop"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <ImageView
+        android:id="@+id/tip"
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        android:background="@color/colorTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/choseTab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/colorBlack"
+        android:text="请选择你喜欢的标签（可多选）:"
+        app:layout_constraintStart_toEndOf="@id/tip"
+        app:layout_constraintTop_toTopOf="@id/tip"
+        app:layout_constraintBottom_toBottomOf="@id/tip"
+        android:layout_marginStart="20dp"
+        />
+    <ImageView
+        android:id="@+id/topMidGuideLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toTopOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+    <ImageView
+        android:id="@+id/support1"
+        android:background="@color/colorLineGray"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choseTab"
+        android:layout_marginTop="20dp"
+        />
+
+    <ImageView
+        android:id="@+id/support2"
+        android:background="@color/colorLineGray"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        android:layout_marginTop="100dp"
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.25"
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.5"
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine75"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.75"
+        />
+
+    <TextView
+        android:text="竹筏漂流"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideLine25"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/topMidGuideLine"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="采摘"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine25"
+        app:layout_constraintEnd_toEndOf="@id/guideLine50"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/topMidGuideLine"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="聚会K歌"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine50"
+        app:layout_constraintEnd_toEndOf="@id/guideLine75"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/topMidGuideLine"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="垂钓"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine75"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/topMidGuideLine"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="游山玩水"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideLine25"
+        app:layout_constraintTop_toBottomOf="@id/topMidGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="麻将"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine25"
+        app:layout_constraintEnd_toEndOf="@id/guideLine50"
+        app:layout_constraintTop_toBottomOf="@id/topMidGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="江边烧烤"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine50"
+        app:layout_constraintEnd_toEndOf="@id/guideLine75"
+        app:layout_constraintTop_toBottomOf="@id/topMidGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="土菜馆"
+        android:textColor="@color/colorTextGray"
+        android:textSize="13sp"
+        android:background="@drawable/shape_catalog1"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine75"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topMidGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        android:gravity="center"
+        />
+
+    <ImageView
+        android:id="@+id/tip2"
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        android:background="@color/colorTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support2"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/choseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请选择出行日期和人数："
+        app:layout_constraintStart_toEndOf="@id/tip2"
+        app:layout_constraintTop_toTopOf="@id/tip2"
+        app:layout_constraintBottom_toBottomOf="@id/tip2"
+        android:textColor="#000000"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        />
+
+    <include
+        android:id="@+id/panel_time_chosen"
+        layout="@layout/panel_customized_timechose"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choseDate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        />
+
+    <include
+        android:id="@+id/panel_people_chosen"
+        layout="@layout/panel_customized_people"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/panel_time_chosen"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        />
+
+    <ImageView
+        android:id="@+id/support3"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/colorLineGray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/panel_people_chosen"
+        android:layout_marginTop="10dp"
+        />
+
+
+
+    <ImageView
+        android:id="@+id/tip3"
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        android:background="@color/colorTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support3"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="定制你的游玩计划："
+        app:layout_constraintStart_toEndOf="@id/tip3"
+        app:layout_constraintTop_toTopOf="@id/tip3"
+        app:layout_constraintBottom_toBottomOf="@id/tip3"
+        android:textColor="#000000"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        />
+
+    <ImageView
+        android:id="@+id/customized"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tip3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/shape_customized"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="定制"
+        android:textColor="#ffffff"
+        app:layout_constraintStart_toStartOf="@id/customized"
+        app:layout_constraintEnd_toEndOf="@id/customized"
+        app:layout_constraintTop_toTopOf="@id/customized"
+        app:layout_constraintBottom_toBottomOf="@id/customized"
+        />
+
+    <include android:id="@+id/datePanel"
+        layout="@layout/panel_timechose"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        />
+
+</android.support.constraint.ConstraintLayout>
