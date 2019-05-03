@@ -36,8 +36,9 @@
         app:layout_constraintTop_toTopOf="@id/locationPic"
         app:layout_constraintBottom_toBottomOf="@id/locationPic"
         android:layout_marginStart="5dp"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:text="定位中…"
+        android:layout_marginTop="5dp"
         />
     
     <TextView

@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private View topBar;
     private TextView title;
     private TextView finish;
+    private Button back;
 
     private String orderId;
     private String projectName;
@@ -83,6 +85,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         finish.setVisibility(View.VISIBLE);
         finish.setText("完成");
         finish.setOnClickListener(this);
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         projectPic = findViewById(R.id.project_pic);
         Uri imageUri = Uri.parse(projectPicUrl);
@@ -217,6 +221,9 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 star4.setImageResource(R.drawable.star2);
                 star5.setImageResource(R.drawable.star2);
                 rank = 5;
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

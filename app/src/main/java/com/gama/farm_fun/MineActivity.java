@@ -170,6 +170,20 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                     startActivityForResult(loginIntent, 0);
                 }
                 break;
+            case R.id.homePage:
+                finish();
+                break;
+            case R.id.news:
+                Intent intent = new Intent(MineActivity.this, NewsActivity.class);
+                intent.putExtra("UserId", userId);
+                startActivity(intent);
+                break;
+            case R.id.order:
+                Intent intent1 = new Intent(MineActivity.this, MyOrder.class);
+                intent1.putExtra("UserId", userId);
+                intent1.putExtra("Type", "all");
+                startActivity(intent1);
+                break;
         }
     }
 

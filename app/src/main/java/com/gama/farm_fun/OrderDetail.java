@@ -247,10 +247,10 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
 
             private ViewHolder(View view) {
                 super(view);
-                itemPic = view.findViewById(R.id.item_pic);
-                itemName = view.findViewById(R.id.item_name);
+                itemPic = view.findViewById(R.id.project_pic);
+                itemName = view.findViewById(R.id.project_name);
                 itemDetail = view.findViewById(R.id.item_detail);
-                itemCount = view.findViewById(R.id.item_count);
+                itemCount = view.findViewById(R.id.project_locate);
                 itemPrice = view.findViewById(R.id.item_price);
             }
         }

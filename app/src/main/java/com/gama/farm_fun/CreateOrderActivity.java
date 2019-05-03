@@ -43,6 +43,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
 
     private View topBar;
     private TextView title;
+    private Button back;
 
     private TextView projectName;
     private RecyclerView orderRecyclerView;
@@ -99,6 +100,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         } else if (type.equals("restaurant")) {
             title.setText("用餐订单");
         }
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         projectName = findViewById(R.id.project_name);
         projectName.setText(project);
@@ -170,6 +173,9 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                         minus.setBackground(getResources().getDrawable(R.drawable.shape_circle2));
                     }
                 }
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }
@@ -259,10 +265,10 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
 
             private ViewHolder(View view) {
                 super(view);
-                itemPic = view.findViewById(R.id.item_pic);
-                itemName = view.findViewById(R.id.item_name);
+                itemPic = view.findViewById(R.id.project_pic);
+                itemName = view.findViewById(R.id.project_name);
                 itemDetail = view.findViewById(R.id.item_detail);
-                itemCount = view.findViewById(R.id.item_count);
+                itemCount = view.findViewById(R.id.project_locate);
                 itemPrice = view.findViewById(R.id.item_price);
             }
         }

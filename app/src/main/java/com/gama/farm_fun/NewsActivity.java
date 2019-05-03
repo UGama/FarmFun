@@ -344,6 +344,10 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 break;
+            case R.id.post:
+                Intent intent0 = new Intent(NewsActivity.this, CustomizedActivity.class);
+                intent0.putExtra("UserId", userId);
+                startActivity(intent0);
             case R.id.mine:
                 Intent intent = new Intent(NewsActivity.this, MineActivity.class);
                 intent.putExtra("UserId", userId);

@@ -77,6 +77,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     private TextView secondSubTitle;
     private TextView thirdSubTitle;
     private TextView fourthSubTitle;
+    private Button back;
 
     private ObservableScrollView observableScrollView;
 
@@ -183,6 +184,8 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         secondSubTitle.setText("房间预订");
         thirdSubTitle.setText("住户评论");
         fourthSubTitle.setText("地图导览");
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         observableScrollView = findViewById(R.id.observableScrollView);
         setObservableScrollView();
@@ -472,6 +475,9 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                     firstTouch = true;
                 }
                 timeChosePanelQuit.start();
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

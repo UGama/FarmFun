@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.chess:
                 Intent chessIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 chessIntent.putExtra("UserId", userId);
-                chessIntent.putExtra("Type", "card");
+                chessIntent.putExtra("Type", "chess");
                 startActivity(chessIntent);
                 break;
             case R.id.sightseeing:

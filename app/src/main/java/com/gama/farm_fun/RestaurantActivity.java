@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -66,6 +67,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private TextView secondSubTitle;
     private TextView thirdSubTitle;
     private TextView fourthSubTitle;
+    private Button back;
 
     private ObservableScrollView observableScrollView;
     private ImageView mainPic;
@@ -150,6 +152,8 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         secondSubTitle.setText("桌位预订");
         thirdSubTitle.setText("用户评论");
         fourthSubTitle.setText("地图导览");
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         observableScrollView = findViewById(R.id.observableScrollView);
         mainPic = findViewById(R.id.mainPic);
@@ -458,6 +462,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 Intent allSeatIntent = new Intent(RestaurantActivity.this, RestaurantTicketActivity.class);
                 allSeatIntent.putExtra("UserId", userId);
                 startActivity(allSeatIntent);
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

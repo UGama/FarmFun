@@ -46,6 +46,7 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
 
     private View topBar;
     private TextView title;
+    private Button back;
 
     private View topPanel;
     private TextView topPanelChosenDate;
@@ -107,6 +108,8 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
         topBar = findViewById(R.id.bar_top);
         title = topBar.findViewById(R.id.title);
         title.setText(projectName);
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         topPanel = findViewById(R.id.timeChosePanel);
         topPanel.setOnClickListener(this);
@@ -218,6 +221,9 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
                 timeChosePanel.setVisibility(View.INVISIBLE);
                 shelter.setVisibility(View.INVISIBLE);
                 timeChosePanelQuit.start();
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

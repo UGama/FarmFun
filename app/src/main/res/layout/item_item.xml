@@ -6,7 +6,7 @@
     xmlns:fresco="http://schemas.android.com/tools"
     android:background="#ffffff">
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_pic"
+        android:id="@+id/project_pic"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleType="centerCrop"
@@ -18,11 +18,11 @@
         fresco:placeholderImageScaleType="fitCenter"
         />
     <TextView
-        android:id="@+id/item_name"
+        android:id="@+id/project_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/item_pic"
-        app:layout_constraintStart_toEndOf="@id/item_pic"
+        app:layout_constraintTop_toTopOf="@id/project_pic"
+        app:layout_constraintStart_toEndOf="@id/project_pic"
         android:layout_marginStart="20dp"
         android:textColor="#000000"
         android:textSize="16sp"
@@ -36,25 +36,25 @@
         android:text="@string/test"
         android:textColor="@color/colorTextGray"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/item_name"
-        app:layout_constraintTop_toBottomOf="@id/item_name"
+        app:layout_constraintStart_toStartOf="@id/project_name"
+        app:layout_constraintTop_toBottomOf="@id/project_name"
         />
     <TextView
-        android:id="@+id/item_count"
+        android:id="@+id/project_locate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/test"
         android:textColor="@color/colorTextGray"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/item_name"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
+        app:layout_constraintStart_toStartOf="@id/project_name"
+        app:layout_constraintBottom_toBottomOf="@id/project_pic"
         />
     <TextView
         android:id="@+id/item_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/item_name"
+        app:layout_constraintBottom_toBottomOf="@+id/project_name"
         android:text="@string/test"
         android:textColor="#000000"
         android:textSize="16sp"

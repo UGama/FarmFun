@@ -184,6 +184,10 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
         days = timeShowPanel.findViewById(R.id.days);
         days.setText("共2天>");
         dayCount = 2;
+        startMonth = 6;
+        startDay = 1;
+        endMonth = 6;
+        endDay = 2;
 
         peopleShowPanel = findViewById(R.id.panel_people_show);
         peopleShowPanel.setOnClickListener(this);

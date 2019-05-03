@@ -14,6 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
     <com.gama.farm_fun.ObservableScrollView
         android:id="@+id/observableScrollView"
         android:layout_width="match_parent"
@@ -37,6 +38,7 @@
                 />
 
             <TextView
+                android:id="@+id/travel_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/tip"
@@ -46,6 +48,18 @@
                 android:textColor="#000000"
                 android:text="出行计划"
                 android:layout_marginStart="20dp"
+                />
+
+            <TextView
+                android:id="@+id/travel_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/travel_plan"
+                android:textColor="#000000"
+                app:layout_constraintStart_toEndOf="@id/travel_plan"
+                android:text="@string/test"
+                android:textSize="16sp"
+                android:layout_marginStart="5dp"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -58,16 +72,8 @@
                 android:layout_marginTop="10dp"
                 />
 
-
         </android.support.constraint.ConstraintLayout>
 
-
     </com.gama.farm_fun.ObservableScrollView>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorTheme"
-        />
 
 </android.support.constraint.ConstraintLayout>
