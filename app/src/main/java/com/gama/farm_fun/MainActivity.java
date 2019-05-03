@@ -44,6 +44,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
 
+    private ImageView map;
+
     private ViewPager viewPager;
     private PosterPagerAdapter posterPagerAdapter;
     private List<Poster> posterList;
@@ -90,63 +92,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         StartLocateService();
 
-        posterList = new ArrayList<>();
-        posterList.add(new Poster(R.drawable.adtest));
-        posterList.add(new Poster(R.drawable.adtest));
-        posterList.add(new Poster(R.drawable.adtest));
-        posterList.add(new Poster(R.drawable.adtest));
-        posterList.add(new Poster(R.drawable.adtest));
-        posterList.add(new Poster(R.drawable.adtest));
-        viewPager = findViewById(R.id.viewPager);
-        posterPagerAdapter = new PosterPagerAdapter(posterList);
-        viewPager.setAdapter(posterPagerAdapter);
-        viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
-        indicator = findViewById(R.id.indicator);
-        indicator.setLength(posterList.size());
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                indicator.setSelected(position);
-                /*position = position % 4;
-                switch (position) {
-                    case 0:
-                        Item.setImageResource(v1.SourceId1);
-                        Bag_Pic.setImageResource(v1.SourceId2);
-                        Item_name.setText(" ? ? ? ");
-                        PagesCount = 1;
-                        break;
-                    case 1:
-                        Item.setImageResource(v2.SourceId1);
-                        Bag_Pic.setImageResource(v2.SourceId2);
-                        Item_name.setText(" ? ? ? ");
-                        PagesCount = 2;
-                        break;
-                    case 2:
-                        Item.setImageResource(v3.SourceId1);
-                        Bag_Pic.setImageResource(v3.SourceId2);
-                        Item_name.setText(" ? ? ? ");
-                        PagesCount = 3;
-                        break;
-                    case 3:
-                        Item.setImageResource(v4.SourceId1);
-                        Bag_Pic.setImageResource(v4.SourceId2);
-                        Item_name.setText(" ? ? ? ");
-                        PagesCount = 4;
-                        break;
-                }*/
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
         AVObject testObject = new AVObject("TestObject");
         testObject.put("words", "Hello World!");
         testObject.saveInBackground(new SaveCallback() {
@@ -177,7 +122,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recommendProjectsRecycler.setLayoutManager(linearLayoutManager1);
         recommendProjectsList = new ArrayList<>();
 
-        getUserInformation();
+        getPoster();
+    }
+
+    public void getPoster() {
+        posterList = new ArrayList<>();
+
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereStartsWith("name", "poster");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Poster poster = new Poster(avObject.getString("url"), "");
+                    posterList.add(poster);
+                }
+                Log.i("avObjectsList", String.valueOf(avObjects.size()));
+                viewPager = findViewById(R.id.viewPager);
+                posterPagerAdapter = new PosterPagerAdapter(posterList);
+                viewPager.setAdapter(posterPagerAdapter);
+                viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
+                indicator = findViewById(R.id.indicator);
+                indicator.setLength(posterList.size());
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        indicator.setSelected(position);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+
+                getUserInformation();
+            }
+        });
+
+
     }
 
     public void getUserInformation() {
@@ -232,6 +220,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initUI() {
+        map = findViewById(R.id.map);
+        map.setOnClickListener(this);
+
         pick = findViewById(R.id.pick);
         pick.setOnClickListener(this);
         drift = findViewById(R.id.drift);
@@ -310,19 +301,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //可选，设置是否收集Crash信息，默认收集，即参数为false
 
         option.setWifiCacheTimeOut(5 * 60 * 1000);
-//可选，V7.2版本新增能力
-//如果设置了该接口，首次启动定位时，会先判断当前Wi-Fi是否超出有效期，若超出有效期，会先重新扫描Wi-Fi，然后定位
 
         option.setEnableSimulateGps(false);
-//可选，设置是否需要过滤GPS仿真结果，默认需要，即参数为false
-
 
         option.setIsNeedAddress(true);
-//可选，是否需要地址信息，默认为不需要，即参数为false
-//如果开发者需要获得当前点的地址信息，此处必须为true
+
         option.setIsNeedLocationDescribe(true);
-//可选，是否需要位置描述信息，默认为不需要，即参数为false
-//如果开发者需要获得当前点的位置信息，此处必须为true
+
         mLocationClient.setLocOption(option);
         mLocationClient.start();
     }
@@ -330,20 +315,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
-            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-            //以下只列举部分获取经纬度相关（常用）的结果信息
-            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
 
             double latitude = location.getLatitude();    //获取纬度信息
             double longitude = location.getLongitude();    //获取经度信息
             float radius = location.getRadius();    //获取定位精度，默认值为0.0f
 
-
             String coorType = location.getCoorType();
-            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
 
             int errorCode = location.getLocType();
-            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
+
             String addr = location.getAddrStr();    //获取详细地址信息
             String country = location.getCountry();    //获取国家
             String province = location.getProvince();    //获取省份
@@ -351,8 +331,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
             String locationDescribe = location.getLocationDescribe();
-            /*Log.i("locateDescribe", locationDescribe);
-            Log.i("address", addr);*/
             locationString = locationDescribe;
             locationText = findViewById(R.id.locationText);
             if (locationString != null) {
@@ -432,23 +410,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sightSeeingIntent.putExtra("Type", "sightseeing");
                 startActivity(sightSeeingIntent);
                 break;
+            case R.id.all:
             case R.id.news:
                 Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
                 newsIntent.putExtra("UserId", userId);
                 startActivity(newsIntent);
-                finish();
                 break;
             case R.id.post:
                 Intent postIntent = new Intent(MainActivity.this, CustomizedActivity.class);
                 postIntent.putExtra("UserId", userId);
                 startActivity(postIntent);
+                finish();
+                break;
+            case R.id.map:
+                Intent mapIntent = new Intent(MainActivity.this, ScenicMapActivity.class);
+                startActivity(mapIntent);
                 break;
         }
     }
 
     private class PosterPagerAdapter extends android.support.v4.view.PagerAdapter {
 
-        List<Poster> posterList = new ArrayList<>();
+        List<Poster> posterList;
 
         public PosterPagerAdapter(List<Poster> posterList) {
             this.posterList = posterList;
@@ -473,8 +456,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public Object instantiateItem(ViewGroup container, int position) {
             position = position % posterList.size();
             View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_poster, null);
-            ImageView poster = view.findViewById(R.id.poster);
-            poster.setBackgroundResource(posterList.get(position).getSourceId());
+            SimpleDraweeView poster = view.findViewById(R.id.poster);
+            Uri uri = Uri.parse(posterList.get(position).url);
+            poster.setImageURI(uri);
             //poster.setImageResource(posterList.get(position).getSourceId());
             /*switch (List.get(position).Number) {
                 case 1:

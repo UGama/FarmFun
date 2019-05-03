@@ -9,8 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.model.LatLng;
@@ -19,6 +22,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class DatabaseOperation extends AppCompatActivity {
 
@@ -56,6 +62,25 @@ public class DatabaseOperation extends AppCompatActivity {
         //updateBarbecue();
         //updateChess();
         //updateKTV();
+
+        //test();
+    }
+
+    public void test() {
+        AVQuery<AVObject> query1 = new AVQuery<>("_File");
+        query1.whereStartsWith("name", "poster");
+        AVQuery<AVObject> query2 = new AVQuery<>("_File");
+        query2.whereEqualTo("name", "restaurantmain.jpg");
+        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(query1, query2));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+
+                Log.i("avObjectsList", String.valueOf(avObjects.size()));
+
+            }
+        });
+
 
     }
 

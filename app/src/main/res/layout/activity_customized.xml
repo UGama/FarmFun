@@ -101,6 +101,7 @@
         />
 
     <TextView
+        android:id="@+id/drift"
         android:text="竹筏漂流"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -115,6 +116,7 @@
         />
 
     <TextView
+        android:id="@+id/pick"
         android:text="采摘"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -129,6 +131,7 @@
         />
 
     <TextView
+        android:id="@+id/ktv"
         android:text="聚会K歌"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -143,6 +146,7 @@
         />
 
     <TextView
+        android:id="@+id/fishing"
         android:text="垂钓"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -157,6 +161,7 @@
         />
 
     <TextView
+        android:id="@+id/sightseeing"
         android:text="游山玩水"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -171,6 +176,7 @@
         />
 
     <TextView
+        android:id="@+id/chess"
         android:text="麻将"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -185,6 +191,7 @@
         />
 
     <TextView
+        android:id="@+id/barbecue"
         android:text="江边烧烤"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"
@@ -199,6 +206,7 @@
         />
 
     <TextView
+        android:id="@+id/restaurant"
         android:text="土菜馆"
         android:textColor="@color/colorTextGray"
         android:textSize="13sp"

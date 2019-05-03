@@ -7,43 +7,16 @@
     tools:context=".MainActivity"
     android:background="#ffffff"
     >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/topGuideLine"
+        />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/oneFourthGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.2"
-        />
-    <android.support.constraint.Guideline
-        android:id="@+id/twoFourthGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.4"
-        />
-    <android.support.constraint.Guideline
-        android:id="@+id/threeFourthGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.6"
-        />
-    <android.support.constraint.Guideline
-        android:id="@+id/fourFifthGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.8"
-        />
     <ImageView
         android:id="@+id/locationPic"
         android:layout_width="25dp"
@@ -51,28 +24,50 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:src="@drawable/location"
-        app:layout_constraintBottom_toTopOf="@id/topGuideLine"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         />
     <TextView
         android:id="@+id/locationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         app:layout_constraintLeft_toRightOf="@id/locationPic"
         app:layout_constraintTop_toTopOf="@id/locationPic"
         app:layout_constraintBottom_toBottomOf="@id/locationPic"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="5dp"
+        android:textSize="16sp"
         android:text="定位中…"
         />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        app:layout_constraintTop_toTopOf="@id/map"
+        app:layout_constraintBottom_toBottomOf="@id/map"
+        app:layout_constraintEnd_toStartOf="@id/map"
+        android:textSize="12sp"
+        android:textColor="#ffffff"
+        android:text="景区地图>"
+        />
+    <ImageView
+        android:id="@+id/map"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/map"
+        />
+    
     <ImageView
         android:id="@+id/topGuideLine"
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="@color/colorTheme"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
-        android:src="#f6f6f6"
+        android:layout_marginTop="80dp"
         />
 
     <ScrollView
@@ -366,7 +361,7 @@
                 android:id="@+id/cutLine"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/colorTheme"
+                android:background="@color/colorLineGray"
                 app:layout_constraintTop_toBottomOf="@id/fishingText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -413,7 +408,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recommendProjectsRecyclerView"
                 android:layout_marginTop="20dp"
-                android:background="@color/colorTheme"
+                android:background="@color/colorLineGray"
                 />
 
             <ImageView

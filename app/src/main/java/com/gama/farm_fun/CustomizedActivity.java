@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,8 +36,24 @@ import java.util.List;
 import static android.animation.ObjectAnimator.ofFloat;
 
 public class CustomizedActivity extends AppCompatActivity implements View.OnClickListener {
-    public int screenWidth;
-    public int screenHeight;
+    private String userId;
+
+    private View topBar;
+    private TextView title;
+    private Button back;
+
+    private int screenWidth;
+    private int screenHeight;
+
+    private TextView drift;
+    private TextView pick;
+    private TextView ktv;
+    private TextView fishing;
+    private TextView sightseeing;
+    private TextView chess;
+    private TextView barbecue;
+    private TextView restaurant;
+    private String[] tabs;
 
     private View timeChosePanel;
     private ImageView shelter;
@@ -78,15 +95,19 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
 
     private Toast toast;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
-
         setContentView(R.layout.activity_customized);
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
 
         getWindowInformation();
     }
+
     public void getWindowInformation() {
         WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -105,6 +126,31 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void initUI() {
+        topBar = findViewById(R.id.top_bar);
+        title = topBar.findViewById(R.id.title);
+        title.setText("项目定制");
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
+
+        drift = findViewById(R.id.drift);
+        drift.setOnClickListener(this);
+        pick = findViewById(R.id.pick);
+        pick.setOnClickListener(this);
+        ktv = findViewById(R.id.ktv);
+        ktv.setOnClickListener(this);
+        sightseeing = findViewById(R.id.sightseeing);
+        sightseeing.setOnClickListener(this);
+        chess = findViewById(R.id.chess);
+        chess.setOnClickListener(this);
+        fishing = findViewById(R.id.fishing);
+        fishing.setOnClickListener(this);
+        barbecue = findViewById(R.id.barbecue);
+        barbecue.setOnClickListener(this);
+        restaurant = findViewById(R.id.restaurant);
+        restaurant.setOnClickListener(this);
+
+        tabs = new String[]{"","","","","","","",""};
+
         timeChosePanel = findViewById(R.id.datePanel);
         shelter = findViewById(R.id.shelter);
         shelter.setOnClickListener(this);
@@ -136,8 +182,8 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
         chosenEndDate.setText("6月2日");
         endTime = "6月2日";
         days = timeShowPanel.findViewById(R.id.days);
-        days.setText("共1天>");
-        dayCount = 1;
+        days.setText("共2天>");
+        dayCount = 2;
 
         peopleShowPanel = findViewById(R.id.panel_people_show);
         peopleShowPanel.setOnClickListener(this);
@@ -182,6 +228,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 Log.i("adults", String.valueOf(newVal));
                 adults = newVal;
+                persons = adults + children;
                 adultsText.setText(String.valueOf(adults) + "名成人");
             }
         });
@@ -195,6 +242,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 Log.i("children", String.valueOf(newVal));
                 children = newVal;
+                persons = adults + children;
                 childrenText.setText(String.valueOf(children) + "名儿童");
             }
         });
@@ -233,6 +281,198 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.drift:
+                boolean chosen = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("drift")) {
+                        chosen = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen) {
+                    drift.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    drift.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "drift";
+                            drift.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            drift.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.chess:
+                boolean chosen2 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("chess")) {
+                        chosen2 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen2) {
+                    chess.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    chess.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "chess";
+                            chess.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            chess.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.ktv:
+                boolean chosen3 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("ktv")) {
+                        chosen3 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen3) {
+                    ktv.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    ktv.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "ktv";
+                            ktv.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            ktv.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.barbecue:
+                boolean chosen4 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("barbecue")) {
+                        chosen4 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen4) {
+                    barbecue.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    barbecue.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "barbecue";
+                            barbecue.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            barbecue.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.fishing:
+                boolean chosen5 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("fishing")) {
+                        chosen5 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen5) {
+                    fishing.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    fishing.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "fishing";
+                            fishing.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            fishing.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.pick:
+                boolean chosen6 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("pick")) {
+                        chosen6 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen6) {
+                    pick.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    pick.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "pick";
+                            pick.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            pick.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.sightseeing:
+                boolean chosen7 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("sightseeing")) {
+                        chosen7 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen7) {
+                    sightseeing.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    sightseeing.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "sightseeing";
+                            sightseeing.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            sightseeing.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
+            case R.id.restaurant:
+                boolean chosen8 = false;
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i].equals("restaurant")) {
+                        chosen8 = true;
+                        tabs[i] = "";
+                        break;
+                    }
+                }
+                if (chosen8) {
+                    restaurant.setBackground(getResources().getDrawable(R.drawable.shape_catalog1));
+                    restaurant.setTextColor(getResources().getColor(R.color.colorTextGray));
+                } else {
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (tabs[i].equals("")) {
+                            tabs[i] = "restaurant";
+                            restaurant.setBackground(getResources().getDrawable(R.drawable.shape_catalog2));
+                            restaurant.setTextColor(getResources().getColor(R.color.colorWhite));
+                            break;
+                        }
+                    }
+                }
+                showTabs(tabs);
+                break;
             case R.id.panel_people_show:
                 peopleChosePanel.setVisibility(View.VISIBLE);
                 ObjectAnimator objectAnimator1 = ofFloat(peopleChosePanel,
@@ -265,9 +505,33 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
             case R.id.customized:
                 if (dayCount > 7) {
                     showToast("暂时只提供7日内农家乐项目定制。");
+                } else if (endMonth != 6 || startMonth != 6) {
+                    showToast("暂时只提供6月份的农家乐旅游项目定制。");
                 } else {
-
+                    boolean tab = false;
+                    for (int i = 0; i < tabs.length; i++) {
+                        if (!tabs[i].equals("")) {
+                            tab = true;
+                            break;
+                        }
+                    }
+                    if (tab) {
+                        Intent intent = new Intent(CustomizedActivity.this, TravelPlanActivity.class);
+                        intent.putExtra("UserId", userId);
+                        intent.putExtra("tabs", tabs);
+                        intent.putExtra("children", children);
+                        intent.putExtra("adults", adults);
+                        intent.putExtra("startTime", startDay);
+                        intent.putExtra("endTime", endDay);
+                        intent.putExtra("days", dayCount);
+                        startActivityForResult(intent, 0);
+                    } else {
+                        showToast("请至少选择一个你喜欢的标签。");
+                    }
                 }
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }
@@ -330,7 +594,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
         Week firstWeek = new Week(firstWeekArray);
         weeks.add(firstWeek);
 
-        int[] weekArray=new int[7];
+        int[] weekArray = new int[7];
         int l = 0;
         for (int i = 8 - month.firstDayWeek; i <= month.days; i++) {
             if ((i + month.firstDayWeek) % 7 == 1) {
@@ -406,7 +670,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.SunDetail.setText("返程");
                                 holder.SunDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Sun.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 Log.i("endTime", endTime);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -442,7 +706,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.MonDetail.setText("返程");
                                 holder.MonDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Mon.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -477,7 +741,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.TueDetail.setText("返程");
                                 holder.TueDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Tue.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -512,7 +776,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.WedDetail.setText("返程");
                                 holder.WedDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Wed.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -547,7 +811,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.ThuDetail.setText("返程");
                                 holder.ThuDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Thu.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -582,7 +846,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.FriDetail.setText("返程");
                                 holder.FriDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Fri.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -617,7 +881,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                                 holder.SatDetail.setText("返程");
                                 holder.SatDetail.setVisibility(View.VISIBLE);
                                 endTime = String.valueOf(month) + "月" + holder.Sat.getText().toString() + "日";
-                                days.setText("共" + String.valueOf(dayCount) + "晚>");
+                                days.setText("共" + String.valueOf(dayCount) + "天>");
                                 shelter.setVisibility(View.INVISIBLE);
                                 chosenStartDate.setText(startTime);
                                 chosenEndDate.setText(endTime);
@@ -669,7 +933,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                 SatDetail = view.findViewById(R.id.Sat_detail);
             }
         }
-        
+
     }
 
     private class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.ViewHolder> {
@@ -719,9 +983,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
     }
 
     public int getDays(int startMonth, int startDay, int endMonth, int endDay) {
-        int nights = 0;
+        int days = 0;
         if (startMonth == endMonth) {
-            nights = endDay - startDay;
+            days = endDay - startDay + 1;
         } else {
             for (int i = 0; i < endMonth - startMonth; i++) {
                 switch (startMonth + i) {
@@ -736,10 +1000,30 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                         break;
                 }
             }
-            nights = endDay - startDay;
+            days = endDay - startDay + 1;
         }
-        return nights;
+        return days;
     }
 
+    public void showTabs(String[] tabs) {
+        String string = "";
+        for (int i = 0; i < tabs.length; i++) {
+            if (!tabs[i].equals("")) {
+                string = string + (tabs[i] + ',');
+            }
+        }
+        Log.i("tabs", string);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    finish();
+                }
+                break;
+        }
+    }
 }

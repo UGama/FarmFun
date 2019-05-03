@@ -50,10 +50,10 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     public List<Poster> posterList;
     public ViewPagerIndicator indicator;
 
-
     public RecyclerView typeRecyclerView;
     public List<Type> typeList;
     public String typeShowing;
+    public View choseTypeView;
 
     public RecyclerView commentRecyclerView;
     public List<Comment> commentList;
@@ -601,9 +601,16 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(View v) {
                     Log.i("Type", holder.code);
                     typeShowing = holder.code;
+                    holder.background.setVisibility(View.VISIBLE);
+                    choseTypeView.setVisibility(View.INVISIBLE);
+                    choseTypeView = holder.background;
                     getProjectInformation();
                 }
             });
+            if (position == 0) {
+                holder.background.setVisibility(View.VISIBLE);
+                choseTypeView = holder.background;
+            }
         }
 
         @Override
@@ -616,12 +623,14 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             private TextView type;
             private String code;
             private View typeView;
+            private ImageView background;
 
             private ViewHolder(View view) {
                 super(view);
                 image = view.findViewById(R.id.image);
                 type = view.findViewById(R.id.type);
                 typeView = view;
+                background = view.findViewById(R.id.background);
             }
 
             public void setCode(String code) {
