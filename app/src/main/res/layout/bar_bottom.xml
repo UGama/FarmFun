@@ -119,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/onlineStore"
+        app:layout_constraintTop_toBottomOf="@id/news"
         app:layout_constraintStart_toStartOf="@id/oneFourthGuideLine"
         app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         />

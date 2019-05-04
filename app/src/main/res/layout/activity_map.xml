@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="20dp"
         android:alpha="0.4"
         />
 

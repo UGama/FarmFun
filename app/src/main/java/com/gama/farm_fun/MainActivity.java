@@ -370,8 +370,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationPic:
-                Intent intent = new Intent(MainActivity.this, ScenicMapActivity.class);
+                Intent intent = new Intent(MainActivity.this, OnlineShopActivity.class);
+                intent.putExtra("UserId", userId);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.pick:
                 Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);

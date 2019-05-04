@@ -353,7 +353,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -378,6 +377,13 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(NewsActivity.this, MineActivity.class);
                 intent.putExtra("UserId", userId);
                 startActivity(intent);
+                finish();
+                break;
+            case R.id.order:
+                Intent intent1 = new Intent(NewsActivity.this, MyOrder.class);
+                intent1.putExtra("Type", "all");
+                intent1.putExtra("UserId", userId);
+                startActivity(intent1);
                 finish();
                 break;
             case R.id.homePage:
@@ -461,15 +467,15 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 postPanel.setVisibility(View.INVISIBLE);
                 break;
             case R.id.post_customized:
-                Intent intent1 = new Intent(NewsActivity.this, CustomizedActivity.class);
-                intent1.putExtra("UserId", userId);
-                startActivity(intent1);
+                Intent intent2 = new Intent(NewsActivity.this, CustomizedActivity.class);
+                intent2.putExtra("UserId", userId);
+                startActivity(intent2);
                 break;
             case R.id.post_comment:
-                Intent intent2 = new Intent(NewsActivity.this, MyOrder.class);
-                intent2.putExtra("UserId", userId);
-                intent2.putExtra("Type", "comment");
-                startActivity(intent2);
+                Intent intent3 = new Intent(NewsActivity.this, MyOrder.class);
+                intent3.putExtra("UserId", userId);
+                intent3.putExtra("Type", "comment");
+                startActivity(intent3);
                 break;
         }
     }

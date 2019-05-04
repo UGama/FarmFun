@@ -82,7 +82,7 @@
         app:layout_constraintTop_toTopOf="@+id/topGuideLine"
         app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
         android:background="@drawable/tobecommented"
-        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_bias="0.25"
         />
     <ImageView
         android:id="@+id/homeStayOrder"
@@ -92,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideLine"
         app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
-        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_bias="0.25"
         android:background="@drawable/homestayorder"
         />
 
@@ -104,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="@id/threeFourthGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideLine"
         app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
-        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_bias="0.25"
         android:background="@drawable/restaurantorder"
         />
 
@@ -117,7 +117,7 @@
         app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
         app:layout_constraintTop_toTopOf="@id/topGuideLine"
         android:background="@drawable/projectsorder"
-        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_bias="0.25"
         />
 
     <TextView
