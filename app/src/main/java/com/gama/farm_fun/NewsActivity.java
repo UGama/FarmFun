@@ -1,5 +1,7 @@
 package com.gama.farm_fun;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,6 +57,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     public List<Type> typeList;
     public String typeShowing;
     public View choseTypeView;
+    public boolean init;
+    public String showType;
 
     public RecyclerView commentRecyclerView;
     public List<Comment> commentList;
@@ -61,6 +66,15 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
     public RecyclerView travelJournalRecyclerView;
     public List<TravelJournal> travelJournalList;
+
+    private View postPanel;
+    private Button postBack;
+    private ImageView postComment;
+    private ImageView postCustomized;
+    private ImageView postJournal;
+    private TextView postCustomizedText;
+    private TextView postCommentText;
+    private TextView postJournalText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +110,22 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
         detail = findViewById(R.id.detail);
         detail.setOnClickListener(this);
 
+        init = true;
+        showType = "pick";
+
+        postPanel = findViewById(R.id.panel_post);
+        postPanel.setOnClickListener(this);
+        postBack = postPanel.findViewById(R.id.post_back);
+        postBack.setOnClickListener(this);
+        postComment = postPanel.findViewById(R.id.post_comment);
+        postComment.setOnClickListener(this);
+        postCustomized = postPanel.findViewById(R.id.post_customized);
+        postCustomized.setOnClickListener(this);
+        postJournal = postPanel.findViewById(R.id.post_journal);
+        postJournal.setOnClickListener(this);
+        postCommentText = postPanel.findViewById(R.id.comment_text);
+        postCustomizedText = postPanel.findViewById(R.id.customized_text);
+        postJournalText = postPanel.findViewById(R.id.journal_text);
 
         initTypeRecyclerView();
     }
@@ -344,10 +374,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 break;
-            case R.id.post:
-                Intent intent0 = new Intent(NewsActivity.this, CustomizedActivity.class);
-                intent0.putExtra("UserId", userId);
-                startActivity(intent0);
             case R.id.mine:
                 Intent intent = new Intent(NewsActivity.this, MineActivity.class);
                 intent.putExtra("UserId", userId);
@@ -356,6 +382,94 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.homePage:
                 finish();
+                break;
+            case R.id.post:
+                postCommentText.setVisibility(View.INVISIBLE);
+                postCustomizedText.setVisibility(View.INVISIBLE);
+                postJournalText.setVisibility(View.INVISIBLE);
+                postPanel.setVisibility(View.VISIBLE);
+                postPanel.getBackground().setAlpha(240);
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(postComment,
+                        "translationY", 700, 0);
+                objectAnimator1.setDuration(1000);
+                objectAnimator1.setInterpolator(new OvershootInterpolator());
+                objectAnimator1.start();
+
+                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(postCustomized,
+                        "translationY", 700, 0);
+                objectAnimator2.setDuration(1000);
+                objectAnimator2.setInterpolator(new OvershootInterpolator());
+                objectAnimator2.start();
+
+                ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(postJournal,
+                        "translationY", 700, 0);
+                objectAnimator3.setDuration(1000);
+                objectAnimator3.setInterpolator(new OvershootInterpolator());
+                objectAnimator3.start();
+                objectAnimator3.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        postCommentText.setVisibility(View.VISIBLE);
+                        postCustomizedText.setVisibility(View.VISIBLE);
+                        postJournalText.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(postBack,
+                        "rotation", 0, 45);
+                objectAnimator4.setDuration(500);
+                objectAnimator4.setInterpolator(new OvershootInterpolator());
+                objectAnimator4.start();
+
+                ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(postCommentText,
+                        "alpha", 0, 1);
+                objectAnimator5.setDuration(500);
+                objectAnimator5.setStartDelay(1000);
+                objectAnimator5.setInterpolator(new OvershootInterpolator());
+                objectAnimator5.start();
+
+                ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(postCustomizedText,
+                        "alpha", 0, 1);
+                objectAnimator6.setDuration(500);
+                objectAnimator6.setStartDelay(1000);
+                objectAnimator6.setInterpolator(new OvershootInterpolator());
+                objectAnimator6.start();
+
+                ObjectAnimator objectAnimator7 = ObjectAnimator.ofFloat(postJournalText,
+                        "alpha", 0, 1);
+                objectAnimator7.setDuration(500);
+                objectAnimator7.setStartDelay(1000);
+                objectAnimator7.setInterpolator(new OvershootInterpolator());
+                objectAnimator7.start();
+                break;
+            case R.id.post_back:
+                postPanel.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.post_customized:
+                Intent intent1 = new Intent(NewsActivity.this, CustomizedActivity.class);
+                intent1.putExtra("UserId", userId);
+                startActivity(intent1);
+                break;
+            case R.id.post_comment:
+                Intent intent2 = new Intent(NewsActivity.this, MyOrder.class);
+                intent2.putExtra("UserId", userId);
+                intent2.putExtra("Type", "comment");
+                startActivity(intent2);
                 break;
         }
     }
@@ -600,21 +714,24 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             holder.image.setImageResource(type.picId);
             holder.type.setText(type.type);
             holder.setCode(type.typeCode);
+            holder.background.setVisibility(View.INVISIBLE);
             holder.typeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i("Type", holder.code);
                     typeShowing = holder.code;
-                    holder.background.setVisibility(View.VISIBLE);
                     choseTypeView.setVisibility(View.INVISIBLE);
+                    holder.background.setVisibility(View.VISIBLE);
                     choseTypeView = holder.background;
+                    showType = holder.code;
                     getProjectInformation();
                 }
             });
-            if (position == 0) {
+            if (holder.code.equals(showType)) {
                 holder.background.setVisibility(View.VISIBLE);
                 choseTypeView = holder.background;
             }
+
         }
 
         @Override

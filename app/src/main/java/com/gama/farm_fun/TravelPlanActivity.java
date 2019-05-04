@@ -55,6 +55,14 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private int picSupport;
     private int travelPlanSupport;
 
+    private List<TravelPlan> homeStayList;
+    private RecyclerView homeStayRecyclerView;
+    private List<SimpleTicket> roomList;
+
+    private List<TravelPlan> restaurantList;
+    private RecyclerView restaurantRecyclerView;
+    private List<SimpleTicket> seatList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,21 +172,21 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void getTravelPlanPic() {
-        for (int i = 0; i < travelPlanList.size(); i++) {
-            AVQuery<AVObject> query = new AVQuery<>("_File");
-            query.whereEqualTo("name", travelPlanList.get(i).picName);
-            query.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject object, AVException e) {
-                    travelPlanList.get(picSupport).setUrl(object.getString("url"));
-                    picSupport++;
-                    if (picSupport == travelPlanList.size()) {
-                        initTravelPlan();
-                    }
-                }
-            });
-        }
 
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", travelPlanList.get(picSupport).picName);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                travelPlanList.get(picSupport).setUrl(object.getString("url"));
+                picSupport++;
+                if (picSupport < travelPlanList.size()) {
+                    getTravelPlanPic();
+                } else {
+                    initTravelPlan();
+                }
+            }
+        });
 
     }
 
@@ -189,10 +197,82 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         TravelPlanAdapter travelPlanAdapter = new TravelPlanAdapter(travelPlanList);
         travelPlanRecyclerView.setAdapter(travelPlanAdapter);
 
-        getItem();
+        getHomeStayInformation();
     }
 
-    public void getItem() {
+    public void getHomeStayInformation() {
+        homeStayList = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("HomeStay");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                TravelPlan travelPlan = new TravelPlan(0,
+                        object.getString("name"),
+                        object.getString("locateDescribe"),
+                        object.getString("mainPicName"));
+                travelPlan.setType("HomeStay");
+                homeStayList.add(travelPlan);
+                getHomeStayPic();
+            }
+        });
+    }
+
+    public void getHomeStayPic() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", homeStayList.get(0).picName);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                homeStayList.get(0).setUrl(object.getString("url"));
+                initHomeStayRecyclerView();
+            }
+        });
+
+    }
+
+    public void initHomeStayRecyclerView() {
+        homeStayRecyclerView = findViewById(R.id.homeStayRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        homeStayRecyclerView.setLayoutManager(linearLayoutManager);
+        TravelPlanAdapter travelPlanAdapter = new TravelPlanAdapter(homeStayList);
+        homeStayRecyclerView.setAdapter(travelPlanAdapter);
+        getRestaurantInformation();
+    }
+
+    public void getRestaurantInformation() {
+        restaurantList = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("Restaurant");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                TravelPlan travelPlan = new TravelPlan(0,
+                        object.getString("name"),
+                        object.getString("locateDescribe"),
+                        object.getString("mainPicName"));
+                travelPlan.setType("Restaurant");
+                restaurantList.add(travelPlan);
+                getRestaurantPic();
+            }
+        });
+    }
+    public void getRestaurantPic() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", restaurantList.get(0).picName);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                restaurantList.get(0).setUrl(object.getString("url"));
+                initRestaurantRecyclerView();
+            }
+        });
+    }
+
+    public void initRestaurantRecyclerView() {
+        restaurantRecyclerView = findViewById(R.id.restaurantRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        restaurantRecyclerView.setLayoutManager(linearLayoutManager);
+        TravelPlanAdapter travelPlanAdapter = new TravelPlanAdapter(restaurantList);
+        restaurantRecyclerView.setAdapter(travelPlanAdapter);
     }
 
     private class TravelPlanAdapter extends RecyclerView.Adapter<TravelPlanAdapter.ViewHolder> {
@@ -219,7 +299,11 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             holder.projectPic.getHierarchy().setRoundingParams(roundingParams);
             holder.locate.setText(travelPlan.locateDescribe);
             holder.price.setText("¥200");
-            holder.day.setText("Day" + String.valueOf(travelPlan.day));
+            if (travelPlan.day == 0) {
+                holder.day.setVisibility(View.INVISIBLE);
+            } else {
+                holder.day.setText("Day" + String.valueOf(travelPlan.day));
+            }
             holder.name.setText(travelPlan.name);
 
             holder.setNumber(travelPlan.day);
@@ -343,7 +427,7 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
                 ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
                 holder.projectRecyclerView.setAdapter(itemAdapter);
-            } else {
+            } else if (travelPlan.type.equals("sightseeing")) {
                 if (children == 0) {
                     SimpleTicket simpleTicket = new SimpleTicket("成人票",
                             adults, 120 * adults);
@@ -356,11 +440,75 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                             children, 60 * children);
                     simpleTicketList.add(simpleTicket2);
                 }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
+                holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
+                ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
+                holder.projectRecyclerView.setAdapter(itemAdapter);
+            } else if (travelPlan.type.equals("HomeStay")) {
+                SimpleTicket simpleTicket = new SimpleTicket("标准间",
+                        adults / 2 * dayCount, dayCount * adults / 2 * 278);
+                simpleTicketList.add(simpleTicket);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
+                holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
+                ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
+                holder.projectRecyclerView.setAdapter(itemAdapter);
+            } else if (travelPlan.type.equals("Restaurant")) {
+                if (haveRestaurant) {
+                    if (persons <= 2) {
+                        SimpleTicket simpleTicket1 = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日中午）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket1);
+                        SimpleTicket simpleTicket2 = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket2);
+                    } else if (persons <= 4) {
+                        SimpleTicket simpleTicket1 = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日中午）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket1);
+                        SimpleTicket simpleTicket2 = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket2);
+                    } else if (persons <= 8) {
+                        SimpleTicket simpleTicket1 = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日中午）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket1);
+                        SimpleTicket simpleTicket2 = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket2);
+                    } else {
+                        SimpleTicket simpleTicket1 = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日中午）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket1);
+                        SimpleTicket simpleTicket2 = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket2);
+                    }
+
+                } else {
+                    if (persons <= 2) {
+                        SimpleTicket simpleTicket = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket);
+                    } else if (persons <= 4) {
+                        SimpleTicket simpleTicket = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket);
+                    } else if (persons <= 8) {
+                        SimpleTicket simpleTicket = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket);
+                    } else {
+                        SimpleTicket simpleTicket = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日晚上）",
+                                1, 20);
+                        simpleTicketList.add(simpleTicket);
+                    }
+                }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
+                holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
+                ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
+                holder.projectRecyclerView.setAdapter(itemAdapter);
             }
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
-            holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
-            ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
-            holder.projectRecyclerView.setAdapter(itemAdapter);
+
         }
 
         @Override
@@ -474,7 +622,10 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             }
         }
         for (int i = 0; i < support.length; i++) {
+            Log.i("support", String.valueOf(support[i]));
             randomString[i] = tabs[support[i]];
+            Log.i("randomString", randomString[i]);
+            Log.i("tabs", tabs[support[i]]);
         }
 
         return randomString;

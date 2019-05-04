@@ -18,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -62,6 +65,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
     private List<Date> dateList;
     private List<Month> monthList;
     private AnimatorSet timeChosePanelQuit;
+    private TextView timeChosePanelTitle;
 
     private String startTime;
     private String endTime;
@@ -90,6 +94,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
     private NumberPicker childrenNumberPick;
 
     private ImageView customized;
+    private TextView customizedText;
 
     private boolean firstTouch = true;
 
@@ -172,6 +177,8 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                 timeChosePanel.setVisibility(View.INVISIBLE);
             }
         });
+        timeChosePanelTitle = timeChosePanel.findViewById(R.id.choseDate);
+        timeChosePanelTitle.setText("请选择出行与返程时间：");
 
         timeShowPanel = findViewById(R.id.panel_time_show);
         timeShowPanel.setOnClickListener(this);
@@ -218,6 +225,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
 
         customized = findViewById(R.id.customized);
         customized.setOnClickListener(this);
+        customizedText = findViewById(R.id.customized_text);
 
         initNumberPick();
     }
@@ -280,7 +288,6 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
         Log.i("Test", "setAdapterSuccess!");
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -509,7 +516,11 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
             case R.id.customized:
                 if (dayCount > 7) {
                     showToast("暂时只提供7日内农家乐项目定制。");
+                    customized.startAnimation(shakeAnimation());
+                    customizedText.startAnimation(shakeAnimation());
                 } else if (endMonth != 6 || startMonth != 6) {
+                    customized.startAnimation(shakeAnimation());
+                    customizedText.startAnimation(shakeAnimation());
                     showToast("暂时只提供6月份的农家乐旅游项目定制。");
                 } else {
                     boolean tab = false;
@@ -530,6 +541,8 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                         intent.putExtra("days", dayCount);
                         startActivityForResult(intent, 0);
                     } else {
+                        customized.startAnimation(shakeAnimation());
+                        customizedText.startAnimation(shakeAnimation());
                         showToast("请至少选择一个你喜欢的标签。");
                     }
                 }
@@ -1030,4 +1043,12 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
+    private Animation shakeAnimation() {
+        Animation translateAnimation = new TranslateAnimation(0, 10, 0, 0);
+        translateAnimation.setInterpolator(new CycleInterpolator(5));
+        translateAnimation.setDuration(1000);
+        return translateAnimation;
+    }
+
 }

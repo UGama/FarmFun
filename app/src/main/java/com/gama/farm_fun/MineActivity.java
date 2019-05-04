@@ -1,5 +1,7 @@
 package com.gama.farm_fun;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,9 +9,11 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -49,6 +53,16 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mineText;
     private Button post;
 
+    private Toast toast;
+
+    private View postPanel;
+    private Button postBack;
+    private ImageView postComment;
+    private ImageView postCustomized;
+    private ImageView postJournal;
+    private TextView postCustomizedText;
+    private TextView postCommentText;
+    private TextView postJournalText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +101,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         headPic = userLayout.findViewById(R.id.headPic);
         headPic.setImageResource(R.drawable.male);
 
-        localSpecialtyOrder = findViewById(R.id.localSpecialtyOrder);
+        localSpecialtyOrder = findViewById(R.id.toBeCommentedOrder);
         localSpecialtyOrder.setOnClickListener(this);
         homeStayOrder = findViewById(R.id.homeStayOrder);
         homeStayOrder.setOnClickListener(this);
@@ -128,41 +142,85 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         mine.setBackground(getResources().getDrawable(R.drawable.mine1));
         mineText = bottomBar.findViewById(R.id.mineText);
         mineText.setTextColor(getResources().getColor(R.color.colorTheme));
+
+        postPanel = findViewById(R.id.panel_post);
+        postPanel.setOnClickListener(this);
+        postBack = postPanel.findViewById(R.id.post_back);
+        postBack.setOnClickListener(this);
+        postComment = postPanel.findViewById(R.id.post_comment);
+        postComment.setOnClickListener(this);
+        postCustomized = postPanel.findViewById(R.id.post_customized);
+        postCustomized.setOnClickListener(this);
+        postJournal = postPanel.findViewById(R.id.post_journal);
+        postJournal.setOnClickListener(this);
+        postCommentText = postPanel.findViewById(R.id.comment_text);
+        postCustomizedText = postPanel.findViewById(R.id.customized_text);
+        postJournalText = postPanel.findViewById(R.id.journal_text);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.localSpecialtyOrder:
+            case R.id.toBeCommentedOrder:
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent toBeCommentOrder = new Intent(MineActivity.this, MyOrder.class);
+                    toBeCommentOrder.putExtra("UserId", userId);
+                    toBeCommentOrder.putExtra("Type", "comment");
+                    startActivity(toBeCommentOrder);
+                }
                 break;
             case R.id.homeStayOrder:
-                Intent homeStayOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                homeStayOrderIntent.putExtra("Type", "HomeStay");
-                homeStayOrderIntent.putExtra("UserId", userId);
-                startActivity(homeStayOrderIntent);
-                finish();
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent homeStayOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    homeStayOrderIntent.putExtra("Type", "HomeStay");
+                    homeStayOrderIntent.putExtra("UserId", userId);
+                    startActivity(homeStayOrderIntent);
+                }
                 break;
             case R.id.restaurantOrder:
-                Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                restaurantOrderIntent.putExtra("Type", "Restaurant");
-                restaurantOrderIntent.putExtra("UserId", userId);
-                startActivity(restaurantOrderIntent);
-                finish();
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    restaurantOrderIntent.putExtra("Type", "Restaurant");
+                    restaurantOrderIntent.putExtra("UserId", userId);
+                    startActivity(restaurantOrderIntent);
+                }
                 break;
             case R.id.projectOrder:
-                Intent amusementOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                amusementOrderIntent.putExtra("Type", "Amusement");
-                amusementOrderIntent.putExtra("UserId", userId);
-                startActivity(amusementOrderIntent);
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent amusementOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    amusementOrderIntent.putExtra("Type", "Amusement");
+                    amusementOrderIntent.putExtra("UserId", userId);
+                    startActivity(amusementOrderIntent);
+                }
                 break;
             case R.id.comment:
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent commentIntent = new Intent(MineActivity.this, MyCommentActivity.class);
+                    commentIntent.putExtra("UserId", userId);
+                    startActivity(commentIntent);
+                }
                 break;
             case R.id.setting:
                 break;
             case R.id.all_order:
-                Intent allOrderIntent = new Intent(MineActivity.this, MyOrder.class);
-                allOrderIntent.putExtra("Type", "all");
-                startActivity(allOrderIntent);
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent allOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    allOrderIntent.putExtra("UserId", userId);
+                    allOrderIntent.putExtra("Type", "all");
+                    startActivity(allOrderIntent);
+                }
                 break;
             case R.id.userLayout:
                 if (userId.equals("tourist")) {
@@ -177,12 +235,105 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MineActivity.this, NewsActivity.class);
                 intent.putExtra("UserId", userId);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.order:
-                Intent intent1 = new Intent(MineActivity.this, MyOrder.class);
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent intent1 = new Intent(MineActivity.this, MyOrder.class);
+                    intent1.putExtra("UserId", userId);
+                    intent1.putExtra("Type", "all");
+                    startActivity(intent1);
+                }
+                break;
+            case R.id.post:
+                postCommentText.setVisibility(View.INVISIBLE);
+                postCustomizedText.setVisibility(View.INVISIBLE);
+                postJournalText.setVisibility(View.INVISIBLE);
+                postPanel.setVisibility(View.VISIBLE);
+                postPanel.getBackground().setAlpha(240);
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(postComment,
+                        "translationY", 700, 0);
+                objectAnimator1.setDuration(1000);
+                objectAnimator1.setInterpolator(new OvershootInterpolator());
+                objectAnimator1.start();
+
+                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(postCustomized,
+                        "translationY", 700, 0);
+                objectAnimator2.setDuration(1000);
+                objectAnimator2.setInterpolator(new OvershootInterpolator());
+                objectAnimator2.start();
+
+                ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(postJournal,
+                        "translationY", 700, 0);
+                objectAnimator3.setDuration(1000);
+                objectAnimator3.setInterpolator(new OvershootInterpolator());
+                objectAnimator3.start();
+                objectAnimator3.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        postCommentText.setVisibility(View.VISIBLE);
+                        postCustomizedText.setVisibility(View.VISIBLE);
+                        postJournalText.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(postBack,
+                        "rotation", 0, 45);
+                objectAnimator4.setDuration(500);
+                objectAnimator4.setInterpolator(new OvershootInterpolator());
+                objectAnimator4.start();
+
+                ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(postCommentText,
+                        "alpha", 0, 1);
+                objectAnimator5.setDuration(500);
+                objectAnimator5.setStartDelay(1000);
+                objectAnimator5.setInterpolator(new OvershootInterpolator());
+                objectAnimator5.start();
+
+                ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(postCustomizedText,
+                        "alpha", 0, 1);
+                objectAnimator6.setDuration(500);
+                objectAnimator6.setStartDelay(1000);
+                objectAnimator6.setInterpolator(new OvershootInterpolator());
+                objectAnimator6.start();
+
+                ObjectAnimator objectAnimator7 = ObjectAnimator.ofFloat(postJournalText,
+                        "alpha", 0, 1);
+                objectAnimator7.setDuration(500);
+                objectAnimator7.setStartDelay(1000);
+                objectAnimator7.setInterpolator(new OvershootInterpolator());
+                objectAnimator7.start();
+                break;
+            case R.id.post_back:
+                postPanel.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.post_customized:
+                Intent intent1 = new Intent(MineActivity.this, CustomizedActivity.class);
                 intent1.putExtra("UserId", userId);
-                intent1.putExtra("Type", "all");
                 startActivity(intent1);
+                break;
+            case R.id.post_comment:
+                Intent intent2 = new Intent(MineActivity.this, MyOrder.class);
+                intent2.putExtra("UserId", userId);
+                intent2.putExtra("Type", "comment");
+                startActivity(intent2);
                 break;
         }
     }
@@ -201,11 +352,21 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void done(AVObject object, AVException e) {
                             netName = object.getString("netName");
-
+                            userName.setText(netName);
                         }
                     });
                 }
                 break;
+        }
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
         }
     }
 }

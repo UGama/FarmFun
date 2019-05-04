@@ -25,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="120dp"
         android:src="@drawable/day_frame"
@@ -50,7 +49,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/project_pic"
         app:layout_constraintStart_toEndOf="@id/project_pic"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:textColor="#000000"
         android:textSize="16sp"
         android:text="@string/test"
@@ -103,5 +102,6 @@
         android:layout_marginEnd="30dp"
         android:background="@color/thumbColor"
         />
+
 
 </android.support.constraint.ConstraintLayout>

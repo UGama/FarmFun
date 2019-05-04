@@ -27,12 +27,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyOrder extends AppCompatActivity {
+public class MyOrder extends AppCompatActivity implements View.OnClickListener {
     private String userId;
     private String type;
 
     private View topBar;
     private TextView title;
+    private Button back;
 
     private RecyclerView myOrderRecyclerView;
     private List<Order> orderList;
@@ -55,6 +56,11 @@ public class MyOrder extends AppCompatActivity {
         topBar = findViewById(R.id.topBar);
         title = topBar.findViewById(R.id.title);
         title.setText("我的订单");
+        if (type.equals("comment")) {
+            title.setText("待评价订单");
+        }
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
 
         myOrderRecyclerView = findViewById(R.id.myorderRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -71,6 +77,9 @@ public class MyOrder extends AppCompatActivity {
             query.whereEqualTo("type", type);
         } else if (type.equals("HomeStay")) {
             query.whereEqualTo("type", type);
+        }
+        if (type.equals("comment")) {
+            query.whereEqualTo("comment", true);
         }
         query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {
@@ -137,6 +146,15 @@ public class MyOrder extends AppCompatActivity {
     public void initMyOrderRecyclerView() {
         MyOrderAdapter myOrderAdapter = new MyOrderAdapter(orderList);
         myOrderRecyclerView.setAdapter(myOrderAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
+        }
     }
 
     private class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHolder> {

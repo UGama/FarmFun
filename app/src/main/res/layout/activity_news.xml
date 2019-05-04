@@ -17,8 +17,8 @@
     <ImageView
         android:id="@+id/topCutLine"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLineGray"
+        android:layout_height="3dp"
+        android:background="@color/colorTheme"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/typeRecyclerView"
@@ -198,6 +198,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <include
+        android:id="@+id/panel_post"
+        layout="@layout/panel_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
         />
 
 </android.support.constraint.ConstraintLayout>

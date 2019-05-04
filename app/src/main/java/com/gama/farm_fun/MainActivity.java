@@ -1,5 +1,7 @@
 package com.gama.farm_fun;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -81,6 +84,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public RecyclerView travelJournalRecycler;
     List<TravelJournal> travelJournalsList = null;
+
+    private View postPanel;
+    private Button postBack;
+    private ImageView postComment;
+    private ImageView postCustomized;
+    private ImageView postJournal;
+    private TextView postCustomizedText;
+    private TextView postCommentText;
+    private TextView postJournalText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +270,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         order.setOnClickListener(this);
         mine = bottomBar.findViewById(R.id.mine);
         mine.setOnClickListener(this);
+
+        postPanel = findViewById(R.id.panel_post);
+        postPanel.setOnClickListener(this);
+        postBack = postPanel.findViewById(R.id.post_back);
+        postBack.setOnClickListener(this);
+        postComment = postPanel.findViewById(R.id.post_comment);
+        postComment.setOnClickListener(this);
+        postCustomized = postPanel.findViewById(R.id.post_customized);
+        postCustomized.setOnClickListener(this);
+        postJournal = postPanel.findViewById(R.id.post_journal);
+        postJournal.setOnClickListener(this);
+        postCommentText = postPanel.findViewById(R.id.comment_text);
+        postCustomizedText = postPanel.findViewById(R.id.customized_text);
+        postJournalText = postPanel.findViewById(R.id.journal_text);
     }
 
     public void StartLocateService() {
@@ -416,15 +442,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 newsIntent.putExtra("UserId", userId);
                 startActivity(newsIntent);
                 break;
-            case R.id.post:
-                Intent postIntent = new Intent(MainActivity.this, CustomizedActivity.class);
-                postIntent.putExtra("UserId", userId);
-                startActivity(postIntent);
-                finish();
-                break;
             case R.id.map:
                 Intent mapIntent = new Intent(MainActivity.this, ScenicMapActivity.class);
                 startActivity(mapIntent);
+                break;
+            case R.id.post:
+                postCommentText.setVisibility(View.INVISIBLE);
+                postCustomizedText.setVisibility(View.INVISIBLE);
+                postJournalText.setVisibility(View.INVISIBLE);
+                postPanel.setVisibility(View.VISIBLE);
+                postPanel.getBackground().setAlpha(240);
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(postComment,
+                        "translationY", 700, 0);
+                objectAnimator1.setDuration(1000);
+                objectAnimator1.setInterpolator(new OvershootInterpolator());
+                objectAnimator1.start();
+
+                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(postCustomized,
+                        "translationY", 700, 0);
+                objectAnimator2.setDuration(1000);
+                objectAnimator2.setInterpolator(new OvershootInterpolator());
+                objectAnimator2.start();
+
+                ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(postJournal,
+                        "translationY", 700, 0);
+                objectAnimator3.setDuration(1000);
+                objectAnimator3.setInterpolator(new OvershootInterpolator());
+                objectAnimator3.start();
+                objectAnimator3.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        postCommentText.setVisibility(View.VISIBLE);
+                        postCustomizedText.setVisibility(View.VISIBLE);
+                        postJournalText.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(postBack,
+                        "rotation", 0, 45);
+                objectAnimator4.setDuration(500);
+                objectAnimator4.setInterpolator(new OvershootInterpolator());
+                objectAnimator4.start();
+
+                ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(postCommentText,
+                        "alpha", 0, 1);
+                objectAnimator5.setDuration(500);
+                objectAnimator5.setStartDelay(1000);
+                objectAnimator5.setInterpolator(new OvershootInterpolator());
+                objectAnimator5.start();
+
+                ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(postCustomizedText,
+                        "alpha", 0, 1);
+                objectAnimator6.setDuration(500);
+                objectAnimator6.setStartDelay(1000);
+                objectAnimator6.setInterpolator(new OvershootInterpolator());
+                objectAnimator6.start();
+
+                ObjectAnimator objectAnimator7 = ObjectAnimator.ofFloat(postJournalText,
+                        "alpha", 0, 1);
+                objectAnimator7.setDuration(500);
+                objectAnimator7.setStartDelay(1000);
+                objectAnimator7.setInterpolator(new OvershootInterpolator());
+                objectAnimator7.start();
+                break;
+            case R.id.post_back:
+                postPanel.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.post_customized:
+                Intent intent1 = new Intent(MainActivity.this, CustomizedActivity.class);
+                intent1.putExtra("UserId", userId);
+                startActivity(intent1);
+                break;
+            case R.id.post_comment:
+                Intent intent2 = new Intent(MainActivity.this, MyOrder.class);
+                intent2.putExtra("UserId", userId);
+                intent2.putExtra("Type", "comment");
+                startActivity(intent2);
                 break;
         }
     }
@@ -558,6 +666,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             holder.setType(recommendProject.type);
+            holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.type.equals("HomeStay")) {
+                        Intent intent = new Intent(MainActivity.this, HomeStayActivity.class);
+                        intent.putExtra("UserId", userId);
+                        startActivity(intent);
+                    } else if (holder.type.equals("Restaurant")) {
+                        Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
+                        intent.putExtra("UserId", userId);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, AmusementActivity.class);
+                        intent.putExtra("UserId", userId);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
 
         @Override

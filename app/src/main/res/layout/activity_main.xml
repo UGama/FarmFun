@@ -481,6 +481,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+    <include
+        android:id="@+id/panel_post"
+        layout="@layout/panel_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        />
+
 
 
 </android.support.constraint.ConstraintLayout>

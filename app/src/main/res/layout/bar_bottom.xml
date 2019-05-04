@@ -5,15 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     >
-    <ImageView
-        android:id="@+id/bottomGuideLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:src="#f6f6f6"
-        />
+
     <android.support.constraint.Guideline
         android:id="@+id/oneFourthGuideLine"
         android:layout_width="wrap_content"
@@ -57,7 +49,7 @@
         android:background="@drawable/homepage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/oneFourthGuideLine"
         app:layout_constraintVertical_bias="0.2"
         />
@@ -67,11 +59,12 @@
         android:layout_height="30dp"
         android:background="@drawable/news"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottomGuideLine"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="@id/oneFourthGuideLine"
         app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         app:layout_constraintVertical_bias="0.2"
         />
+
     <Button
         android:id="@+id/post"
         android:background="@drawable/post"
@@ -79,9 +72,10 @@
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
     <Button
         android:id="@+id/order"
         android:background="@drawable/order"
@@ -89,7 +83,7 @@
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/threeFourthGuideLine"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="@id/fourFifthGuideLine"
         app:layout_constraintVertical_bias="0.2"
         />
@@ -100,7 +94,7 @@
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/fourFifthGuideLine"
-        app:layout_constraintTop_toBottomOf="@+id/bottomGuideLine"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.3"
         />

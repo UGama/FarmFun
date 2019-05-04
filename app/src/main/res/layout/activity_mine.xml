@@ -57,7 +57,7 @@
         android:id="@+id/topGuideLine"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/colorTheme"
+        android:background="@color/colorLineGray"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="120dp"
         />
@@ -70,18 +70,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="120dp"
-        android:background="@color/colorTheme"
+        android:background="@color/colorLineGray"
         />
 
     <ImageView
-        android:id="@+id/localSpecialtyOrder"
+        android:id="@+id/toBeCommentedOrder"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/oneFourthGuideLine"
         app:layout_constraintTop_toTopOf="@+id/topGuideLine"
         app:layout_constraintBottom_toBottomOf="@id/secondTopGuideLine"
-        android:background="@drawable/localspecialorder"
+        android:background="@drawable/tobecommented"
         app:layout_constraintVertical_bias="0.35"
         />
     <ImageView
@@ -125,11 +125,11 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/colorTheme"
-        android:text="土特产\n订单"
+        android:text="待评价\n订单"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/localSpecialtyOrder"
-        app:layout_constraintEnd_toEndOf="@id/localSpecialtyOrder"
-        app:layout_constraintTop_toBottomOf="@id/localSpecialtyOrder"
+        app:layout_constraintStart_toStartOf="@id/toBeCommentedOrder"
+        app:layout_constraintEnd_toEndOf="@id/toBeCommentedOrder"
+        app:layout_constraintTop_toBottomOf="@id/toBeCommentedOrder"
         android:layout_marginTop="10dp"
         />
     <TextView
@@ -256,6 +256,14 @@
         android:layout_height="55dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <include
+        android:id="@+id/panel_post"
+        layout="@layout/panel_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
         />
 
 </android.support.constraint.ConstraintLayout>
