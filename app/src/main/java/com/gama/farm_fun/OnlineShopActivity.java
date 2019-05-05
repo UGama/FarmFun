@@ -27,7 +27,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnlineShopActivity extends AppCompatActivity {
+public class OnlineShopActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
 
     private RecyclerView subTitleRecyclerView;
@@ -71,8 +71,11 @@ public class OnlineShopActivity extends AppCompatActivity {
     public void initUI() {
         galleryPanel = findViewById(R.id.panel_gallery);
         bigPic = galleryPanel.findViewById(R.id.big_pic);
+        bigPic.setOnClickListener(this);
         smallPic1 = galleryPanel.findViewById(R.id.small_pic1);
+        smallPic1.setOnClickListener(this);
         smallPic2 = galleryPanel.findViewById(R.id.small_pic2);
+        smallPic2.setOnClickListener(this);
         urls = new ArrayList<>();
 
         initSubTitle();
@@ -83,8 +86,8 @@ public class OnlineShopActivity extends AppCompatActivity {
         stringList = new ArrayList<>();
         String s1 = "推荐";
         String s2 = "全部宝贝";
-        String s3 = "店铺信息";
-        String s4 = "评论";
+        String s3 = "评论";
+        String s4 = "店铺信息";
         stringList.add(s1);
         stringList.add(s2);
         stringList.add(s3);
@@ -134,6 +137,7 @@ public class OnlineShopActivity extends AppCompatActivity {
 
                     }
                 });
+
 
                 getGallery();
             }
@@ -236,6 +240,22 @@ public class OnlineShopActivity extends AppCompatActivity {
         CommodityAdapter commodityAdapter2 = new CommodityAdapter(rightCommodityList);
         rightRecyclerView.setAdapter(commodityAdapter2);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.big_pic:
+                Intent bigPicIntent = new Intent(OnlineShopActivity.this, CommodityActivity.class);
+                bigPicIntent.putExtra("UserId", userId);
+                bigPicIntent.putExtra("code", "WC");
+                startActivity(bigPicIntent);
+                break;
+            case R.id.small_pic1:
+                break;
+            case R.id.small_pic2:
+                break;
+        }
     }
 
     private class SubTitleAdapter extends RecyclerView.Adapter<SubTitleAdapter.ViewHolder> {

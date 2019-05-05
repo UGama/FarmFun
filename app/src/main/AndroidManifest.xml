@@ -68,6 +68,8 @@
 
         <activity android:name=".MyCommentActivity" />
 
+        <activity android:name=".CommodityActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,36 +78,36 @@
         </activity>
 
 
-        <!--<activity android:name=".MainActivity" />-->
+        <!--<activity_commodity android:name=".MainActivity" />-->
 
-        <!--<activity android:name=".DatabaseOperation" >-->
+        <!--<activity_commodity android:name=".DatabaseOperation" >-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
-        <!--</activity>-->
-        <!--<activity android:name=".DatabaseOperation" />-->
-        <!--<activity android:name=".AmusementActivity">
+        <!--</activity_commodity>-->
+        <!--<activity_commodity android:name=".DatabaseOperation" />-->
+        <!--<activity_commodity android:name=".AmusementActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-        </activity>-->
+        </activity_commodity>-->
 
-        <!--<activity android:name=".RestaurantTicketActivity">-->
+        <!--<activity_commodity android:name=".RestaurantTicketActivity">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
-        <!--</activity>-->
+        <!--</activity_commodity>-->
 
-        <!--<activity android:name=".HomeStayActivity">-->
+        <!--<activity_commodity android:name=".HomeStayActivity">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
-        <!--</activity>-->
+        <!--</activity_commodity>-->
 
 
         <service android:name="com.avos.avoscloud.PushService"/>

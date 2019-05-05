@@ -282,6 +282,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     public void getUserName() {
         commentNumber = 0;
         Log.i("commentList.size()", String.valueOf(commentList.size()));
@@ -317,6 +318,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     public void setCommentRecyclerView() {
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
         commentRecyclerView.setAdapter(commentAdapter);

@@ -12,9 +12,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="30dp"
         fresco:placeholderImage="@drawable/placeholder"
         fresco:placeholderImageScaleType="fitCenter"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/big_pic"
+        app:layout_constraintBottom_toBottomOf="@id/big_pic"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
+        android:text="Top 1"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         />
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -28,6 +40,18 @@
         fresco:placeholderImageScaleType="fitCenter"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/small_pic1"
+        app:layout_constraintBottom_toBottomOf="@id/small_pic1"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
+        android:text="Top 2"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/small_pic2"
         android:layout_width="85dp"
@@ -37,6 +61,18 @@
         app:layout_constraintBottom_toBottomOf="@id/big_pic"
         fresco:placeholderImage="@drawable/placeholder"
         fresco:placeholderImageScaleType="fitCenter"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/small_pic2"
+        app:layout_constraintBottom_toBottomOf="@id/small_pic2"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
+        android:text="Top 3"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         />
 
 </android.support.constraint.ConstraintLayout>

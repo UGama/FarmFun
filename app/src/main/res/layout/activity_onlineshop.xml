@@ -78,12 +78,25 @@
                 app:layout_constraintTop_toTopOf="@+id/viewPager"
                 app:layout_constraintVertical_bias="0.95" />
 
+            <TextView
+                android:id="@+id/sales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="30dp"
+                app:layout_constraintTop_toBottomOf="@id/viewPager"
+                android:layout_marginTop="20dp"
+                android:text="本期明星产品："
+                android:textColor="@color/colorRemind"
+                android:textSize="20sp"
+                />
+
             <include
                 android:id="@+id/panel_gallery"
                 layout="@layout/panel_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                app:layout_constraintTop_toBottomOf="@id/viewPager"
+                app:layout_constraintTop_toBottomOf="@id/sales"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
