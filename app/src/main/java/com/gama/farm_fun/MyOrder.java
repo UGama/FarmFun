@@ -122,6 +122,8 @@ public class MyOrder extends AppCompatActivity implements View.OnClickListener {
             query.whereEqualTo("name", "homestaymain.jpg");
         } else if (orderList.get(projectPicSupport).type.equals("Restaurant")) {
             query.whereEqualTo("name", "restaurantmain.jpg");
+        } else if (orderList.get(projectPicSupport).type.length() == 2) {
+            query.whereStartsWith("name", orderList.get(projectPicSupport).type + "1.jpg");
         } else {
             query.whereEqualTo("name", orderList.get(projectPicSupport).type + "main.jpg");
         }

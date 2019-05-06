@@ -30,6 +30,9 @@ import java.util.List;
 public class OnlineShopActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
 
+    private View searchBar;
+    private TextView title;
+
     private RecyclerView subTitleRecyclerView;
     private List<String> stringList;
     private View chosenSubtitle;
@@ -78,6 +81,10 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         smallPic2 = galleryPanel.findViewById(R.id.small_pic2);
         smallPic2.setOnClickListener(this);
         urls = new ArrayList<>();
+
+        searchBar = findViewById(R.id.bar_search);
+        title = searchBar.findViewById(R.id.title);
+        title.setText("线上商城");
 
         initSubTitle();
     }

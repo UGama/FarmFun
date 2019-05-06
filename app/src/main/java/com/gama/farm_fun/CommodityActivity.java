@@ -359,6 +359,8 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                     Log.i("User", "click");
                     Intent loginIntent = new Intent(CommodityActivity.this, LoginActivity.class);
                     startActivityForResult(loginIntent, 1);
+                } else if (firstTouch) {
+                    showToast("请先选择商品种类和数量。");
                 } else {
                     orderAVObject = new AVObject("Order");
                     orderAVObject.put("userId", userId);

@@ -19,87 +19,115 @@
         />
 
 
-    <TextView
-        android:id="@+id/kind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_pic"
-        android:layout_marginTop="10dp"
-        android:text="种类"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        />
+        app:layout_constraintBottom_toTopOf="@id/buy_cart"
+        >
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/kindChoseRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/kind"
-        android:layout_marginTop="20dp"
-        />
+            <TextView
+                android:id="@+id/kind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toBottomOf="@id/item_pic"
+                android:layout_marginTop="10dp"
+                android:text="种类"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/kindChoseRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/kind"
+                android:layout_marginTop="20dp"
+                />
 
 
-    <include
-        android:id="@+id/panel_count_chose"
-        layout="@layout/panel_count_chose"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kindChoseRecyclerView"
-        android:layout_marginTop="40dp"
-        />
+            <include
+                android:id="@+id/panel_count_chose"
+                layout="@layout/panel_count_chose"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/kindChoseRecyclerView"
+                android:layout_marginTop="40dp"
+                />
 
-    <ImageView
-        android:id="@+id/cutLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/colorLineGray"
-        />
+            <ImageView
+                android:id="@+id/cutLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
+                android:layout_marginTop="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/colorLineGray"
+                />
 
-    <ImageView
-        android:id="@+id/price_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-        app:layout_constraintBottom_toBottomOf="@id/cutLine"
-        android:layout_marginStart="20dp"
-        android:background="@drawable/icon_price"
-        />
+            <ImageView
+                android:id="@+id/price_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
+                app:layout_constraintBottom_toBottomOf="@id/cutLine"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/icon_price"
+                />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        android:text="价格"
-        app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-        app:layout_constraintBottom_toBottomOf="@id/cutLine"
-        app:layout_constraintStart_toEndOf="@id/price_icon"
-        android:layout_marginStart="10dp"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:text="价格"
+                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
+                app:layout_constraintBottom_toBottomOf="@id/cutLine"
+                app:layout_constraintStart_toEndOf="@id/price_icon"
+                android:layout_marginStart="10dp"
+                />
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorRemind"
-        android:text=""
-        app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-        app:layout_constraintBottom_toBottomOf="@id/cutLine"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/colorRemind"
+                android:text="@string/symbol_yuan"
+                app:layout_constraintBottom_toBottomOf="@id/price_icon"
+                app:layout_constraintEnd_toStartOf="@id/price"
+                android:layout_marginEnd="3dp"
+                />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="20dp"
+                android:textSize="20sp"
+                android:textColor="@color/colorRemind"
+                android:text=""
+                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
+                app:layout_constraintBottom_toBottomOf="@id/cutLine"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </ScrollView>
 
 
     <include

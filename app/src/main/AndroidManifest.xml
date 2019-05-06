@@ -70,6 +70,8 @@
 
         <activity android:name=".CommodityActivity" />
 
+        <activity android:name=".CartActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
