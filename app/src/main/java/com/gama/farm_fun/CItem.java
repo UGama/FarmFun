@@ -19,4 +19,8 @@ public class CItem {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public CItem(String empty) {
+        this.name = empty;
+    }
 }

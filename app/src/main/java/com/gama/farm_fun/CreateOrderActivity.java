@@ -100,6 +100,9 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         } else if (type.equals("restaurant")) {
             title.setText("用餐订单");
         }
+        if (type.length() == 2) {
+            title.setText("商品订单");
+        }
         back = topBar.findViewById(R.id.back);
         back.setOnClickListener(this);
 
@@ -119,7 +122,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         submit = submitPanel.findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
-        if (!type.equals("homeStay")) {
+        if (!type.equals("homeStay") & type.length() != 2) {
             countChose = findViewById(R.id.countChose);
             countChose.setVisibility(View.VISIBLE);
             plus = countChose.findViewById(R.id.plus);
@@ -130,6 +133,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             numberTextView.setText("1");
             number = Integer.parseInt(numberTextView.getText().toString());
         }
+
+
         initOrderRecyclerView();
     }
 

@@ -39,6 +39,7 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     private PosterPagerAdapter posterPagerAdapter;
     private List<Poster> posterList;
     private ViewPagerIndicator indicator;
+    private int pageCount;
 
     private View galleryPanel;
     private List<String> urls;
@@ -111,7 +112,9 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
-                    Poster poster = new Poster(avObject.getString("url"), "");
+                    String code = avObject.getString("name");
+                    code = getPosterCode(code);
+                    Poster poster = new Poster(avObject.getString("url"), "", code);
                     posterList.add(poster);
                 }
                 Log.i("avObjectsList", String.valueOf(avObjects.size()));
@@ -130,6 +133,8 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onPageSelected(int position) {
                         indicator.setSelected(position);
+                        Log.i("page", String.valueOf(position));
+                        pageCount = position;
                     }
 
                     @Override
@@ -206,6 +211,7 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         commodityPicSupport = 0;
         getCommodityUrl();
     }
+
     public void getCommodityUrl() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereStartsWith("name", commodityList.get(commodityPicSupport).code);
@@ -250,10 +256,19 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                 bigPicIntent.putExtra("UserId", userId);
                 bigPicIntent.putExtra("code", "WC");
                 startActivity(bigPicIntent);
+                finish();
                 break;
             case R.id.small_pic1:
+                Intent smallPic1Intent = new Intent(OnlineShopActivity.this, CommodityActivity.class);
+                smallPic1Intent.putExtra("UserId", userId);
+                smallPic1Intent.putExtra("code", "DL");
+                startActivity(smallPic1Intent);
                 break;
             case R.id.small_pic2:
+                Intent smallPic2Intent = new Intent(OnlineShopActivity.this, CommodityActivity.class);
+                smallPic2Intent.putExtra("UserId", userId);
+                smallPic2Intent.putExtra("code", "DP");
+                startActivity(smallPic2Intent);
                 break;
         }
     }
@@ -349,59 +364,23 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
             position = position % posterList.size();
             View view = LayoutInflater.from(OnlineShopActivity.this).inflate(R.layout.item_poster, null);
             SimpleDraweeView poster = view.findViewById(R.id.poster);
-            Uri uri = Uri.parse(posterList.get(position).url);
+            final Uri uri = Uri.parse(posterList.get(position).url);
             poster.setImageURI(uri);
-            //poster.setImageResource(posterList.get(position).getSourceId());
-            /*switch (List.get(position).Number) {
-                case 1:
-                    List<OwnItem> ownItems1 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 1) {
-                            ownItems1.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager1 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager1);
-                    ItemAdapter adapter1 = new ItemAdapter(ownItems1);
-                    recyclerView.setAdapter(adapter1);
-                    break;
-                case 2:
-                    List<OwnItem> ownItems2 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 2) {
-                            ownItems2.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager2 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager2);
-                    ItemAdapter adapter2 = new ItemAdapter(ownItems2);
-                    recyclerView.setAdapter(adapter2);
-                    break;
-                case 3:
-                    List<OwnItem> ownItems3 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 3) {
-                            ownItems3.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager3 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager3);
-                    ItemAdapter adapter3 = new ItemAdapter(ownItems3);
-                    recyclerView.setAdapter(adapter3);
-                    break;
-                case 4:
-                    List<OwnItem> ownItems4 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 4) {
-                            ownItems4.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager4 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager4);
-                    ItemAdapter adapter4 = new ItemAdapter(ownItems4);
-                    recyclerView.setAdapter(adapter4);
-                    break;
-            }*/
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int k = pageCount % posterList.size();
+                    Log.i("k", String.valueOf(k));
+                    Poster poster = posterList.get(k);
+                    String code = poster.code;
+                    Log.i("Chosen", code);
+                    Intent intent = new Intent(OnlineShopActivity.this, CommodityActivity.class);
+                    intent.putExtra("UserId", userId);
+                    intent.putExtra("code", code);
+                    startActivity(intent);
+                }
+            });
+
             container.addView(view);
             return view;
         }
@@ -430,12 +409,21 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public void onBindViewHolder(final CommodityAdapter.ViewHolder holder, int position) {
-            Commodity commodity = commodityList.get(position);
-            Uri uri = Uri.parse(commodity.url);
+            final Commodity commodity = commodityList.get(position);
+            final Uri uri = Uri.parse(commodity.url);
             holder.pic.setImageURI(uri);
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(20f);
             holder.pic.getHierarchy().setRoundingParams(roundingParams);
 
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(OnlineShopActivity.this, CommodityActivity.class);
+                    intent.putExtra("UserId", userId);
+                    intent.putExtra("code", commodity.code);
+                    startActivity(intent);
+                }
+            });
             holder.name.setText(commodity.name);
             holder.price.setText(String.valueOf(commodity.lowestPrice));
         }
@@ -449,16 +437,32 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
             private SimpleDraweeView pic;
             private TextView name;
             private TextView price;
+            private View view;
 
             private ViewHolder(View view) {
                 super(view);
                 pic = view.findViewById(R.id.pic);
                 name = view.findViewById(R.id.name);
                 price = view.findViewById(R.id.price);
+                this.view = view;
             }
 
         }
 
 
+    }
+
+    public String getPosterCode(String code) {
+        String newCode;
+        char[] codeChar = code.toCharArray();
+        int k = 0;
+        for (int i = 0; i < codeChar.length; i++) {
+            if (codeChar[i] == '.') {
+                k = i;
+                break;
+            }
+        }
+        newCode = String.valueOf(codeChar[k - 2]) + String.valueOf(codeChar[k - 1]);
+        return newCode;
     }
 }

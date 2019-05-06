@@ -38,7 +38,6 @@
         app:layout_constraintStart_toEndOf="@id/total_account"
         app:layout_constraintBottom_toBottomOf="@id/price"
         android:layout_marginStart="10dp"
-
         />
     <TextView
         android:id="@+id/price"

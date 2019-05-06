@@ -428,6 +428,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+
     public void getUserName() {
         commentNumber = 0;
         Log.i("commentList.size()", String.valueOf(commentList.size()));

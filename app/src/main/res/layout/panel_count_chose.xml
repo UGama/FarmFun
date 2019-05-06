@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/count"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/cutLine6"

@@ -8,6 +8,7 @@ public class Poster {
     private int SourceId;
     public String url;
     public String title;
+    public String code;
     public Poster(int SourceId) {
         this.SourceId = SourceId;
     }
@@ -23,5 +24,11 @@ public class Poster {
     public Poster(String url, String title) {
         this.url = url;
         this.title = title;
+    }
+
+    public Poster(String url, String title, String code) {
+        this.url = url;
+        this.title = title;
+        this.code = code;
     }
 }

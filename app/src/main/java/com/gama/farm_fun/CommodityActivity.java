@@ -18,14 +18,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -43,6 +46,9 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     public int screenHeight;
 
     private Commodity commodity;
+    private String commodityName;
+    private int commodityKindPrice;
+    private String commodityKind;
 
     private TextView nameText;
     private TextView describeText;
@@ -64,9 +70,14 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     private View commodityChosePanel;
     private AnimatorSet commodityChosePanelQuit;
     private SimpleDraweeView item_pic;
+
     private RecyclerView kindChoseRecyclerView;
     private List<CItemArray> cItemArrayList;
     private CItemArray cItemArray;
+    private TextView chosenText;
+    private View chosenTab;
+    private boolean firstTouch;
+
     private View countChosePanel;
     private TextView countText;
     private ImageView plus;
@@ -74,8 +85,16 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     private int count;
     private ImageView shelter;
 
+    private View buy_cart;
+    private Button buy;
+    private Button addToCart;
 
+    private TextView panelPrice;
 
+    private AVObject orderAVObject;
+    private Toast toast;
+
+    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,6 +161,15 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
             }
         });
         shelter = findViewById(R.id.shelter);
+        buy_cart = commodityChosePanel.findViewById(R.id.buy_cart);
+        buy = buy_cart.findViewById(R.id.buy);
+        buy.setOnClickListener(this);
+        addToCart = buy_cart.findViewById(R.id.addToCart);
+        addToCart.setOnClickListener(this);
+
+        panelPrice = commodityChosePanel.findViewById(R.id.price);
+
+        firstTouch = true;
 
         getWindowInformation();
     }
@@ -179,10 +207,10 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                         object.getString("code"),
                         object.getInt("lowestPrice"));
 
+                commodityName = commodity.name;
                 nameText.setText(commodity.name);
                 describeText.setText(commodity.describe);
                 priceText.setText(String.valueOf(commodity.lowestPrice));
-
                 initViewPager();
             }
         });
@@ -198,7 +226,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
-                    Poster poster = new Poster(avObject.getString("url"), "");
+                    Poster poster = new Poster(avObject.getString("url"), "", commodity.code);
                     posterList.add(poster);
                 }
                 posterPagerAdapter = new PosterPagerAdapter(posterList);
@@ -276,6 +304,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
             public void done(List<AVObject> avObjects, AVException avException) {
                 for (AVObject avObject : avObjects) {
                     Uri uri = Uri.parse(avObject.getString("url"));
+                    url = avObject.getString("url");
                     item_pic.setImageURI(uri);
                     RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
                     item_pic.getHierarchy().setRoundingParams(roundingParams);
@@ -288,18 +317,25 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.plus:
-                count++;
-                countText.setText(String.valueOf(count));
-                if (count == 2) {
-                    minus.setBackground(getResources().getDrawable(R.drawable.shape_circle));
+                if (!firstTouch) {
+                    count++;
+                    countText.setText(String.valueOf(count));
+                    panelPrice.setText(String.valueOf(count * commodityKindPrice));
+                    if (count == 2) {
+                        minus.setBackground(getResources().getDrawable(R.drawable.shape_circle));
+                    }
+                } else {
+                    showToast("请先选择产品种类。");
                 }
                 break;
             case R.id.minus:
                 if (count > 1) {
                     count--;
                     countText.setText(String.valueOf(count));
+                    panelPrice.setText(String.valueOf(count * commodityKindPrice));
                     if (count == 1) {
                         minus.setBackground(getResources().getDrawable(R.drawable.shape_circle2));
+
                     }
                 }
                 break;
@@ -317,6 +353,45 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
             case R.id.shelter:
                 shelter.setVisibility(View.INVISIBLE);
                 commodityChosePanelQuit.start();
+                break;
+            case R.id.buy:
+                if (userId.equals("tourist")) {
+                    Log.i("User", "click");
+                    Intent loginIntent = new Intent(CommodityActivity.this, LoginActivity.class);
+                    startActivityForResult(loginIntent, 1);
+                } else {
+                    orderAVObject = new AVObject("Order");
+                    orderAVObject.put("userId", userId);
+                    orderAVObject.put("type", code);
+                    orderAVObject.put("project", commodityName);
+                    orderAVObject.put("status", "待支付");
+                    orderAVObject.put("item", commodityKind);
+                    orderAVObject.put("detail", "");
+                    orderAVObject.put("count", count);
+                    orderAVObject.put("price", commodityKindPrice);
+                    orderAVObject.put("comment", false);
+                    orderAVObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                Intent orderIntent = new Intent(CommodityActivity.this, CreateOrderActivity.class);
+                                orderIntent.putExtra("UserId", userId);
+                                orderIntent.putExtra("Type", code);
+                                orderIntent.putExtra("Project", commodityName);
+                                orderIntent.putExtra("Item", commodityKind);
+                                orderIntent.putExtra("Url", url);
+                                orderIntent.putExtra("Detail", "");
+                                orderIntent.putExtra("Count", count);
+                                orderIntent.putExtra("Price", commodityKindPrice);
+                                orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                orderIntent.putExtra("comment", false);
+                                startActivityForResult(orderIntent, 0);
+                            }
+                        }
+                    });
+
+
+                }
                 break;
         }
     }
@@ -406,28 +481,28 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         List<CItemArray> cItemArrayList = new ArrayList<>();
         for (int i = 0; i < cItemList.size(); i++) {
             if (i % 4 == 0) {
-                cItemArray = new CItemArray(cItemList.get(i).name);
+                cItemArray = new CItemArray(cItemList.get(i));
                 if (i == cItemList.size() - 1) {
-                    cItemArray.setS2("");
-                    cItemArray.setS3("");
-                    cItemArray.setS4("");
+                    cItemArray.setC2(new CItem(""));
+                    cItemArray.setC3(new CItem(""));
+                    cItemArray.setC4(new CItem(""));
                     cItemArrayList.add(cItemArray);
                 }
             } else if (i % 4 == 1) {
-                cItemArray.setS2(cItemList.get(i).name);
+                cItemArray.setC2(cItemList.get(i));
                 if (i == cItemList.size() - 1) {
-                    cItemArray.setS3("");
-                    cItemArray.setS4("");
+                    cItemArray.setC3(new CItem(""));
+                    cItemArray.setC4(new CItem(""));
                     cItemArrayList.add(cItemArray);
                 }
             } else if (i % 4 == 2) {
-                cItemArray.setS3(cItemList.get(i).name);
+                cItemArray.setC3(cItemList.get(i));
                 if (i == cItemList.size() - 1) {
-                    cItemArray.setS4("");
+                    cItemArray.setC4(new CItem(""));
                     cItemArrayList.add(cItemArray);
                 }
             } else {
-                cItemArray.setS4(cItemList.get(i).name);
+                cItemArray.setC4(cItemList.get(i));
                 cItemArrayList.add(cItemArray);
             }
         }
@@ -458,21 +533,109 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
 
         @Override
         public void onBindViewHolder(final CItemArrayArrayAdapter.ViewHolder holder, int position) {
-            CItemArray cItemArray = CItemArrayList.get(position);
-            holder.itemName1.setText(cItemArray.s1);
-            holder.itemName2.setText(cItemArray.s2);
-            holder.itemName3.setText(cItemArray.s3);
-            holder.itemName4.setText(cItemArray.s4);
+            final CItemArray cItemArray = CItemArrayList.get(position);
+            holder.itemName1.setText(cItemArray.c1.name);
+            holder.itemName2.setText(cItemArray.c2.name);
+            holder.itemName3.setText(cItemArray.c3.name);
+            holder.itemName4.setText(cItemArray.c4.name);
 
-            if (cItemArray.s2.equals("")) {
+            if (cItemArray.c2.name.equals("")) {
                 holder.tab2.setVisibility(View.INVISIBLE);
             }
-            if (cItemArray.s3.equals("")) {
+            if (cItemArray.c3.name.equals("")) {
                 holder.tab3.setVisibility(View.INVISIBLE);
             }
-            if (cItemArray.s4.equals("")) {
+            if (cItemArray.c4.name.equals("")) {
                 holder.tab4.setVisibility(View.INVISIBLE);
             }
+
+            holder.tab1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.tab1.setBackground(getResources().getDrawable(R.drawable.shape_kind_name2));
+                    holder.itemName1.setTextColor(getResources().getColor(R.color.colorWhite));
+                    Log.i("itemName", String.valueOf(holder.itemName1.getText().toString()));
+                    commodityKind = holder.itemName1.getText().toString();
+                    commodityKindPrice = cItemArray.c1.price;
+                    panelPrice.setText(String.valueOf(cItemArray.c1.price * count));
+                    if (firstTouch) {
+                        chosenTab = holder.tab1;
+                        chosenText = holder.itemName1;
+                        firstTouch = false;
+                    } else {
+                        chosenText.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        chosenTab.setBackground(getResources().getDrawable(R.drawable.shape_kind_name));
+                        chosenTab = holder.tab1;
+                        chosenText = holder.itemName1;
+                    }
+
+                }
+            });
+            holder.tab2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.tab2.setBackground(getResources().getDrawable(R.drawable.shape_kind_name2));
+                    holder.itemName2.setTextColor(getResources().getColor(R.color.colorWhite));
+                    Log.i("itemName", String.valueOf(holder.itemName2.getText().toString()));
+                    commodityKind = holder.itemName2.getText().toString();
+                    commodityKindPrice = cItemArray.c2.price;
+                    panelPrice.setText(String.valueOf(cItemArray.c2.price * count));
+                    if (firstTouch) {
+                        chosenTab = holder.tab2;
+                        chosenText = holder.itemName2;
+                        firstTouch = false;
+                    } else {
+                        chosenText.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        chosenTab.setBackground(getResources().getDrawable(R.drawable.shape_kind_name));
+                        chosenTab = holder.tab2;
+                        chosenText = holder.itemName2;
+                    }
+                }
+            });
+            holder.tab3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.tab3.setBackground(getResources().getDrawable(R.drawable.shape_kind_name2));
+                    holder.itemName3.setTextColor(getResources().getColor(R.color.colorWhite));
+                    commodityKind = holder.itemName3.getText().toString();
+                    Log.i("itemName", String.valueOf(holder.itemName3.getText().toString()));
+                    panelPrice.setText(String.valueOf(cItemArray.c3.price * count));
+                    commodityKindPrice = cItemArray.c3.price;
+                    if (firstTouch) {
+                        chosenTab = holder.tab3;
+                        chosenText = holder.itemName3;
+                        firstTouch = false;
+                    } else {
+                        chosenText.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        chosenTab.setBackground(getResources().getDrawable(R.drawable.shape_kind_name));
+                        chosenTab = holder.tab3;
+                        chosenText = holder.itemName3;
+                    }
+                }
+            });
+
+            holder.tab4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.tab4.setBackground(getResources().getDrawable(R.drawable.shape_kind_name2));
+                    holder.itemName4.setTextColor(getResources().getColor(R.color.colorWhite));
+                    commodityKind = holder.itemName4.getText().toString();
+                    Log.i("itemName", String.valueOf(holder.itemName4.getText().toString()));
+                    panelPrice.setText(String.valueOf(cItemArray.c4.price * count));
+                    commodityKindPrice = cItemArray.c4.price;
+                    if (firstTouch) {
+                        chosenTab = holder.tab4;
+                        chosenText = holder.itemName4;
+                        firstTouch = false;
+                    } else {
+                        chosenText.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        chosenTab.setBackground(getResources().getDrawable(R.drawable.shape_kind_name));
+                        chosenTab = holder.tab4;
+                        chosenText = holder.itemName4;
+                    }
+                }
+            });
+
         }
 
         @Override
@@ -506,5 +669,33 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         }
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    finish();
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    userId = data.getStringExtra("UserId");
+                    showToast("登录成功！");
+                }
+                break;
+        }
+
+    }
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
+        }
     }
 }
