@@ -90,6 +90,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     private Button addToCart;
 
     private TextView panelPrice;
+    private TextView chosenKind;
 
     private AVObject orderAVObject;
     private Toast toast;
@@ -166,8 +167,11 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         buy.setOnClickListener(this);
         addToCart = buy_cart.findViewById(R.id.addToCart);
         addToCart.setOnClickListener(this);
-
         panelPrice = commodityChosePanel.findViewById(R.id.price);
+        chosenKind = commodityChosePanel.findViewById(R.id.chosen);
+
+        shelter = findViewById(R.id.shelter);
+        shelter.setOnClickListener(this);
 
         firstTouch = true;
 
@@ -395,6 +399,35 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
 
                 }
                 break;
+            case R.id.addToCart:
+                if (userId.equals("tourist")) {
+                    Log.i("User", "click");
+                    Intent loginIntent = new Intent(CommodityActivity.this, LoginActivity.class);
+                    startActivityForResult(loginIntent, 1);
+                } else if (firstTouch) {
+                    showToast("请先选择商品种类和数量。");
+                } else {
+                    AVObject cartAVObject = new AVObject("Cart");
+                    cartAVObject.put("userId", userId);
+                    cartAVObject.put("kind", commodityKind);
+                    cartAVObject.put("name", commodityName);
+                    cartAVObject.put("count", count);
+                    cartAVObject.put("singlePrice", commodityKindPrice);
+                    cartAVObject.put("code", code);
+                    cartAVObject.put("exist", true);
+                    cartAVObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                showToast("成功加入购物车～");
+                                firstTouch = true;
+                                shelter.setVisibility(View.INVISIBLE);
+                                commodityChosePanelQuit.start();
+                            }
+                        }
+                    });
+                }
+                break;
         }
     }
 
@@ -559,6 +592,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                     Log.i("itemName", String.valueOf(holder.itemName1.getText().toString()));
                     commodityKind = holder.itemName1.getText().toString();
                     commodityKindPrice = cItemArray.c1.price;
+                    chosenKind.setText(commodityKind);
                     panelPrice.setText(String.valueOf(cItemArray.c1.price * count));
                     if (firstTouch) {
                         chosenTab = holder.tab1;
@@ -581,6 +615,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                     Log.i("itemName", String.valueOf(holder.itemName2.getText().toString()));
                     commodityKind = holder.itemName2.getText().toString();
                     commodityKindPrice = cItemArray.c2.price;
+                    chosenKind.setText(commodityKind);
                     panelPrice.setText(String.valueOf(cItemArray.c2.price * count));
                     if (firstTouch) {
                         chosenTab = holder.tab2;
@@ -603,6 +638,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                     Log.i("itemName", String.valueOf(holder.itemName3.getText().toString()));
                     panelPrice.setText(String.valueOf(cItemArray.c3.price * count));
                     commodityKindPrice = cItemArray.c3.price;
+                    chosenKind.setText(commodityKind);
                     if (firstTouch) {
                         chosenTab = holder.tab3;
                         chosenText = holder.itemName3;
@@ -625,6 +661,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                     Log.i("itemName", String.valueOf(holder.itemName4.getText().toString()));
                     panelPrice.setText(String.valueOf(cItemArray.c4.price * count));
                     commodityKindPrice = cItemArray.c4.price;
+                    chosenKind.setText(commodityKind);
                     if (firstTouch) {
                         chosenTab = holder.tab4;
                         chosenText = holder.itemName4;

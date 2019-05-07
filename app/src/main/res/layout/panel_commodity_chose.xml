@@ -6,30 +6,30 @@
     xmlns:fresco="http://schemas.android.com/tools"
     android:background="#ffffff">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_pic"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        fresco:placeholderImage="@drawable/placeholder"
-        fresco:placeholderImageScaleType="fitCenter"
-        />
-
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_pic"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/buy_cart"
         >
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/item_pic"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                fresco:placeholderImage="@drawable/placeholder"
+                fresco:placeholderImageScaleType="fitCenter"
+                />
 
             <TextView
                 android:id="@+id/kind"
@@ -66,16 +66,6 @@
                 android:layout_marginTop="40dp"
                 />
 
-            <ImageView
-                android:id="@+id/cutLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-                android:layout_marginTop="50dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/colorLineGray"
-                />
 
             <ImageView
                 android:id="@+id/price_icon"
@@ -89,24 +79,13 @@
                 />
 
             <TextView
+                android:id="@+id/yuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
-                android:text="价格"
-                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-                app:layout_constraintBottom_toBottomOf="@id/cutLine"
-                app:layout_constraintStart_toEndOf="@id/price_icon"
-                android:layout_marginStart="10dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:textColor="@color/colorRemind"
                 android:text="@string/symbol_yuan"
-                app:layout_constraintBottom_toBottomOf="@id/price_icon"
+                app:layout_constraintBottom_toBottomOf="@id/price"
                 app:layout_constraintEnd_toStartOf="@id/price"
                 android:layout_marginEnd="3dp"
                 />
@@ -115,13 +94,26 @@
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/item_pic"
                 android:layout_marginEnd="20dp"
                 android:textSize="20sp"
                 android:textColor="@color/colorRemind"
                 android:text=""
-                app:layout_constraintTop_toBottomOf="@id/panel_count_chose"
-                app:layout_constraintBottom_toBottomOf="@id/cutLine"
+                app:layout_constraintTop_toTopOf="@+id/item_pic"
+                app:layout_constraintBottom_toBottomOf="@id/item_pic"
+                android:layout_marginStart="20dp"
+                />
+            <TextView
+                android:id="@+id/chosen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/yuan"
+                app:layout_constraintTop_toBottomOf="@id/price"
+                android:textSize="15sp"
+                android:text="已选择："
+                android:textColor="@color/colorTextGray"
+                android:singleLine="false"
+                android:maxEms="10"
                 />
 
         </android.support.constraint.ConstraintLayout>

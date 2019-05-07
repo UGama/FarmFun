@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
 
     private View searchBar;
     private TextView title;
+    private Button cart;
 
     private RecyclerView subTitleRecyclerView;
     private List<String> stringList;
@@ -85,6 +87,8 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         searchBar = findViewById(R.id.bar_search);
         title = searchBar.findViewById(R.id.title);
         title.setText("线上商城");
+        cart = searchBar.findViewById(R.id.cart_icon);
+        cart.setOnClickListener(this);
 
         initSubTitle();
     }
@@ -276,6 +280,16 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                 smallPic2Intent.putExtra("UserId", userId);
                 smallPic2Intent.putExtra("code", "DP");
                 startActivity(smallPic2Intent);
+                break;
+            case R.id.cart_icon:
+                if (userId.equals("tourist")) {
+                    Intent intent = new Intent(OnlineShopActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, 0);
+                } else {
+                    Intent cartIntent = new Intent(OnlineShopActivity.this, CartActivity.class);
+                    cartIntent.putExtra("UserId", userId);
+                    startActivity(cartIntent);
+                }
                 break;
         }
     }
@@ -471,5 +485,10 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         }
         newCode = String.valueOf(codeChar[k - 2]) + String.valueOf(codeChar[k - 1]);
         return newCode;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
