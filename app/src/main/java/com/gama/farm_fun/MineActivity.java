@@ -44,6 +44,9 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private View allOrder;
     private ImageView allOrderIcon;
     private TextView allOrderText;
+    private View address;
+    private ImageView addressIcon;
+    private TextView addressText;
 
     private View bottomBar;
     private Button homePage;
@@ -128,6 +131,12 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         allOrderIcon.setImageResource(R.drawable.allorder);
         allOrderText = allOrder.findViewById(R.id.common_name);
         allOrderText.setText("全部订单");
+        address = findViewById(R.id.address);
+        addressIcon = address.findViewById(R.id.common_icon);
+        addressIcon.setImageResource(R.drawable.address);
+        addressText = address.findViewById(R.id.common_name);
+        addressText.setText("我的地址");
+
         bottomBar = findViewById(R.id.bottom_bar);
         homePage = bottomBar.findViewById(R.id.homePage);
         homePage.setOnClickListener(this);

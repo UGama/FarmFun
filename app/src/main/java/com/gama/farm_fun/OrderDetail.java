@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -51,7 +55,15 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
     private TextView remarkText;
 
     private Button comment;
+    private Button refund;
 
+    private ConstraintLayout confirmPanel;
+    private Button confirm;
+    private Button cancel;
+
+    private ImageView shelter;
+
+    private Toast toast;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +105,17 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
         comment = findViewById(R.id.comment);
         comment.setOnClickListener(this);
 
+        refund = findViewById(R.id.refund);
+        refund.setOnClickListener(this);
+
+        confirmPanel = findViewById(R.id.panel_confirm);
+        confirm = findViewById(R.id.confirm);
+        confirm.setOnClickListener(this);
+        cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
+        shelter = findViewById(R.id.shelter);
+        shelter.setOnClickListener(this);
+
         getUserInformation();
     }
 
@@ -115,8 +138,13 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
         query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject object, AVException e) {
-                if (object.getString("status").equals("已评价")) {
+                if (object.getString("status").equals("已支付")) {
+                    comment.setVisibility(View.VISIBLE);
+                } else {
                     comment.setVisibility(View.INVISIBLE);
+                }
+                if (object.getString("status").equals("已支付") & orderType.equals("HomeStay")) {
+                    refund.setVisibility(View.VISIBLE);
                 }
                 statusText.setText(object.getString("status"));
                 if (orderType.equals("HomeStay") || orderType.equals("Restaurant")) {
@@ -196,6 +224,29 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
                 intent.putExtra("userId", userId);
                 startActivityForResult(intent, 0);
                 break;
+            case R.id.refund:
+                shelter.setVisibility(View.VISIBLE);
+                confirmPanel.setVisibility(View.VISIBLE);
+                break;
+            case R.id.shelter:
+            case R.id.cancel:
+                shelter.setVisibility(View.INVISIBLE);
+                confirmPanel.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.confirm:
+                AVObject avObject = AVObject.createWithoutData("Order", orderId);
+                avObject.put("status", "已退订");
+                avObject.put("comment", false);
+                avObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            showToast("退订成功！");
+                            finish();
+                        }
+                    }
+                });
+                break;
         }
     }
 
@@ -265,6 +316,16 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
                     comment.setVisibility(View.INVISIBLE);
                 }
                 break;
+        }
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
         }
     }
 }

@@ -72,6 +72,10 @@
 
         <activity android:name=".CartActivity" />
 
+        <activity android:name=".AddressActivity" />
+
+        <activity android:name=".AddAddressActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
