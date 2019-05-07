@@ -135,7 +135,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         post.setOnClickListener(this);
         news = bottomBar.findViewById(R.id.news);
         news.setOnClickListener(this);
-        order = bottomBar.findViewById(R.id.order);
+        order = bottomBar.findViewById(R.id.onlineShop);
         order.setOnClickListener(this);
         mine = bottomBar.findViewById(R.id.mine);
         mine.setOnClickListener(this);
@@ -237,15 +237,10 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.order:
-                if (userId.equals("tourist")) {
-                    showToast("请先登录。");
-                } else {
-                    Intent intent1 = new Intent(MineActivity.this, MyOrder.class);
-                    intent1.putExtra("UserId", userId);
-                    intent1.putExtra("Type", "all");
-                    startActivity(intent1);
-                }
+            case R.id.onlineShop:
+                Intent intent0 = new Intent(MineActivity.this, OnlineShopActivity.class);
+                intent0.putExtra("UserId", userId);
+                startActivity(intent0);
                 break;
             case R.id.post:
                 postCommentText.setVisibility(View.INVISIBLE);

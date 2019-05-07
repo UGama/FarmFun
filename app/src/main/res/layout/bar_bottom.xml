@@ -77,8 +77,8 @@
         />
 
     <Button
-        android:id="@+id/order"
-        android:background="@drawable/order"
+        android:id="@+id/onlineShop"
+        android:background="@drawable/onlinestore"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -124,8 +124,8 @@
         app:layout_constraintEnd_toEndOf="@id/twoFourthGuideLine"
         />
     <TextView
-        android:id="@+id/orderText"
-        android:text="订单"
+        android:id="@+id/onlineShopText"
+        android:text="线上商城"
         android:textSize="12sp"
         android:textColor="#000000"
         android:layout_width="wrap_content"

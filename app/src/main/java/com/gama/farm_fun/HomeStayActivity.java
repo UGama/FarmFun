@@ -984,7 +984,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                 price = view.findViewById(R.id.price);
                 storePrice = view.findViewById(R.id.physicalStorePrice);
                 roomPic = view.findViewById(R.id.roomPic);
-                order = view.findViewById(R.id.order);
+                order = view.findViewById(R.id.onlineShop);
             }
 
             private void setUrl(String url) {

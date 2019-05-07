@@ -99,7 +99,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
         news.setBackground(getResources().getDrawable(R.drawable.news1));
         newsText = bottomBar.findViewById(R.id.newsText);
         newsText.setTextColor(getResources().getColor(R.color.colorTheme));
-        order = bottomBar.findViewById(R.id.order);
+        order = bottomBar.findViewById(R.id.onlineShop);
         order.setOnClickListener(this);
         mine = bottomBar.findViewById(R.id.mine);
         mine.setOnClickListener(this);
@@ -381,9 +381,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.order:
-                Intent intent1 = new Intent(NewsActivity.this, MyOrder.class);
-                intent1.putExtra("Type", "all");
+            case R.id.onlineShop:
+                Intent intent1 = new Intent(NewsActivity.this, OnlineShopActivity.class);
                 intent1.putExtra("UserId", userId);
                 startActivity(intent1);
                 finish();

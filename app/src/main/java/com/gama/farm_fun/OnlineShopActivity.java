@@ -61,6 +61,14 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView rightRecyclerView;
     private List<Commodity> rightCommodityList;
 
+    public View bottomBar;
+    public Button homePage;
+    public Button post;
+    public Button news;
+    public Button mine;
+    public Button order;
+    public TextView orderText;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +97,21 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         title.setText("线上商城");
         cart = searchBar.findViewById(R.id.cart_icon);
         cart.setOnClickListener(this);
+
+        bottomBar = findViewById(R.id.bar_bottom);
+        homePage = bottomBar.findViewById(R.id.homePage);
+        homePage.setOnClickListener(this);
+        post = bottomBar.findViewById(R.id.post);
+        post.setOnClickListener(this);
+        news = bottomBar.findViewById(R.id.news);
+        news.setOnClickListener(this);
+        order = bottomBar.findViewById(R.id.onlineShop);
+        orderText = bottomBar.findViewById(R.id.onlineShopText);
+        order.setBackground(getResources().getDrawable(R.drawable.onlinestore1));
+        order.setOnClickListener(this);
+        orderText.setTextColor(getResources().getColor(R.color.colorTheme));
+        mine = bottomBar.findViewById(R.id.mine);
+        mine.setOnClickListener(this);
 
         initSubTitle();
     }
@@ -290,6 +313,20 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                     cartIntent.putExtra("UserId", userId);
                     startActivity(cartIntent);
                 }
+                break;
+            case R.id.mine:
+                Intent mineIntent = new Intent(OnlineShopActivity.this, MineActivity.class);
+                mineIntent.putExtra("UserId", userId);
+                startActivity(mineIntent);
+                break;
+            case R.id.news:
+                Intent newsIntent = new Intent(OnlineShopActivity.this, NewsActivity.class);
+                newsIntent.putExtra("UserId", userId);
+                startActivity(newsIntent);
+                finish();
+                break;
+            case R.id.homePage:
+                finish();
                 break;
         }
     }

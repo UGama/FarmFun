@@ -88,24 +88,28 @@ public class MyOrder extends AppCompatActivity implements View.OnClickListener {
                 if (avObjects.size() == 0) {
                 } else {
                     for (AVObject avObject : avObjects) {
-                        Order order = new Order(avObject.getObjectId(),
-                                avObject.getString("project"),
-                                avObject.getString("item"),
-                                avObject.getString("detail"),
-                                avObject.getInt("price"),
-                                avObject.getString("status"),
-                                avObject.getInt("count"),
-                                avObject.getString("type"),
-                                avObject.getBoolean("comment"));
-                        if (type.equals("Amusement")) {
-                            if (avObject.getString("type").equals("HomeStay") ||
-                                    avObject.getString("type").equals("Restaurant")) {
+                        if (avObject.getString("type").length() == 2) {
+
+                        } else {
+                            Order order = new Order(avObject.getObjectId(),
+                                    avObject.getString("project"),
+                                    avObject.getString("item"),
+                                    avObject.getString("detail"),
+                                    avObject.getInt("price"),
+                                    avObject.getString("status"),
+                                    avObject.getInt("count"),
+                                    avObject.getString("type"),
+                                    avObject.getBoolean("comment"));
+                            if (type.equals("Amusement")) {
+                                if (avObject.getString("type").equals("HomeStay") ||
+                                        avObject.getString("type").equals("Restaurant")) {
+                                } else {
+                                    orderList.add(order);
+                                    Log.i("order", order.item);
+                                }
                             } else {
                                 orderList.add(order);
-                                Log.i("order", order.item);
                             }
-                        } else {
-                            orderList.add(order);
                         }
                     }
                     Log.i("orderList", String.valueOf(orderList.size()));

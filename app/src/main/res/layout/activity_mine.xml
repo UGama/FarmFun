@@ -239,6 +239,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
+
     <include
         android:id="@+id/setting"
         layout="@layout/panel_common"
@@ -248,6 +249,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+    
 
     <include
         android:id="@+id/bottom_bar"

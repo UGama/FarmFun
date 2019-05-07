@@ -322,7 +322,7 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
                 price = view.findViewById(R.id.price);
                 sales = view.findViewById(R.id.sales);
                 payOnline = view.findViewById(R.id.payOnline);
-                order = view.findViewById(R.id.order);
+                order = view.findViewById(R.id.onlineShop);
             }
 
             private void setProject(String project) {

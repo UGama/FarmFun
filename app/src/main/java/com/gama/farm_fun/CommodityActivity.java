@@ -107,7 +107,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         userId = intent.getStringExtra("UserId");
         code = intent.getStringExtra("code");
 
-        initUI();
+        getWindowInformation();
     }
 
     public void initUI() {
@@ -175,7 +175,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
 
         firstTouch = true;
 
-        getWindowInformation();
+        setObservableScrollView();
     }
 
     public void getWindowInformation() {
@@ -192,7 +192,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
         Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
 
-        setObservableScrollView();
+        initUI();
     }
 
     public void setObservableScrollView() {

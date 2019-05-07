@@ -11,6 +11,7 @@ public class Order {
     public int count;
     public String type;
     public boolean comment;
+    public String counts;
 
     public Order(String id, String project, String item, String detail, int price, String status, int count, String type, boolean comment) {
         this.id = id;
@@ -28,4 +29,7 @@ public class Order {
         this.projectPicUrl = projectPicUrl;
     }
 
+    public void setCounts(String counts) {
+        this.counts = counts;
+    }
 }

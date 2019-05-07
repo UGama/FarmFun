@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         post.setOnClickListener(this);
         news = bottomBar.findViewById(R.id.news);
         news.setOnClickListener(this);
-        order = bottomBar.findViewById(R.id.order);
+        order = bottomBar.findViewById(R.id.onlineShop);
         order.setOnClickListener(this);
         mine = bottomBar.findViewById(R.id.mine);
         mine.setOnClickListener(this);
@@ -373,7 +373,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this, OnlineShopActivity.class);
                 intent.putExtra("UserId", userId);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.pick:
                 Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
@@ -414,10 +413,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mineIntent.putExtra("UserId", userId);
                 startActivity(mineIntent);
                 break;
-            case R.id.order:
-                Intent orderIntent = new Intent(MainActivity.this, MyOrder.class);
+            case R.id.onlineShop:
+                Intent orderIntent = new Intent(MainActivity.this, OnlineShopActivity.class);
                 orderIntent.putExtra("UserId", userId);
-                orderIntent.putExtra("Type", "all");
                 startActivity(orderIntent);
                 break;
             case R.id.ktv:

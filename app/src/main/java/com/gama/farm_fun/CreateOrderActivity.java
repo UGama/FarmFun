@@ -40,6 +40,13 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private int count;
     private int price;
     private int orderPrice;
+    private String[] names;
+    private String[] codes;
+    private String[] kinds;
+    private String[] urls;
+    private int[] counts;
+    private int[] prices;
+    private String[] cartIds;
 
     private View topBar;
     private TextView title;
@@ -63,6 +70,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private int number;
 
     private String way;
+    private int cartSupport;
 
     private Toast toast;
 
@@ -77,18 +85,39 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     public void getOrderInformation() {
         Intent orderIntent = getIntent();
         userId = orderIntent.getStringExtra("UserId");
+        Log.i("userId", userId);
         orderId = orderIntent.getStringExtra("OrderId");
         Log.i("OrderId", orderId);
         type = orderIntent.getStringExtra("Type");
-        Log.i("type", type);
-        project = orderIntent.getStringExtra("Project");
-        itemName = orderIntent.getStringExtra("Item");
-        url = orderIntent.getStringExtra("Url");
-        detail = orderIntent.getStringExtra("Detail");
-        count = orderIntent.getIntExtra("Count", 0);
-        price = orderIntent.getIntExtra("Price", 0);
+        if (type.equals("manyC")) {
+            Log.i("type", type);
+            names = orderIntent.getStringArrayExtra("Project");
+            kinds = orderIntent.getStringArrayExtra("Item");
+            urls = orderIntent.getStringArrayExtra("Url");
+            counts = orderIntent.getIntArrayExtra("Count");
+            prices = orderIntent.getIntArrayExtra("Price");
+            codes = orderIntent.getStringArrayExtra("Code");
+            cartIds = orderIntent.getStringArrayExtra("CartId");
+            for (int i = 0; i < cartIds.length; i++) {
+                Log.i("cartId1", cartIds[i]);
+            }
+            orderPrice = 0;
+            for (int i = 0; i < names.length; i++) {
+                orderPrice += prices[i] * counts[i];
+            }
+        } else {
+            Log.i("type", type);
+            project = orderIntent.getStringExtra("Project");
+            itemName = orderIntent.getStringExtra("Item");
+            url = orderIntent.getStringExtra("Url");
+            detail = orderIntent.getStringExtra("Detail");
+            count = orderIntent.getIntExtra("Count", 0);
+            price = orderIntent.getIntExtra("Price", 0);
 
-        orderPrice = price * count;
+            orderPrice = price * count;
+        }
+
+        cartSupport = 0;
         initUI();
     }
 
@@ -101,6 +130,9 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             title.setText("用餐订单");
         }
         if (type.length() == 2) {
+            title.setText("商品订单");
+        }
+        if (type.equals("manyC")) {
             title.setText("商品订单");
         }
         back = topBar.findViewById(R.id.back);
@@ -122,7 +154,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         submit = submitPanel.findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
-        if (!type.equals("homeStay") & type.length() != 2) {
+        if (!type.equals("homeStay") & type.length() != 2 & !type.equals("manyC")) {
             countChose = findViewById(R.id.countChose);
             countChose.setVisibility(View.VISIBLE);
             plus = countChose.findViewById(R.id.plus);
@@ -135,12 +167,28 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         }
 
 
-        initOrderRecyclerView();
+        if (type.equals("manyC")) {
+            initOrderRecyclerView2();
+        } else {
+            initOrderRecyclerView();
+        }
+
     }
 
     public void initOrderRecyclerView() {
         Item item = new Item(itemName, url, detail, count, price);
         itemList.add(item);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        orderRecyclerView.setLayoutManager(linearLayoutManager);
+        ItemAdapter itemAdapter = new ItemAdapter(itemList);
+        orderRecyclerView.setAdapter(itemAdapter);
+    }
+
+    public void initOrderRecyclerView2() {
+        for (int i = 0; i < names.length; i++) {
+            Item item = new Item(names[i], urls[i], "", counts[i], prices[i]);
+            itemList.add(item);
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         orderRecyclerView.setLayoutManager(linearLayoutManager);
         ItemAdapter itemAdapter = new ItemAdapter(itemList);
@@ -199,7 +247,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                     way = data.getStringExtra("way");
                     AVObject avObject = AVObject.createWithoutData("Order", orderId);
                     avObject.put("status", "已支付");
-                    if (!type.equals("homeStay")) {
+                    if (!type.equals("homeStay") & !type.equals("manyC")) {
                         avObject.put("count", number);
                         avObject.put("price", price * number);
                     }
@@ -209,11 +257,15 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                         @Override
                         public void done(AVException e) {
                             if (e == null) {
-                                Log.i("Save", "Succeed");
-                                showToast("支付成功！");
-                                Intent intent = new Intent();
-                                setResult(RESULT_OK, intent);
-                                finish();
+                                if (type.equals("manyC")) {
+                                    updateCart();
+                                } else {
+                                    Log.i("Save", "Succeed");
+                                    showToast("支付成功！");
+                                    Intent intent = new Intent();
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
                             }
                         }
                     });
@@ -287,5 +339,27 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             toast.setText(msg);
             toast.show();
         }
+    }
+
+    public void updateCart() {
+        AVObject avObject = AVObject.createWithoutData("Cart", cartIds[cartSupport]);
+        avObject.put("exist", false);
+        avObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    cartSupport++;
+                    if (cartSupport == cartIds.length) {
+                        Log.i("Save", "Succeed");
+                        showToast("支付成功！");
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        updateCart();
+                    }
+                }
+            }
+        });
     }
 }

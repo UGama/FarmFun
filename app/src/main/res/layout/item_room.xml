@@ -102,7 +102,7 @@
         android:textSize="14sp"
         android:text="@string/yuan"
         app:layout_constraintBottom_toBottomOf="@id/price"
-        app:layout_constraintEnd_toStartOf="@id/order"
+        app:layout_constraintEnd_toStartOf="@id/onlineShop"
         android:layout_marginEnd="10dp"
         />
     <TextView
@@ -140,7 +140,7 @@
         />
 
     <Button
-        android:id="@+id/order"
+        android:id="@+id/onlineShop"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:textColor="#ffffff"
@@ -161,8 +161,8 @@
         android:textSize="12sp"
         android:textColor="@color/colorTheme"
         android:background="@drawable/shape_payonline"
-        app:layout_constraintTop_toBottomOf="@id/order"
-        app:layout_constraintStart_toStartOf="@id/order"
-        app:layout_constraintEnd_toEndOf="@id/order"
+        app:layout_constraintTop_toBottomOf="@id/onlineShop"
+        app:layout_constraintStart_toStartOf="@id/onlineShop"
+        app:layout_constraintEnd_toEndOf="@id/onlineShop"
         />
 </android.support.constraint.ConstraintLayout>

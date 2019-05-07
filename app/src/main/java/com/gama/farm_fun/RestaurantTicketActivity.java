@@ -881,7 +881,7 @@ public class RestaurantTicketActivity extends AppCompatActivity implements View.
                 seatPic = view.findViewById(R.id.seatPic);
                 describe = view.findViewById(R.id.describe);
                 payOnline = view.findViewById(R.id.payOnline);
-                order = view.findViewById(R.id.order);
+                order = view.findViewById(R.id.onlineShop);
                 price = 20;
             }
             private void setUrl(String url) {
