@@ -27,7 +27,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyOrder extends AppCompatActivity implements View.OnClickListener {
+public class MyOrderActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
     private String type;
 
@@ -88,8 +88,8 @@ public class MyOrder extends AppCompatActivity implements View.OnClickListener {
                 if (avObjects.size() == 0) {
                 } else {
                     for (AVObject avObject : avObjects) {
-                        if (avObject.getString("type").length() == 2) {
-
+                        if (avObject.getString("type").length() == 2 ||
+                                avObject.getString("type").equals("manyC")) {
                         } else {
                             Order order = new Order(avObject.getObjectId(),
                                     avObject.getString("project"),
@@ -220,7 +220,7 @@ public class MyOrder extends AppCompatActivity implements View.OnClickListener {
             holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MyOrder.this, EditCommentActivity.class);
+                    Intent intent = new Intent(MyOrderActivity.this, EditCommentActivity.class);
                     intent.putExtra("project", holder.projectName.getText().toString());
                     intent.putExtra("url", holder.url);
                     intent.putExtra("item", holder.itemName.getText().toString());
@@ -236,7 +236,7 @@ public class MyOrder extends AppCompatActivity implements View.OnClickListener {
             holder.checkDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MyOrder.this, OrderDetail.class);
+                    Intent intent = new Intent(MyOrderActivity.this, OrderDetail.class);
                     intent.putExtra("project", holder.projectName.getText().toString());
                     intent.putExtra("url", holder.url);
                     intent.putExtra("item", holder.itemName.getText().toString());

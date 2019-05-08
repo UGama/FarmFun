@@ -473,7 +473,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent2);
                 break;
             case R.id.post_comment:
-                Intent intent3 = new Intent(NewsActivity.this, MyOrder.class);
+                Intent intent3 = new Intent(NewsActivity.this, MyOrderActivity.class);
                 intent3.putExtra("UserId", userId);
                 intent3.putExtra("Type", "comment");
                 startActivity(intent3);

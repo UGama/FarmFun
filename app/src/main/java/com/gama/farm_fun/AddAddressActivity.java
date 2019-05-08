@@ -32,7 +32,7 @@ public class AddAddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_address);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
 
         name = findViewById(R.id.name);
@@ -56,6 +56,8 @@ public class AddAddressActivity extends AppCompatActivity {
                     @Override
                     public void done(AVException e) {
                         if (e == null) {
+                            Intent intent1 = new Intent();
+                            setResult(RESULT_OK, intent1);
                             showToast("添加成功！");
                             finish();
                         }

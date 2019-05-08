@@ -69,8 +69,17 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private TextView numberTextView;
     private int number;
 
+    private ConstraintLayout addressPanel;
+    private TextView addressText;
+    private TextView nameText;
+    private TextView phoneText;
+
     private String way;
     private int cartSupport;
+
+    private String name;
+    private String phone;
+    private String address;
 
     private Toast toast;
 
@@ -105,6 +114,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             for (int i = 0; i < names.length; i++) {
                 orderPrice += prices[i] * counts[i];
             }
+
         } else {
             Log.i("type", type);
             project = orderIntent.getStringExtra("Project");
@@ -166,6 +176,15 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             number = Integer.parseInt(numberTextView.getText().toString());
         }
 
+        if (type.equals("manyC") || type.length() == 2) {
+            addressPanel = findViewById(R.id.addressPanel);
+            addressPanel.setVisibility(View.VISIBLE);
+            addressPanel.setOnClickListener(this);
+            addressText = findViewById(R.id.address);
+            nameText = findViewById(R.id.name);
+            phoneText = findViewById(R.id.phone);
+        }
+
 
         if (type.equals("manyC")) {
             initOrderRecyclerView2();
@@ -203,9 +222,13 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(remarkIntent, 1);
                 break;
             case R.id.submit:
-                Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
-                intent.putExtra("price", orderPrice);
-                startActivityForResult(intent, 1);
+                if (phoneText.getText().toString().equals("")) {
+                    showToast("请先选择收货地址。");
+                } else {
+                    Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
+                    intent.putExtra("price", orderPrice);
+                    startActivityForResult(intent, 1);
+                }
                 break;
             case R.id.plus:
                 number++;
@@ -230,6 +253,12 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             case R.id.back:
                 finish();
                 break;
+            case R.id.addressPanel:
+                Intent intent1 = new Intent(CreateOrderActivity.this, AddressActivity.class);
+                intent1.putExtra("UserId", userId);
+                intent1.putExtra("Type", "chose");
+                startActivityForResult(intent1, 2);
+                break;
         }
     }
 
@@ -247,7 +276,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                     way = data.getStringExtra("way");
                     AVObject avObject = AVObject.createWithoutData("Order", orderId);
                     avObject.put("status", "已支付");
-                    if (!type.equals("homeStay") & !type.equals("manyC")) {
+                    if (!type.equals("homeStay") & !type.equals("manyC") & type.length() != 2) {
                         avObject.put("count", number);
                         avObject.put("price", price * number);
                     }
@@ -259,6 +288,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                             if (e == null) {
                                 if (type.equals("manyC")) {
                                     updateCart();
+                                } else if (type.length() == 2) {
+                                    updateAddressInformation();
                                 } else {
                                     Log.i("Save", "Succeed");
                                     showToast("支付成功！");
@@ -269,6 +300,16 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                             }
                         }
                     });
+                }
+                break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    name = data.getStringExtra("name");
+                    phone = data.getStringExtra("phone");
+                    address = data.getStringExtra("address");
+                    nameText.setText(data.getStringExtra("name"));
+                    phoneText.setText(data.getStringExtra("phone"));
+                    addressText.setText(data.getStringExtra("address"));
                 }
                 break;
         }
@@ -350,14 +391,29 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                 if (e == null) {
                     cartSupport++;
                     if (cartSupport == cartIds.length) {
-                        Log.i("Save", "Succeed");
-                        showToast("支付成功！");
-                        Intent intent = new Intent();
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        updateAddressInformation();
                     } else {
                         updateCart();
                     }
+                }
+            }
+        });
+    }
+
+    public void updateAddressInformation() {
+        AVObject avObject = AVObject.createWithoutData("Order", orderId);
+        avObject.put("address", address);
+        avObject.put("name", name);
+        avObject.put("phone", phone);
+        avObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    Log.i("Save", "Succeed");
+                    showToast("支付成功！");
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });

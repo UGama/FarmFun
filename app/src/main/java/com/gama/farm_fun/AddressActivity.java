@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,12 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddressActivity extends AppCompatActivity implements View.OnClickListener {
-
     private String userId;
+    private String type;
 
     private View topBar;
     private TextView title;
@@ -41,6 +43,10 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         Fresco.initialize(this);
         setContentView(R.layout.activity_address);
 
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
+        type = intent.getStringExtra("Type");
+
         topBar = findViewById(R.id.bar_top);
         title = topBar.findViewById(R.id.title);
         title.setText("我的地址");
@@ -56,6 +62,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void getAddressInformation() {
+        addressList = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Address");
         query.whereEqualTo("userId", userId);
         query.findInBackground(new FindCallback<AVObject>() {
@@ -64,6 +71,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                 if (avObjects.size() == 0) {
                     emptyAddress.setVisibility(View.VISIBLE);
                 } else {
+                    emptyAddress.setVisibility(View.INVISIBLE);
                     for (AVObject avObject : avObjects) {
                         Address address = new Address(avObject.getString("address"),
                                 avObject.getString("phone"),
@@ -89,6 +97,11 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.add_address:
+                Intent intent = new Intent(AddressActivity.this, AddAddressActivity.class);
+                intent.putExtra("UserId", userId);
+                startActivityForResult(intent, 0);
                 break;
         }
     }
@@ -121,6 +134,21 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             holder.name.setText(address.name);
             holder.address.setText(address.address);
             holder.phone.setText(address.phone);
+
+            if (type.equals("chose")) {
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.putExtra("name", holder.name.getText().toString());
+                        intent.putExtra("phone", holder.phone.getText().toString());
+                        intent.putExtra("address", holder.address.getText().toString());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+            }
+
         }
 
         @Override
@@ -132,12 +160,14 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             private TextView name;
             private TextView address;
             private TextView phone;
+            private View view;
 
             private ViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.name);
                 address = view.findViewById(R.id.address);
                 phone = view.findViewById(R.id.phone);
+                this.view = view;
             }
 
         }
@@ -145,6 +175,15 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    getAddressInformation();
+                }
+                break;
+        }
+    }
 }

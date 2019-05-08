@@ -47,6 +47,9 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private View address;
     private ImageView addressIcon;
     private TextView addressText;
+    private View onlineOrder;
+    private ImageView onlineOrderIcon;
+    private TextView onlineOrderText;
 
     private View bottomBar;
     private Button homePage;
@@ -103,6 +106,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         userLayout.setOnClickListener(this);
         headPic = userLayout.findViewById(R.id.headPic);
         headPic.setImageResource(R.drawable.male);
+        userName = userLayout.findViewById(R.id.userName);
 
         localSpecialtyOrder = findViewById(R.id.toBeCommentedOrder);
         localSpecialtyOrder.setOnClickListener(this);
@@ -132,10 +136,17 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         allOrderText = allOrder.findViewById(R.id.common_name);
         allOrderText.setText("全部订单");
         address = findViewById(R.id.address);
+        address.setOnClickListener(this);
         addressIcon = address.findViewById(R.id.common_icon);
         addressIcon.setImageResource(R.drawable.address);
         addressText = address.findViewById(R.id.common_name);
         addressText.setText("我的地址");
+        onlineOrder = findViewById(R.id.online_order);
+        onlineOrder.setOnClickListener(this);
+        onlineOrderIcon = onlineOrder.findViewById(R.id.common_icon);
+        onlineOrderIcon.setImageResource(R.drawable.online_order);
+        onlineOrderText = onlineOrder.findViewById(R.id.common_name);
+        onlineOrderText.setText("商城订单");
 
         bottomBar = findViewById(R.id.bottom_bar);
         homePage = bottomBar.findViewById(R.id.homePage);
@@ -174,7 +185,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     showToast("请先登录。");
                 } else {
-                    Intent toBeCommentOrder = new Intent(MineActivity.this, MyOrder.class);
+                    Intent toBeCommentOrder = new Intent(MineActivity.this, MyOrderActivity.class);
                     toBeCommentOrder.putExtra("UserId", userId);
                     toBeCommentOrder.putExtra("Type", "comment");
                     startActivity(toBeCommentOrder);
@@ -184,7 +195,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     showToast("请先登录。");
                 } else {
-                    Intent homeStayOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    Intent homeStayOrderIntent = new Intent(MineActivity.this, MyOrderActivity.class);
                     homeStayOrderIntent.putExtra("Type", "HomeStay");
                     homeStayOrderIntent.putExtra("UserId", userId);
                     startActivity(homeStayOrderIntent);
@@ -194,7 +205,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     showToast("请先登录。");
                 } else {
-                    Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    Intent restaurantOrderIntent = new Intent(MineActivity.this, MyOrderActivity.class);
                     restaurantOrderIntent.putExtra("Type", "Restaurant");
                     restaurantOrderIntent.putExtra("UserId", userId);
                     startActivity(restaurantOrderIntent);
@@ -204,7 +215,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     showToast("请先登录。");
                 } else {
-                    Intent amusementOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    Intent amusementOrderIntent = new Intent(MineActivity.this, MyOrderActivity.class);
                     amusementOrderIntent.putExtra("Type", "Amusement");
                     amusementOrderIntent.putExtra("UserId", userId);
                     startActivity(amusementOrderIntent);
@@ -225,7 +236,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     showToast("请先登录。");
                 } else {
-                    Intent allOrderIntent = new Intent(MineActivity.this, MyOrder.class);
+                    Intent allOrderIntent = new Intent(MineActivity.this, MyOrderActivity.class);
                     allOrderIntent.putExtra("UserId", userId);
                     allOrderIntent.putExtra("Type", "all");
                     startActivity(allOrderIntent);
@@ -250,6 +261,7 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent0 = new Intent(MineActivity.this, OnlineShopActivity.class);
                 intent0.putExtra("UserId", userId);
                 startActivity(intent0);
+                finish();
                 break;
             case R.id.post:
                 postCommentText.setVisibility(View.INVISIBLE);
@@ -334,10 +346,22 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent1);
                 break;
             case R.id.post_comment:
-                Intent intent2 = new Intent(MineActivity.this, MyOrder.class);
+                Intent intent2 = new Intent(MineActivity.this, MyOrderActivity.class);
                 intent2.putExtra("UserId", userId);
                 intent2.putExtra("Type", "comment");
                 startActivity(intent2);
+                break;
+            case R.id.address:
+                Intent intent3 = new Intent(MineActivity.this, AddressActivity.class);
+                intent3.putExtra("UserId", userId);
+                intent3.putExtra("Type", "manage");
+                startActivity(intent3);
+                break;
+            case R.id.online_order:
+                Intent intent4 = new Intent(MineActivity.this, MyCOrderActivity.class);
+                intent4.putExtra("UserId", userId);
+                startActivity(intent4);
+                finish();
                 break;
         }
     }

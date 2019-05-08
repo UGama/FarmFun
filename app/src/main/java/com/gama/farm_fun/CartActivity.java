@@ -92,9 +92,10 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         chosenSupport = 0;
         deleteSupport = 0;
         cartCommodityList = new ArrayList<>();
+        cartRecyclerView = findViewById(R.id.cartRecyclerView);
         wholePriceText.setText("0");
         AVQuery<AVObject> query = new AVQuery<>("Cart");
-        query.whereEqualTo("UseId", userId);
+        query.whereEqualTo("userId", userId);
         query.whereEqualTo("exist", true);
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {
@@ -178,6 +179,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                     orderAVObject.put("price", wholePrice);
                     orderAVObject.put("counts", getCountString());
                     orderAVObject.put("comment", false);
+                    orderAVObject.put("codes", getItemCodeString());
                     orderAVObject.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
@@ -356,6 +358,18 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("itemNameString", itemsNameString);
         return itemsNameString;
     }
+
+    private String getItemCodeString() {
+        String itemsNameString = "";
+        for (int i = 0; i < cartCommodityList.size(); i++) {
+            if (chosen[i]) {
+                itemsNameString += cartCommodityList.get(i).code + ";";
+            }
+        }
+        Log.i("itemNameString", itemsNameString);
+        return itemsNameString;
+    }
+
     private String getItemsKindString() {
         String itemsNameString = "";
         for (int i = 0; i < cartCommodityList.size(); i++) {

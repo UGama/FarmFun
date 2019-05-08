@@ -272,6 +272,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent();
         intent.putExtra("UserId", userId);
         setResult(RESULT_OK, intent);
+        showToast("登录成功！");
         finish();
     }
 

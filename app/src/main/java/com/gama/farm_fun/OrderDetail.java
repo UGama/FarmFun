@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetail extends AppCompatActivity implements View.OnClickListener {
+    private View topBar;
+    private Button back;
+    private TextView title;
+
     private String orderId;
     private String userId;
     private String projectPicUrl;
@@ -64,6 +68,7 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
     private ImageView shelter;
 
     private Toast toast;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +90,14 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
 
         initUI();
     }
+
     public void initUI() {
+        topBar = findViewById(R.id.topBar);
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
+        title = topBar.findViewById(R.id.title);
+        title.setText("订单详情");
+
         projectName = findViewById(R.id.project_name);
         projectName.setText(projectNameString);
         totalPriceText = findViewById(R.id.total_price);
@@ -246,6 +258,9 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
                         }
                     }
                 });
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

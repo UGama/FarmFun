@@ -34,7 +34,7 @@
 
         <activity android:name=".EditRemarkActivity" />
 
-        <activity android:name=".MyOrder" />
+        <activity android:name=".MyOrderActivity" />
 
         <activity android:name=".AmusementTicketActivity" />
 
@@ -75,6 +75,8 @@
         <activity android:name=".AddressActivity" />
 
         <activity android:name=".AddAddressActivity" />
+
+        <activity android:name=".MyCOrderActivity" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

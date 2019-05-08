@@ -412,11 +412,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent mineIntent = new Intent(MainActivity.this, MineActivity.class);
                 mineIntent.putExtra("UserId", userId);
                 startActivity(mineIntent);
+                finish();
                 break;
             case R.id.onlineShop:
                 Intent orderIntent = new Intent(MainActivity.this, OnlineShopActivity.class);
                 orderIntent.putExtra("UserId", userId);
                 startActivity(orderIntent);
+                finish();
                 break;
             case R.id.ktv:
                 Intent ktvIntent = new Intent(MainActivity.this, AmusementActivity.class);
@@ -529,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent1);
                 break;
             case R.id.post_comment:
-                Intent intent2 = new Intent(MainActivity.this, MyOrder.class);
+                Intent intent2 = new Intent(MainActivity.this, MyOrderActivity.class);
                 intent2.putExtra("UserId", userId);
                 intent2.putExtra("Type", "comment");
                 startActivity(intent2);

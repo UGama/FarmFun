@@ -368,13 +368,14 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     orderAVObject = new AVObject("Order");
                     orderAVObject.put("userId", userId);
-                    orderAVObject.put("type", code);
-                    orderAVObject.put("project", commodityName);
+                    orderAVObject.put("codes", code + ";");
+                    orderAVObject.put("project", commodityName + ";");
                     orderAVObject.put("status", "待支付");
-                    orderAVObject.put("item", commodityKind);
+                    orderAVObject.put("item", commodityKind + ";");
                     orderAVObject.put("detail", "");
-                    orderAVObject.put("count", count);
-                    orderAVObject.put("price", commodityKindPrice);
+                    orderAVObject.put("type", code);
+                    orderAVObject.put("counts", String.valueOf(count) + ";");
+                    orderAVObject.put("price", commodityKindPrice * count);
                     orderAVObject.put("comment", false);
                     orderAVObject.saveInBackground(new SaveCallback() {
                         @Override
@@ -716,6 +717,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         switch (requestCode) {
             case 0:
                 if (resultCode == RESULT_OK) {
+
                     finish();
                 }
                 break;
