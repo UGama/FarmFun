@@ -30,6 +30,8 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -41,6 +43,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +94,11 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(this);
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_amusement);
         Intent intent = getIntent();
 
@@ -400,6 +408,12 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
                 @Override
                 public void onClick(View v) {
                     Intent allTicketIntent = new Intent(AmusementActivity.this, AmusementTicketActivity.class);
+                    allTicketIntent.putExtra("Type", type);
+                    allTicketIntent.putExtra("Project", projectNameString);
+                    Log.i("intentType", type);
+                    Log.i("intentProjectName", projectNameString);
+                    allTicketIntent.putExtra("Url", url);
+                    allTicketIntent.putExtra("UserId", userId);
                     startActivity(allTicketIntent);
                 }
             });

@@ -89,18 +89,24 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         back.setOnClickListener(this);
 
         projectPic = findViewById(R.id.project_pic);
-        Uri imageUri = Uri.parse(projectPicUrl);
-        projectPic.setImageURI(imageUri);
-        RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-        projectPic.getHierarchy().setRoundingParams(roundingParams);
+        if (projectPicUrl.equals("")) {
+            projectPic.setBackground(getResources().getDrawable(R.drawable.online_order));
+            item = findViewById(R.id.item);
+            item.setText(getFirstItem(orderItem));
+        } else {
+            Uri imageUri = Uri.parse(projectPicUrl);
+            projectPic.setImageURI(imageUri);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+            projectPic.getHierarchy().setRoundingParams(roundingParams);
+            item = findViewById(R.id.item);
+            item.setText(orderItem);
+        }
         name = findViewById(R.id.project_name);
         name.setText(projectName);
         detail = findViewById(R.id.detail);
         detail.setText(orderDetail);
         count = findViewById(R.id.count);
         count.setText(orderCount);
-        item = findViewById(R.id.item);
-        item.setText(orderItem);
 
         star1 = findViewById(R.id.star1);
         star1.setOnClickListener(this);
@@ -236,5 +242,22 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             toast.setText(msg);
             toast.show();
         }
+    }
+
+    private String getFirstItem(String nameString) {
+        char[] nameChar = nameString.toCharArray();
+        String s = "";
+        int l = 0;
+        for (int i = 0; i < nameChar.length; i++) {
+            if (nameChar[i] == ';') {
+                l = i;
+                break;
+            }
+        }
+        for (int i = 0; i < l; i++) {
+            s += String.valueOf(nameChar[i]);
+        }
+        return s;
+
     }
 }

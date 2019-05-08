@@ -129,6 +129,10 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     private List<Comment> commentList;
     private int commentNumber;
 
+    private ImageView tip1;
+    private ImageView tip2;
+    private ImageView tip3;
+    private ImageView tip4;
 
     @Override
 
@@ -181,9 +185,13 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         thirdSubTitle = topBar.findViewById(R.id.thirdSubTitle);
         fourthSubTitle = topBar.findViewById(R.id.fourthSubTitle);
         firstSubTitle.setText("民宿概况");
+        firstSubTitle.setOnClickListener(this);
         secondSubTitle.setText("房间预订");
+        secondSubTitle.setOnClickListener(this);
         thirdSubTitle.setText("住户评论");
+        thirdSubTitle.setOnClickListener(this);
         fourthSubTitle.setText("地图导览");
+        fourthSubTitle.setOnClickListener(this);
         back = topBar.findViewById(R.id.back);
         back.setOnClickListener(this);
 
@@ -233,6 +241,11 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         commentRecyclerView.setLayoutManager(linearLayoutManager1);
         commentList = new ArrayList<>();
+
+        tip1 = findViewById(R.id.tip);
+        tip2 = findViewById(R.id.tip2);
+        tip3 = findViewById(R.id.tip3);
+        tip4 = findViewById(R.id.tip4);
 
         getHomeStayInformation();
     }
@@ -479,6 +492,18 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.back:
                 finish();
+                break;
+            case R.id.firstSubTitle:
+                observableScrollView.smoothScrollTo(0, tip1.getTop() - topBar.getBottom());
+                break;
+            case R.id.secondSubTitle:
+                observableScrollView.smoothScrollTo(0, tip2.getTop() - topBar.getBottom());
+                break;
+            case R.id.thirdSubTitle:
+                observableScrollView.smoothScrollTo(0, tip3.getTop() - topBar.getBottom());
+                break;
+            case R.id.fourthSubTitle:
+                observableScrollView.smoothScrollTo(0, tip4.getTop() - topBar.getBottom());
                 break;
         }
     }

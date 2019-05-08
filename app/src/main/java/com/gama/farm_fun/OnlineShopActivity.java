@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -64,6 +65,10 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView rightRecyclerView;
     private List<Commodity> rightCommodityList;
 
+    private RecyclerView commentRecyclerView;
+    private List<Comment> commentList;
+    private int commentNumber;
+
     public View bottomBar;
     public Button homePage;
     public Button post;
@@ -80,6 +85,17 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     private TextView postCustomizedText;
     private TextView postCommentText;
     private TextView postJournalText;
+
+    private ObservableScrollView observableScrollView;
+    private ImageView tip1;
+    private ImageView tip2;
+    private ImageView tip3;
+    private ImageView tip4;
+
+    private View firstBar;
+    private View secondBar;
+    private View thirdBar;
+    private View fourthBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,6 +154,15 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         postCommentText = postPanel.findViewById(R.id.comment_text);
         postCustomizedText = postPanel.findViewById(R.id.customized_text);
         postJournalText = postPanel.findViewById(R.id.journal_text);
+
+        commentRecyclerView = findViewById(R.id.commentRecyclerView);
+        commentList = new ArrayList<>();
+
+        observableScrollView = findViewById(R.id.observableScrollView);
+        tip1 = findViewById(R.id.tip);
+        tip2 = findViewById(R.id.tip2);
+        tip3 = findViewById(R.id.tip3);
+        tip4 = findViewById(R.id.tip4);
 
         initSubTitle();
     }
@@ -306,6 +331,98 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         CommodityAdapter commodityAdapter2 = new CommodityAdapter(rightCommodityList);
         rightRecyclerView.setAdapter(commodityAdapter2);
 
+        getComment();
+    }
+
+    public void getComment() {
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        query.whereEqualTo("type", "manyC");
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    Comment comment = new Comment(avObject.getString("userId"),
+                            avObject.getString("comment"),
+                            avObject.getInt("rank"),
+                            avObject.getString("item"),
+                            String.valueOf(avObject.getDate("createdAt")));
+                    Log.i("userId", comment.userId);
+                    Log.i("comment", avObject.getString("comment"));
+                    Log.i("createdAt", comment.createdAt);
+                    commentList.add(comment);
+                    if (commentList.size() > 4) {
+                        break;
+                    }
+                }
+                getUserName();
+            }
+        });
+    }
+
+    public void getUserName() {
+        commentNumber = 0;
+        Log.i("commentList.size()", String.valueOf(commentList.size()));
+        for (int i = 0; i < commentList.size(); i++) {
+            AVQuery<AVObject> query = new AVQuery<>("Users");
+            query.whereEqualTo("objectId", commentList.get(i).userId);
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject object, AVException e) {
+                    commentList.get(commentNumber).setUserName(object.getString("netName"));
+                    Log.i("netName", commentList.get(commentNumber).userName);
+                    commentNumber++;
+                    if (commentNumber == commentList.size()) {
+                        setCommentRecyclerView();
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void setCommentRecyclerView() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(linearLayoutManager);
+        CommentAdapter commentAdapter = new CommentAdapter(commentList);
+        commentRecyclerView.setAdapter(commentAdapter);
+
+        setObservableScrollView();
+    }
+
+    public void setObservableScrollView() {
+        observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
+                if (y < tip2.getTop()) {
+                    subTitleRecyclerView.smoothScrollToPosition(0);
+                    firstBar.setVisibility(View.VISIBLE);
+                    secondBar.setVisibility(View.INVISIBLE);
+                    thirdBar.setVisibility(View.INVISIBLE);
+                    fourthBar.setVisibility(View.INVISIBLE);
+                } else if (y < tip3.getTop()) {
+                    firstBar.setVisibility(View.INVISIBLE);
+                    secondBar.setVisibility(View.VISIBLE);
+                    thirdBar.setVisibility(View.INVISIBLE);
+                    fourthBar.setVisibility(View.INVISIBLE);
+                    subTitleRecyclerView.smoothScrollToPosition(1);
+                } else if (y < tip4.getTop()) {
+                    firstBar.setVisibility(View.INVISIBLE);
+                    secondBar.setVisibility(View.INVISIBLE);
+                    thirdBar.setVisibility(View.VISIBLE);
+                    fourthBar.setVisibility(View.INVISIBLE);
+                    subTitleRecyclerView.smoothScrollToPosition(2);
+                } else {
+                    firstBar.setVisibility(View.INVISIBLE);
+                    secondBar.setVisibility(View.INVISIBLE);
+                    thirdBar.setVisibility(View.INVISIBLE);
+                    fourthBar.setVisibility(View.VISIBLE);
+                    subTitleRecyclerView.smoothScrollToPosition(3);
+
+                }
+
+            }
+        });
     }
 
     @Override
@@ -470,6 +587,15 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         @Override
         public void onBindViewHolder(final SubTitleAdapter.ViewHolder holder, int position) {
             String subtitle = stringList.get(position);
+            if (subtitle.equals("推荐")) {
+                firstBar = holder.choseBar;
+            } else if (subtitle.equals("全部宝贝")) {
+                secondBar = holder.choseBar;
+            } else if (subtitle.equals("评论")) {
+                thirdBar = holder.choseBar;
+            } else {
+                fourthBar = holder.choseBar;
+            }
             holder.subtitle.setText(subtitle);
             holder.subView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -479,6 +605,17 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                     holder.choseBar.setVisibility(View.VISIBLE);
                     chosenSubtitle = holder.choseBar;
                     Log.i("Subtitle", chosenSubtitleString);
+
+                    if (chosenSubtitleString.equals("推荐")) {
+                        observableScrollView.smoothScrollTo(0, tip1.getTop());
+                    } else if (chosenSubtitleString.equals("全部宝贝")) {
+                        observableScrollView.smoothScrollTo(0, tip2.getTop());
+                    } else if (chosenSubtitleString.equals("评论")) {
+                        observableScrollView.smoothScrollTo(0, tip3.getTop());
+                    } else {
+                        observableScrollView.smoothScrollTo(0, tip4.getTop());
+                    }
+
                 }
             });
             if (subtitle.equals(chosenSubtitleString)) {
@@ -642,5 +779,130 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+        private List<Comment> commentList;
+
+        private CommentAdapter(List<Comment> commentList) {
+            this.commentList = commentList;
+        }
+
+        @Override
+        public CommentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_comment, parent, false);
+            final CommentAdapter.ViewHolder holder = new CommentAdapter.ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });*/
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(CommentAdapter.ViewHolder holder, int position) {
+            Comment comment = commentList.get(position);
+            holder.userName.setText(comment.userName);
+            holder.comment.setText(comment.comment);
+            holder.item.setText(getFirstItem(comment.item) + " 等共" + String.valueOf(getItemsCount(comment.item)) + "件商品");
+            holder.time.setText(comment.createdAt);
+            holder.setRank(comment.rank);
+            if (holder.rank == 1) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 2) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 3) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else if (holder.rank == 4) {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+            } else {
+                holder.star1.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star2.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star3.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star4.setBackground(getResources().getDrawable(R.drawable.star2));
+                holder.star5.setBackground(getResources().getDrawable(R.drawable.star2));
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return commentList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView userName;
+            private TextView comment;
+            private int rank;
+            private TextView item;
+            private TextView time;
+            private ImageView star1;
+            private ImageView star2;
+            private ImageView star3;
+            private ImageView star4;
+            private ImageView star5;
+
+            private ViewHolder(View view) {
+                super(view);
+                userName = view.findViewById(R.id.userName);
+                comment = view.findViewById(R.id.commentText);
+                item = view.findViewById(R.id.item);
+                time = view.findViewById(R.id.time);
+
+                star1 = view.findViewById(R.id.star1);
+                star2 = view.findViewById(R.id.star2);
+                star3 = view.findViewById(R.id.star3);
+                star4 = view.findViewById(R.id.star4);
+                star5 = view.findViewById(R.id.star5);
+            }
+
+            public void setRank(int rank) {
+                this.rank = rank;
+            }
+        }
+
+
+    }
+
+    private String getFirstItem(String nameString) {
+        char[] nameChar = nameString.toCharArray();
+        String s = "";
+        int l = 0;
+        for (int i = 0; i < nameChar.length; i++) {
+            if (nameChar[i] == ';') {
+                l = i;
+                break;
+            }
+        }
+        for (int i = 0; i < l; i++) {
+            s += String.valueOf(nameChar[i]);
+        }
+        return s;
+
+    }
+
+    private int getItemsCount(String nameString) {
+        char[] nameChar = nameString.toCharArray();
+        int k = 0;
+        for (int i = 0; i < nameChar.length; i++) {
+            if (nameChar[i] == ';') {
+                k++;
+            }
+        }
+        return k;
     }
 }

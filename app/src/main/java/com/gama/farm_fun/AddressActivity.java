@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -76,6 +77,8 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                         Address address = new Address(avObject.getString("address"),
                                 avObject.getString("phone"),
                                 avObject.getString("name"));
+
+                        address.setId(avObject.getObjectId());
                         addressList.add(address);
                     }
                     initAddressRecyclerView();
@@ -101,6 +104,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.add_address:
                 Intent intent = new Intent(AddressActivity.this, AddAddressActivity.class);
                 intent.putExtra("UserId", userId);
+                intent.putExtra("edit", "add");
                 startActivityForResult(intent, 0);
                 break;
         }
@@ -134,6 +138,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             holder.name.setText(address.name);
             holder.address.setText(address.address);
             holder.phone.setText(address.phone);
+            holder.setId(address.id);
 
             if (type.equals("chose")) {
                 holder.view.setOnClickListener(new View.OnClickListener() {
@@ -144,10 +149,23 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                         intent.putExtra("phone", holder.phone.getText().toString());
                         intent.putExtra("address", holder.address.getText().toString());
                         setResult(RESULT_OK, intent);
-                        finish();
                     }
                 });
             }
+
+            holder.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AddressActivity.this, AddAddressActivity.class);
+                    intent.putExtra("UserId", userId);
+                    intent.putExtra("edit", "edit");
+                    intent.putExtra("name", holder.name.getText().toString());
+                    intent.putExtra("phone", holder.phone.getText().toString());
+                    intent.putExtra("address", holder.address.getText().toString());
+                    intent.putExtra("id", holder.id);
+                    startActivityForResult(intent, 1);
+                }
+            });
 
         }
 
@@ -161,6 +179,8 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             private TextView address;
             private TextView phone;
             private View view;
+            private ImageView edit;
+            private String id;
 
             private ViewHolder(View view) {
                 super(view);
@@ -168,8 +188,12 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                 address = view.findViewById(R.id.address);
                 phone = view.findViewById(R.id.phone);
                 this.view = view;
+                edit = view.findViewById(R.id.edit);
             }
 
+            public void setId(String id) {
+                this.id = id;
+            }
         }
 
 
@@ -180,6 +204,11 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 0:
+                if (resultCode == RESULT_OK) {
+                    getAddressInformation();
+                }
+                break;
+            case 1:
                 if (resultCode == RESULT_OK) {
                     getAddressInformation();
                 }

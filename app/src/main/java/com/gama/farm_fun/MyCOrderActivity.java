@@ -95,6 +95,9 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
                                 avObject.getString("status"),
                                 transToPicName(toStringArray(avObject.getString("codes"))));
                         checkStringArray(transToPicName(toStringArray(avObject.getString("codes"))));
+                        cOrder.setType(avObject.getString("type"));
+                        cOrder.setCodesString(avObject.getString("codes"));
+                        cOrder.setNameString(avObject.getString("project"));
                         cOrderList.add(cOrder);
                         Log.i("comment0", String.valueOf(avObject.getBoolean("comment")));
                         Log.i("comment1", String.valueOf(cOrder.comment));
@@ -169,9 +172,11 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onBindViewHolder(final COrderAdapter.ViewHolder holder, int position) {
-            COrder cOrder = cOrderList.get(position);
+            final COrder cOrder = cOrderList.get(position);
             holder.price.setText(String.valueOf(cOrder.price));
             holder.status.setText(cOrder.status);
+
+            holder.setId(cOrder.id);
 
             if (cOrder.comment) {
                 holder.comment.setVisibility(View.VISIBLE);
@@ -182,6 +187,22 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
             holder.itemsRecyclerView.setLayoutManager(linearLayoutManager);
             COrderItemAdapter cOrderItemAdapter = new COrderItemAdapter(transToItems(cOrder));
             holder.itemsRecyclerView.setAdapter(cOrderItemAdapter);
+
+            holder.comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MyCOrderActivity.this, EditCommentActivity.class);
+                    intent.putExtra("project", "线上商城");
+                    intent.putExtra("url", "");
+                    intent.putExtra("item", cOrder.nameString);
+                    intent.putExtra("detail", "");
+                    intent.putExtra("count", "等" + String.valueOf(cOrder.names.length) + "件商品");
+                    intent.putExtra("orderId", holder.id);
+                    intent.putExtra("type", "manyC");
+                    intent.putExtra("userId", userId);
+                    startActivityForResult(intent, 0);
+                }
+            });
         }
 
         @Override
@@ -195,6 +216,7 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
             private Button detail;
             private Button comment;
             private RecyclerView itemsRecyclerView;
+            private String id;
 
             private ViewHolder(View view) {
                 super(view);
@@ -205,7 +227,9 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
                 itemsRecyclerView = view.findViewById(R.id.itemsRecyclerView);
             }
 
-
+            public void setId(String id) {
+                this.id = id;
+            }
         }
 
 

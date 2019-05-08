@@ -14,6 +14,9 @@ public class COrder {
     public String[] urls;
     public String status;
     public String[] picName;
+    public String type;
+    public String codesString;
+    public String nameString;
 
     public COrder(String id, String[] kinds, String[] names, String[] codes, int[] counts, int price, String address, String name, String phone, boolean comment, String status, String[] picName) {
         this.id = id;
@@ -32,5 +35,17 @@ public class COrder {
 
     public void setUrls(String[] urls) {
         this.urls = urls;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setCodesString(String codesString) {
+        this.codesString = codesString;
+    }
+
+    public void setNameString(String nameString) {
+        this.nameString = nameString;
     }
 }

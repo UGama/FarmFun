@@ -298,7 +298,44 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
             holder.payOnline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (userId.equals("tourist")) {
+                        Intent loginIntent = new Intent(AmusementTicketActivity.this, LoginActivity.class);
+                        startActivityForResult(loginIntent, 1);
+                    } else {
+                        orderAmusementType = holder.ticketType.getText().toString();
+                        orderPrice = Integer.parseInt(holder.price.getText().toString());
+                        orderDetail = topPanelChosenDate.getText().toString();
+                        orderAVObject = new AVObject("Order");
+                        orderAVObject.put("userId", userId);
+                        orderAVObject.put("type", type);
+                        orderAVObject.put("project", holder.project);
+                        orderAVObject.put("status", "待支付");
+                        orderAVObject.put("item", orderAmusementType);
+                        orderAVObject.put("detail", orderDetail);
+                        orderAVObject.put("price", orderPrice);
+                        orderAVObject.put("count", 1);
+                        orderAVObject.put("comment", false);
+                        orderAVObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    Intent orderIntent = new Intent(AmusementTicketActivity.this, CreateOrderActivity.class);
+                                    orderIntent.putExtra("UserId", userId);
+                                    orderIntent.putExtra("Type", type);
+                                    orderIntent.putExtra("Project", holder.project);
+                                    orderIntent.putExtra("Item", orderAmusementType);
+                                    orderIntent.putExtra("Url", url);
+                                    orderIntent.putExtra("Detail", orderDetail);
+                                    orderIntent.putExtra("Count", 1);
+                                    orderIntent.putExtra("Price", orderPrice);
+                                    orderIntent.putExtra("OrderId", orderAVObject.getObjectId());
+                                    startActivityForResult(orderIntent, 0);
+                                }
+                            }
+                        });
 
+
+                    }
                 }
             });
         }

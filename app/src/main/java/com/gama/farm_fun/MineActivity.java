@@ -361,7 +361,6 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent4 = new Intent(MineActivity.this, MyCOrderActivity.class);
                 intent4.putExtra("UserId", userId);
                 startActivity(intent4);
-                finish();
                 break;
         }
     }

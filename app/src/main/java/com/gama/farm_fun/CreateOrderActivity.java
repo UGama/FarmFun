@@ -138,12 +138,12 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             title.setText("民宿订单");
         } else if (type.equals("restaurant")) {
             title.setText("用餐订单");
-        }
-        if (type.length() == 2) {
+        } else if (type.length() == 2) {
             title.setText("商品订单");
-        }
-        if (type.equals("manyC")) {
+        } else if (type.equals("manyC")) {
             title.setText("商品订单");
+        } else {
+            title.setText("娱乐订单");
         }
         back = topBar.findViewById(R.id.back);
         back.setOnClickListener(this);
@@ -174,6 +174,13 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             numberTextView = countChose.findViewById(R.id.count);
             numberTextView.setText("1");
             number = Integer.parseInt(numberTextView.getText().toString());
+            addressPanel = findViewById(R.id.addressPanel);
+            addressPanel.setVisibility(View.INVISIBLE);
+        }
+
+        if (type.equals("homeStay")) {
+            addressPanel = findViewById(R.id.addressPanel);
+            addressPanel.setVisibility(View.INVISIBLE);
         }
 
         if (type.equals("manyC") || type.length() == 2) {
@@ -222,8 +229,14 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(remarkIntent, 1);
                 break;
             case R.id.submit:
-                if (phoneText.getText().toString().equals("")) {
-                    showToast("请先选择收货地址。");
+                if (type.equals("manyC") || type.length() == 2) {
+                    if (phoneText.getText().toString().equals("")) {
+                        showToast("请先选择收货地址。");
+                    } else {
+                        Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
+                        intent.putExtra("price", orderPrice);
+                        startActivityForResult(intent, 1);
+                    }
                 } else {
                     Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
                     intent.putExtra("price", orderPrice);

@@ -412,13 +412,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent mineIntent = new Intent(MainActivity.this, MineActivity.class);
                 mineIntent.putExtra("UserId", userId);
                 startActivity(mineIntent);
-                finish();
                 break;
             case R.id.onlineShop:
                 Intent orderIntent = new Intent(MainActivity.this, OnlineShopActivity.class);
                 orderIntent.putExtra("UserId", userId);
                 startActivity(orderIntent);
-                finish();
                 break;
             case R.id.ktv:
                 Intent ktvIntent = new Intent(MainActivity.this, AmusementActivity.class);
