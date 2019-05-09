@@ -232,7 +232,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
 
     public void initNumberPick() {
         adultsNumberPick.setMaxValue(15);
-        adultsNumberPick.setMinValue(0);
+        adultsNumberPick.setMinValue(1);
         adultsNumberPick.setValue(1);
         adultsNumberPick.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         adultsNumberPick.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

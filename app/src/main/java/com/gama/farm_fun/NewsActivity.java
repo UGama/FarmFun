@@ -233,6 +233,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 viewPager.setAdapter(posterPagerAdapter);
                 viewPager.setPageTransformer(true, new com.gama.farm_fun.ScalePageTransformer());
                 indicator.setLength(posterList.size());
+                indicator.setSelected(0);
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

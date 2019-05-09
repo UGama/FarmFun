@@ -73,6 +73,8 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
     private TextView nameText;
     private TextView phoneText;
 
+    private ConstraintLayout timeComePanel;
+
     private String way;
     private int cartSupport;
 
@@ -179,6 +181,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         if (type.equals("homeStay")) {
             addressPanel = findViewById(R.id.addressPanel);
             addressPanel.setVisibility(View.INVISIBLE);
+            timeComePanel.setVisibility(View.VISIBLE);
         }
 
         if (type.equals("manyC") || type.length() == 2) {
