@@ -682,7 +682,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Sun.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.SunDetail.setText("返程");
                                 holder.SunDetail.setVisibility(View.VISIBLE);
@@ -718,7 +720,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Mon.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.MonDetail.setText("返程");
                                 holder.MonDetail.setVisibility(View.VISIBLE);
@@ -753,7 +757,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Tue.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.TueDetail.setText("返程");
                                 holder.TueDetail.setVisibility(View.VISIBLE);
@@ -788,7 +794,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Wed.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.WedDetail.setText("返程");
                                 holder.WedDetail.setVisibility(View.VISIBLE);
@@ -823,7 +831,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Thu.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.ThuDetail.setText("返程");
                                 holder.ThuDetail.setVisibility(View.VISIBLE);
@@ -858,7 +868,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Fri.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.FriDetail.setText("返程");
                                 holder.FriDetail.setVisibility(View.VISIBLE);
@@ -893,7 +905,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
                             endMonth = month;
                             endDay = Integer.parseInt(holder.Sat.getText().toString());
                             dayCount = getDays(startMonth, startDay, endMonth, endDay);
-                            if (dayCount > 0) {
+                            if (dayCount == 1) {
+                                showToast("仅支持两天及以上行程");
+                            } else if (dayCount > 0) {
                                 v.setBackground(getResources().getDrawable(R.drawable.shape_days));
                                 holder.SatDetail.setText("返程");
                                 holder.SatDetail.setVisibility(View.VISIBLE);

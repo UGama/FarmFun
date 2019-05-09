@@ -65,4 +65,14 @@
         android:textSize="12sp"
         />
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintStart_toStartOf="@id/timeChosePanel"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/clock"
+        />
+
 </android.support.constraint.ConstraintLayout>

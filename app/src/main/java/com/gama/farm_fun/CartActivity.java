@@ -347,7 +347,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         return count;
     }
 
-    
     private String getItemsNameString() {
         String itemsNameString = "";
         for (int i = 0; i < cartCommodityList.size(); i++) {

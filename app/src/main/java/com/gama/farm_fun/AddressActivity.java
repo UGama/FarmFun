@@ -149,6 +149,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                         intent.putExtra("phone", holder.phone.getText().toString());
                         intent.putExtra("address", holder.address.getText().toString());
                         setResult(RESULT_OK, intent);
+                        finish();
                     }
                 });
             }

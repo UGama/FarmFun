@@ -52,7 +52,7 @@
 
         <activity android:name=".OrderDetail" />
 
-        <activity android:name=".Payment" />
+        <activity android:name=".PaymentActivity" />
 
         <activity android:name=".TravelJournalActivity" />
 
@@ -77,6 +77,8 @@
         <activity android:name=".AddAddressActivity" />
 
         <activity android:name=".MyCOrderActivity" />
+
+        <activity android:name=".CreateTravelPlanOrderActivity" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateOrderActivity extends AppCompatActivity implements View.OnClickListener {
-
     private String userId;
     private String orderId;
     private String type;
@@ -114,7 +113,6 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             for (int i = 0; i < names.length; i++) {
                 orderPrice += prices[i] * counts[i];
             }
-
         } else {
             Log.i("type", type);
             project = orderIntent.getStringExtra("Project");
@@ -192,7 +190,6 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
             phoneText = findViewById(R.id.phone);
         }
 
-
         if (type.equals("manyC")) {
             initOrderRecyclerView2();
         } else {
@@ -233,12 +230,12 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
                     if (phoneText.getText().toString().equals("")) {
                         showToast("请先选择收货地址。");
                     } else {
-                        Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
+                        Intent intent = new Intent(CreateOrderActivity.this, PaymentActivity.class);
                         intent.putExtra("price", orderPrice);
                         startActivityForResult(intent, 1);
                     }
                 } else {
-                    Intent intent = new Intent(CreateOrderActivity.this, Payment.class);
+                    Intent intent = new Intent(CreateOrderActivity.this, PaymentActivity.class);
                     intent.putExtra("price", orderPrice);
                     startActivityForResult(intent, 1);
                 }

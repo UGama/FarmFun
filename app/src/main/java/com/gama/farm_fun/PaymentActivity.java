@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Payment extends AppCompatActivity implements View.OnClickListener {
+public class PaymentActivity extends AppCompatActivity implements View.OnClickListener {
+    private View topBar;
+    private TextView title;
+    private Button back;
 
     private int price;
 
@@ -32,6 +35,7 @@ public class Payment extends AppCompatActivity implements View.OnClickListener {
     private String way;
 
     private Toast toast;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,7 @@ public class Payment extends AppCompatActivity implements View.OnClickListener {
         Log.i("price", String.valueOf(price));
         initUI();
     }
+
     public void initUI() {
         way = null;
         priceText = findViewById(R.id.price);
@@ -81,6 +86,12 @@ public class Payment extends AppCompatActivity implements View.OnClickListener {
 
         pay = findViewById(R.id.pay);
         pay.setOnClickListener(this);
+
+        topBar = findViewById(R.id.bar_top);
+        title = topBar.findViewById(R.id.title);
+        title.setText("选择支付方式");
+        back = topBar.findViewById(R.id.back);
+        back.setOnClickListener(this);
     }
 
     @Override
@@ -95,6 +106,9 @@ public class Payment extends AppCompatActivity implements View.OnClickListener {
                     setResult(RESULT_OK, intent);
                     finish();
                 }
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

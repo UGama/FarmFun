@@ -5,6 +5,7 @@ public class SimpleTicket {
     public String name;
     public int count;
     public int totalPrice;
+    public String type;
 
     public SimpleTicket(String name, int count, int totalPrice) {
         this.name = name;
@@ -12,4 +13,7 @@ public class SimpleTicket {
         this.totalPrice = totalPrice;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 }

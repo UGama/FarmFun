@@ -63,6 +63,14 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView restaurantRecyclerView;
     private List<SimpleTicket> seatList;
 
+    private List<SimpleTicket> allList;
+
+    private Button order;
+    private String[] names;
+    private int[] counts;
+    private String[] types;
+    private int[] prices;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +117,11 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
 
         travelDate = findViewById(R.id.travel_date);
         travelDate.setText("（6月" + String.valueOf(startDay) + "日 至 6月" + String.valueOf(endDay) + "日）");
+
+        allList = new ArrayList<>();
+
+        order = findViewById(R.id.order);
+        order.setOnClickListener(this);
 
         initData();
     }
@@ -255,6 +268,7 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
+
     public void getRestaurantPic() {
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereEqualTo("name", restaurantList.get(0).picName);
@@ -314,13 +328,16 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (children == 0) {
                     SimpleTicket simpleTicket = new SimpleTicket("成人票", adults,
                             97 * adults);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket1 = new SimpleTicket("成人票", adults,
                             97 * adults);
+                    simpleTicket1.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket1);
                     SimpleTicket simpleTicket2 = new SimpleTicket("儿童票", children,
                             67 * children);
+                    simpleTicket2.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket2);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -331,13 +348,16 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (children == 0) {
                     SimpleTicket simpleTicket = new SimpleTicket("综合鱼塘（6小时）+1斤高级鱼饵",
                             adults, adults * 238);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket1 = new SimpleTicket("综合鱼塘（6小时）+1斤高级鱼饵",
                             adults, adults * 238);
+                    simpleTicket1.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket1);
                     SimpleTicket simpleTicket2 = new SimpleTicket("综合鱼塘（6小时）",
                             children, children * 208);
+                    simpleTicket2.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket2);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -349,13 +369,17 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (children == 0) {
                     SimpleTicket simpleTicket = new SimpleTicket("蓝莓采摘+外带两斤蓝莓",
                             adults, adults * 128);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket1 = new SimpleTicket("蓝莓采摘+外带两斤蓝莓",
                             adults, adults * 128);
+                    simpleTicket1.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket1);
                     SimpleTicket simpleTicket2 = new SimpleTicket("蓝莓采摘",
                             children, children * 88);
+                    simpleTicket2.setType(travelPlan.type);
+                    simpleTicketList.add(simpleTicket2);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
                 holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
@@ -366,10 +390,12 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (persons > 6) {
                     SimpleTicket simpleTicket = new SimpleTicket("阳光场欢唱7小时（大包）",
                             1, 218);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket = new SimpleTicket("阳光场欢唱7小时（小包）",
                             1, 158);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -380,29 +406,36 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (persons == 1) {
                     SimpleTicket simpleTicket = new SimpleTicket("户外单人烧烤套餐",
                             1, 88);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else if (persons == 2) {
                     SimpleTicket simpleTicket = new SimpleTicket("户外双人烧烤套餐",
                             1, 168);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else if (persons <= 4) {
                     SimpleTicket simpleTicket = new SimpleTicket("户外四人烧烤套餐",
                             1, 328);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else if (persons <= 8) {
                     SimpleTicket simpleTicket = new SimpleTicket("户外八人烧烤套餐",
                             1, 588);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else if (persons <= 12) {
                     SimpleTicket simpleTicket1 = new SimpleTicket("户外四人烧烤套餐",
                             1, 328);
+                    simpleTicket1.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket1);
                     SimpleTicket simpleTicket2 = new SimpleTicket("户外八人烧烤套餐",
                             1, 588);
+                    simpleTicket2.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket2);
                 } else {
                     SimpleTicket simpleTicket = new SimpleTicket("户外八人烧烤套餐",
                             2, 588 * 2);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -413,14 +446,17 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (adults <= 4) {
                     SimpleTicket simpleTicket = new SimpleTicket("小厅（可容纳4人）",
                             1, 97);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else if (adults <= 8) {
                     SimpleTicket simpleTicket = new SimpleTicket("中厅（可容纳8人）",
                             1, 187);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket = new SimpleTicket("大厅（可容纳15人）",
                             1, 327);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -431,13 +467,16 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 if (children == 0) {
                     SimpleTicket simpleTicket = new SimpleTicket("成人票",
                             adults, 120 * adults);
+                    simpleTicket.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket);
                 } else {
                     SimpleTicket simpleTicket1 = new SimpleTicket("成人票",
                             adults, 120 * adults);
+                    simpleTicket1.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket1);
                     SimpleTicket simpleTicket2 = new SimpleTicket("儿童票",
                             children, 60 * children);
+                    simpleTicket2.setType(travelPlan.type);
                     simpleTicketList.add(simpleTicket2);
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
@@ -445,8 +484,9 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
                 holder.projectRecyclerView.setAdapter(itemAdapter);
             } else if (travelPlan.type.equals("HomeStay")) {
-                SimpleTicket simpleTicket = new SimpleTicket("标准间",
+                SimpleTicket simpleTicket = new SimpleTicket("标准间" + travelDate.getText().toString(),
                         adults / 2 * dayCount, dayCount * adults / 2 * 278);
+                simpleTicket.setType(travelPlan.type);
                 simpleTicketList.add(simpleTicket);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
                 holder.projectRecyclerView.setLayoutManager(linearLayoutManager);
@@ -457,30 +497,38 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                     if (persons <= 2) {
                         SimpleTicket simpleTicket1 = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日中午）",
                                 1, 20);
+                        simpleTicket1.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket1);
                         SimpleTicket simpleTicket2 = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket2.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket2);
                     } else if (persons <= 4) {
                         SimpleTicket simpleTicket1 = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日中午）",
                                 1, 20);
+                        simpleTicket1.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket1);
                         SimpleTicket simpleTicket2 = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket2.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket2);
                     } else if (persons <= 8) {
                         SimpleTicket simpleTicket1 = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日中午）",
                                 1, 20);
+                        simpleTicket1.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket1);
                         SimpleTicket simpleTicket2 = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket2.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket2);
                     } else {
                         SimpleTicket simpleTicket1 = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日中午）",
                                 1, 20);
+                        simpleTicket1.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket1);
                         SimpleTicket simpleTicket2 = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket2.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket2);
                     }
 
@@ -488,18 +536,22 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                     if (persons <= 2) {
                         SimpleTicket simpleTicket = new SimpleTicket("小桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket);
                     } else if (persons <= 4) {
                         SimpleTicket simpleTicket = new SimpleTicket("中桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket);
                     } else if (persons <= 8) {
                         SimpleTicket simpleTicket = new SimpleTicket("大桌（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket);
                     } else {
                         SimpleTicket simpleTicket = new SimpleTicket("包厢（6月" + String.valueOf(startDay + 1) + "日晚上）",
                                 1, 20);
+                        simpleTicket.setType(travelPlan.type);
                         simpleTicketList.add(simpleTicket);
                     }
                 }
@@ -508,7 +560,7 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 ItemAdapter itemAdapter = new ItemAdapter(simpleTicketList);
                 holder.projectRecyclerView.setAdapter(itemAdapter);
             }
-
+            allList.addAll(simpleTicketList);
         }
 
         @Override
@@ -561,7 +613,11 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         public void onBindViewHolder(final ItemAdapter.ViewHolder holder, int position) {
             SimpleTicket simpleTicket = simpleTicketList.get(position);
             holder.projectName.setText(simpleTicket.name);
-            holder.count.setText("x" + String.valueOf(simpleTicket.count));
+            if (checkHomeStay(holder.projectName.getText().toString())) {
+                holder.count.setText("共" + String.valueOf(simpleTicket.count) + "晚");
+            } else {
+                holder.count.setText("x" + String.valueOf(simpleTicket.count));
+            }
             holder.totalPrice.setText(String.valueOf(simpleTicket.totalPrice));
 
         }
@@ -592,6 +648,9 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.order:
+                orderTravelPlan();
                 break;
         }
     }
@@ -727,5 +786,57 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             }
         }
         return newTabs;
+    }
+
+    public boolean checkHomeStay(String s) {
+        char[] chars = s.toCharArray();
+        String s1 = "";
+        for (int i = 0; i < 3; i++) {
+            s1 += String.valueOf(chars[i]);
+        }
+        if (s1.equals("标准间")) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public void orderTravelPlan() {
+        Intent intent = new Intent(TravelPlanActivity.this, CreateTravelPlanOrderActivity.class);
+        names = new String[allList.size()];
+        counts = new int[allList.size()];
+        types = new String[allList.size()];
+        prices = new int[allList.size()];
+        int i = 0;
+        for (SimpleTicket simpleTicket : allList) {
+            names[i] = simpleTicket.name;
+            counts[i] = simpleTicket.count;
+            types[i] = simpleTicket.type;
+            prices[i] = simpleTicket.totalPrice;
+            i++;
+        }
+
+        intent.putExtra("startDay", startDay);
+        intent.putExtra("dayCount", dayCount);
+        intent.putExtra("names", names);
+        intent.putExtra("counts", counts);
+        intent.putExtra("types", types);
+        intent.putExtra("prices", prices);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                break;
+        }
     }
 }

@@ -7,6 +7,7 @@ public class Item {
     public int count;
     public int price;
     public String countString;
+    public String type;
 
     public Item(String name, String picUrl, String detail, int count, int price) {
         this.name = name;
@@ -22,5 +23,9 @@ public class Item {
         this.detail = detail;
         this.countString = countString;
         this.price = price;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

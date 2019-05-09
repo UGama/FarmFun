@@ -646,7 +646,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onBindViewHolder(final RecommendProjectsAdapter.ViewHolder holder, int position) {
-            RecommendProject recommendProject = recommendProjectsList.get(position);
+            final RecommendProject recommendProject = recommendProjectsList.get(position);
             Log.i(String.valueOf(position), recommendProject.name);
             holder.recommendProjectText.setText(recommendProject.name);
             AVQuery<AVObject> query = new AVQuery<>("_File");
@@ -680,6 +680,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Intent intent = new Intent(MainActivity.this, AmusementActivity.class);
                         intent.putExtra("UserId", userId);
+                        intent.putExtra("Type", recommendProject.type);
                         startActivity(intent);
                     }
                 }
