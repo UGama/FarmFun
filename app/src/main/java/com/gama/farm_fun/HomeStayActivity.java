@@ -134,6 +134,7 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
     private ImageView tip3;
     private ImageView tip4;
 
+    private View loading;
     @Override
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +145,10 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
         setContentView(R.layout.activity_homestay);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
         mapView = findViewById(R.id.mapView);
         getWindowInformation();
 
@@ -393,6 +398,8 @@ public class HomeStayActivity extends AppCompatActivity implements View.OnClickL
         MonthAdapter monthAdapter = new MonthAdapter(monthList);
         monthRecyclerView.setAdapter(monthAdapter);
         Log.i("Test", "setAdapterSuccess!");
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     public void loadMapView() {

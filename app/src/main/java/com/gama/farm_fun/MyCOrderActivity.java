@@ -41,6 +41,8 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
     private int support2;
     private String[] urlSupport;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,9 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -143,6 +148,9 @@ public class MyCOrderActivity extends AppCompatActivity implements View.OnClickL
         cOrderRecyclerView.setLayoutManager(linearLayoutManager);
         COrderAdapter cOrderAdapter = new COrderAdapter(cOrderList);
         cOrderRecyclerView.setAdapter(cOrderAdapter);
+
+
+        loading.setVisibility(View.INVISIBLE);
     }
     @Override
     public void onClick(View v) {

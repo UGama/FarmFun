@@ -30,7 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDetail extends AppCompatActivity implements View.OnClickListener {
+public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private View topBar;
     private Button back;
     private TextView title;
@@ -69,11 +69,16 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
 
     private Toast toast;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_order_detail);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
@@ -219,13 +224,14 @@ public class OrderDetail extends AppCompatActivity implements View.OnClickListen
         ItemAdapter itemAdapter = new ItemAdapter(itemList);
         orderRecyclerView.setAdapter(itemAdapter);
 
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comment:
-                Intent intent = new Intent(OrderDetail.this, EditCommentActivity.class);
+                Intent intent = new Intent(OrderDetailActivity.this, EditCommentActivity.class);
                 intent.putExtra("project", projectNameString);
                 intent.putExtra("url", projectPicUrl);
                 intent.putExtra("item", orderItem);

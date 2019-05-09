@@ -97,6 +97,7 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
     private View thirdBar;
     private View fourthBar;
 
+    private View loading;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,9 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
         Log.i("UserId", userId);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -423,6 +427,8 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -70,11 +70,16 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private TextView postCommentText;
     private TextView postJournalText;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_mine);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         getUserInformation();
     }
@@ -176,6 +181,8 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         postCommentText = postPanel.findViewById(R.id.comment_text);
         postCustomizedText = postPanel.findViewById(R.id.customized_text);
         postJournalText = postPanel.findViewById(R.id.journal_text);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -45,10 +45,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private Button register;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -141,6 +146,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         register = findViewById(R.id.button_register);
         register.setOnClickListener(this);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
 

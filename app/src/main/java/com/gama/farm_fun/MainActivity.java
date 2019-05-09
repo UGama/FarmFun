@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView postCommentText;
     private TextView postJournalText;
 
+    private View loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         StartLocateService();
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         AVObject testObject = new AVObject("TestObject");
         testObject.put("words", "Hello World!");
@@ -284,6 +289,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postCommentText = postPanel.findViewById(R.id.comment_text);
         postCustomizedText = postPanel.findViewById(R.id.customized_text);
         postJournalText = postPanel.findViewById(R.id.journal_text);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     public void StartLocateService() {
@@ -792,5 +799,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         userId = sharedPreferences.getString("id", "tourist");
         Log.i("userId", userId);
+
+        postPanel.setVisibility(View.INVISIBLE);
     }
 }

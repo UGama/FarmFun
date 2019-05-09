@@ -181,6 +181,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         if (type.equals("homeStay")) {
             addressPanel = findViewById(R.id.addressPanel);
             addressPanel.setVisibility(View.INVISIBLE);
+            timeComePanel = findViewById(R.id.time_come);
             timeComePanel.setVisibility(View.VISIBLE);
         }
 

@@ -45,10 +45,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private String userId;
 
+    private View loading;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -120,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         register = findViewById(R.id.button_register);
         register.setOnClickListener(this);
 
-
+        loading.setVisibility(View.VISIBLE);
     }
 
     @Override

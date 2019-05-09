@@ -83,6 +83,8 @@ public class CreateTravelPlanOrderActivity extends AppCompatActivity implements 
     private Toast toast;
     private int logSupport;
     private int support;
+
+    private View loading;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,9 @@ public class CreateTravelPlanOrderActivity extends AppCompatActivity implements 
         types = intent.getStringArrayExtra("types");
         prices = intent.getIntArrayExtra("prices");
         checkName(types);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -192,6 +197,8 @@ public class CreateTravelPlanOrderActivity extends AppCompatActivity implements 
 
         totalPrice.setText(String.valueOf(orderPrice));
         totalPrice2.setText(String.valueOf(orderPrice));
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

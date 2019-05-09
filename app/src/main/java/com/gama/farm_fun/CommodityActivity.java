@@ -101,11 +101,16 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
     private List<Comment> commentList;
     private int commentNumber;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_commodity);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
@@ -376,6 +381,8 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
         commentRecyclerView.setLayoutManager(linearLayoutManager);
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
         commentRecyclerView.setAdapter(commentAdapter);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -76,6 +76,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     private TextView postCommentText;
     private TextView postJournalText;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,9 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -351,6 +356,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalList);
                 travelJournalRecyclerView.setAdapter(travelJournalsAdapter);
+                loading.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -727,6 +733,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Log.i("Type", holder.code);
+                    loading.setVisibility(View.VISIBLE);
                     typeShowing = holder.code;
                     choseTypeView.setVisibility(View.INVISIBLE);
                     holder.background.setVisibility(View.VISIBLE);

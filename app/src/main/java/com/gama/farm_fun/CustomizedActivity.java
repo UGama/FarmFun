@@ -100,6 +100,8 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
 
     private Toast toast;
 
+    private View loading;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +111,9 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         getWindowInformation();
     }
@@ -287,6 +292,7 @@ public class CustomizedActivity extends AppCompatActivity implements View.OnClic
         monthRecyclerView.setAdapter(monthAdapter);
         Log.i("Test", "setAdapterSuccess!");
 
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

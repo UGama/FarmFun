@@ -71,11 +71,16 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private String[] types;
     private int[] prices;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_travel_plan);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
@@ -287,6 +292,8 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         TravelPlanAdapter travelPlanAdapter = new TravelPlanAdapter(restaurantList);
         restaurantRecyclerView.setAdapter(travelPlanAdapter);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     private class TravelPlanAdapter extends RecyclerView.Adapter<TravelPlanAdapter.ViewHolder> {

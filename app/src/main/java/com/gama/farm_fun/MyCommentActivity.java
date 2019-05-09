@@ -35,6 +35,7 @@ public class MyCommentActivity extends AppCompatActivity implements View.OnClick
     private List<Comment> commentList;
     private int commentNumber = 0;
 
+    private View loading;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,9 @@ public class MyCommentActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_mycomment);
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -108,6 +112,8 @@ public class MyCommentActivity extends AppCompatActivity implements View.OnClick
         myCommentRecyclerView.setLayoutManager(linearLayoutManager);
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
         myCommentRecyclerView.setAdapter(commentAdapter);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

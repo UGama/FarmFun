@@ -83,6 +83,8 @@ public class RestaurantTicketActivity extends AppCompatActivity implements View.
 
     private Toast toast;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +92,9 @@ public class RestaurantTicketActivity extends AppCompatActivity implements View.
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         getWindowInformation();
     }
@@ -286,6 +291,8 @@ public class RestaurantTicketActivity extends AppCompatActivity implements View.
         MonthAdapter monthAdapter = new MonthAdapter(monthList);
         monthRecyclerView.setAdapter(monthAdapter);
         Log.i("Test", "setAdapterSuccess!");
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {

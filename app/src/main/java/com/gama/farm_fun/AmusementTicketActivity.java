@@ -68,12 +68,17 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
 
     private Toast toast;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amusement_ticket);
 
         Intent intent = getIntent();
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         type = intent.getStringExtra("Type");
         Log.i("getType", String.valueOf(type));
@@ -203,6 +208,8 @@ public class AmusementTicketActivity extends AppCompatActivity implements View.O
         MonthAdapter monthAdapter = new MonthAdapter(monthList);
         monthRecyclerView.setAdapter(monthAdapter);
         Log.i("Test", "setAdapterSuccess!");
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

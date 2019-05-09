@@ -39,6 +39,8 @@ public class MyOrderActivity extends AppCompatActivity implements View.OnClickLi
     private List<Order> orderList;
     private int projectPicSupport;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,9 @@ public class MyOrderActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
         type = intent.getStringExtra("Type");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         initUI();
     }
@@ -152,6 +157,8 @@ public class MyOrderActivity extends AppCompatActivity implements View.OnClickLi
     public void initMyOrderRecyclerView() {
         MyOrderAdapter myOrderAdapter = new MyOrderAdapter(orderList);
         myOrderRecyclerView.setAdapter(myOrderAdapter);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -236,7 +243,7 @@ public class MyOrderActivity extends AppCompatActivity implements View.OnClickLi
             holder.checkDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MyOrderActivity.this, OrderDetail.class);
+                    Intent intent = new Intent(MyOrderActivity.this, OrderDetailActivity.class);
                     intent.putExtra("project", holder.projectName.getText().toString());
                     intent.putExtra("url", holder.url);
                     intent.putExtra("item", holder.itemName.getText().toString());

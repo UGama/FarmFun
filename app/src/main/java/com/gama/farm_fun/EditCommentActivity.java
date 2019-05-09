@@ -57,11 +57,16 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
 
     private int rank;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_edit_comment);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
@@ -148,6 +153,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         });
 
         rank = 0;
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
 

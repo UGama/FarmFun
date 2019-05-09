@@ -88,6 +88,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private Double longitude;
     private Double latitude;
 
+    private View loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +98,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         type = "Restaurant";
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         getWindowInformation();
     }
@@ -352,6 +356,14 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 }
             });
             holder.price.setText("20");
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent allSeatIntent = new Intent(RestaurantActivity.this, RestaurantTicketActivity.class);
+                    allSeatIntent.putExtra("UserId", userId);
+                    startActivity(allSeatIntent);
+                }
+            });
 
         }
 
@@ -367,6 +379,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             private TextView describe;
             private TextView price;
             private String url;
+            private View view;
 
             private ViewHolder(View view) {
                 super(view);
@@ -375,7 +388,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 seatPic = view.findViewById(R.id.seatPic);
                 describe = view.findViewById(R.id.describe);
                 price = view.findViewById(R.id.price);
-
+                this.view = view;
             }
 
             public void setUrl(String url) {
@@ -453,6 +466,8 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         baiduMap.addOverlay(option);
 
         baiduMap.setOnMapClickListener(this);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

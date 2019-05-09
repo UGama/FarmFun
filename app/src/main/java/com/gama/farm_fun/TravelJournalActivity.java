@@ -41,11 +41,15 @@ public class TravelJournalActivity extends AppCompatActivity {
     private TextView subTitleText;
     private RecyclerView articleRecyclerView;
 
+    private View loading;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_traveljournal);
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         number = intent.getIntExtra("number", 0);
@@ -124,6 +128,8 @@ public class TravelJournalActivity extends AppCompatActivity {
 
         ParagraphAdapter paragraphAdapter = new ParagraphAdapter(paragraphList);
         articleRecyclerView.setAdapter(paragraphAdapter);
+
+        loading.setVisibility(View.INVISIBLE);
 
     }
 

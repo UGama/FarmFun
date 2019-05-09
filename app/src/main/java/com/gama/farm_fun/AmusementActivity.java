@@ -90,6 +90,7 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
     private Double longitude;
     private Double latitude;
 
+    private View loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +106,9 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         type = intent.getStringExtra("Type");
         Log.i("Type", type);
         userId = intent.getStringExtra("UserId");
+
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         getWindowInformation();
     }
@@ -354,6 +358,8 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
         baiduMap.addOverlay(option);
 
         baiduMap.setOnMapClickListener(this);
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

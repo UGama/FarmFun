@@ -54,6 +54,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     private Toast toast;
 
+    private View loading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +68,11 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
         initUI();
     }
+
     public void initUI() {
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
         topBar = findViewById(R.id.bar_top);
         title = topBar.findViewById(R.id.title);
         title.setText("购物车");
@@ -155,6 +161,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < chosen.length; i++) {
             chosen[i] = false;
         }
+
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override
