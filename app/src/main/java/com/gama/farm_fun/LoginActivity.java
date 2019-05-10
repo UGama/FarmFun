@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         register = findViewById(R.id.button_register);
         register.setOnClickListener(this);
 
-        loading.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override

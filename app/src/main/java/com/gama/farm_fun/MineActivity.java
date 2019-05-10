@@ -359,10 +359,14 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent2);
                 break;
             case R.id.address:
-                Intent intent3 = new Intent(MineActivity.this, AddressActivity.class);
-                intent3.putExtra("UserId", userId);
-                intent3.putExtra("Type", "manage");
-                startActivity(intent3);
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent intent3 = new Intent(MineActivity.this, AddressActivity.class);
+                    intent3.putExtra("UserId", userId);
+                    intent3.putExtra("Type", "manage");
+                    startActivity(intent3);
+                }
                 break;
             case R.id.online_order:
                 Intent intent4 = new Intent(MineActivity.this, MyCOrderActivity.class);

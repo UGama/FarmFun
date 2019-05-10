@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -70,6 +71,8 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private int[] counts;
     private String[] types;
     private int[] prices;
+
+    private Toast toast;
 
     private View loading;
 
@@ -657,7 +660,13 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.order:
-                orderTravelPlan();
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                    Intent intent = new Intent(TravelPlanActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, 1);
+                } else {
+                    orderTravelPlan();
+                }
                 break;
         }
     }
@@ -844,6 +853,21 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
                     finish();
                 }
                 break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    userId = data.getStringExtra("UserId");
+                }
+                break;
+        }
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
         }
     }
 }

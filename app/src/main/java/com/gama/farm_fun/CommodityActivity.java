@@ -471,6 +471,7 @@ public class CommodityActivity extends AppCompatActivity implements View.OnClick
             case R.id.addToCart:
                 if (userId.equals("tourist")) {
                     Log.i("User", "click");
+                    showToast("请先登录。");
                     Intent loginIntent = new Intent(CommodityActivity.this, LoginActivity.class);
                     startActivityForResult(loginIntent, 1);
                 } else if (firstTouch) {

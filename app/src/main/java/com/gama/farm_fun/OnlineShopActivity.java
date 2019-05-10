@@ -457,6 +457,7 @@ public class OnlineShopActivity extends AppCompatActivity implements View.OnClic
                 if (userId.equals("tourist")) {
                     Intent intent = new Intent(OnlineShopActivity.this, LoginActivity.class);
                     startActivityForResult(intent, 0);
+
                 } else {
                     Intent cartIntent = new Intent(OnlineShopActivity.this, CartActivity.class);
                     cartIntent.putExtra("UserId", userId);
