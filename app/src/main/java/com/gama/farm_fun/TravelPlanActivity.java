@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
@@ -88,6 +89,9 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private ImageView ball;
     private int StruggleCount;
 
+
+    private List<ProjectRankStatistics> statistics;
+    private String[] sequence;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1190,5 +1194,254 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             toast.setText(msg);
             toast.show();
         }
+    }
+
+    public void getSimilarUserRank(final String[] tabs) {
+        statistics = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("TravelPlanOrder");
+        query.whereEqualTo("tabs", toTabString(tabs));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    String[] tripTabs = toTabArray(avObject.getString("tripTabs"));
+                    int[] ranks = toRankArray(avObject.getString("tripRank"));
+                    for (int i = 0; i < tripTabs.length; i++) {
+                        ProjectRankStatistics projectRankStatistics = new ProjectRankStatistics(tripTabs[i], ranks[i]);
+                        if (!containTab(projectRankStatistics.code, tabs)) {
+                            statistics.add(projectRankStatistics);
+                        }
+                    }
+                }
+                getRankAverage();
+            }
+        });
+    }
+
+    public void getRankAverage() {
+        List<ProjectRankStatistics> statistics2 = new ArrayList<>();
+        for (int i = 0; i < statistics.size(); i++) {
+            ProjectRankStatistics projectRankStatistics = statistics.get(i);
+            boolean contain = false;
+            int l = 0;
+            for (int k = 0; k < statistics2.size(); k++) {
+                if (projectRankStatistics.code.equals(statistics2.get(k).code)) {
+                    contain = true;
+                    l = k;
+                    break;
+                }
+            }
+            if (contain) {
+                statistics2.get(l).addRank(projectRankStatistics.rank);
+                statistics2.get(l).addCount();
+            } else {
+                projectRankStatistics.setCount(1);
+                statistics2.add(projectRankStatistics);
+            }
+        }
+
+        for (int i = 0; i < statistics2.size(); i++) {
+            statistics2.get(i).setAverage((float) statistics2.get(i).rank, (float) statistics2.get(i).count);
+        }
+        getTabsOrderBySimilarUser(statistics2);
+    }
+
+    public void getTabsOrderBySimilarUser(List<ProjectRankStatistics> statistics) {
+        sequence = new String[statistics.size()];
+        for (int i = 0; i < statistics.size(); i++) {
+            float max = 0;
+            int k = 0;
+            for (int j = 0; j < statistics.size(); j++) {
+                if (statistics.get(j).average > max) {
+                    max = statistics.get(j).average;
+                    k = j;
+                }
+            }
+            sequence[i] = statistics.get(k).code;
+            statistics.get(k).initAverage();
+        }
+    }
+
+    public String toTabString(String[] tabs) {
+        String s = "";
+        for (int i = 0; i < tabs.length; i++) {
+            s += tabs[i] + ";";
+        }
+        return s;
+    }
+
+    public String[] toTabArray(String tabs) {
+        String[] s = new String[getTabsStringCount(tabs)];
+        char[] tabChar = tabs.toCharArray();
+        int k = 0;
+        String temp = "";
+        for (int i = 0; i < tabChar.length; i++) {
+            if (tabChar[i] == ';') {
+                s[k] = temp;
+                k++;
+                temp = "";
+            } else {
+                temp += tabChar[i];
+            }
+        }
+        return s;
+    }
+
+    public int[] toRankArray(String ranks) {
+        int[] s = new int[getTabsStringCount(ranks)];
+        char[] rankChar = ranks.toCharArray();
+        String temp = "";
+        int k = 0;
+        for (int i = 0; i < rankChar.length; i++) {
+            if (rankChar[i] == ';') {
+                s[k] = Integer.getInteger(String.valueOf(temp));
+                k++;
+                temp = "";
+            } else {
+                temp += rankChar[i];
+            }
+        }
+        return s;
+    }
+
+    public int getTabsStringCount(String tabs) {
+        int count = 0;
+        char[] tabChar = tabs.toCharArray();
+        for (int i = 0; i < tabChar.length; i++) {
+            if (tabChar[i] == ';') {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean containTab(String tab, String[] tabs) {
+        boolean contain = false;
+        for (int i = 0; i < tabs.length; i++) {
+            if (tab.equals(tabs[i])) {
+                contain = true;
+                break;
+            }
+        }
+        return contain;
+    }
+
+    public void getContainUserTabs(String[] tabs) {
+        statistics = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("TravelPlanOrder");
+        for (int i = 0; i < tabs.length; i++) {
+            query.whereContains("tabs", tabs[i]);
+        }
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    String[] tabs = toTabArray(avObject.getString("tabs"));
+                    for (int i = 0; i < tabs.length; i++) {
+                        ProjectRankStatistics projectRankStatistics = new ProjectRankStatistics(tabs[i]);
+                        if (!containTab(projectRankStatistics.code, tabs)) {
+                            statistics.add(projectRankStatistics);
+                        }
+                    }
+                }
+                getFrequency();
+            }
+        });
+    }
+
+    public void getFrequency() {
+        List<ProjectRankStatistics> statistics2 = new ArrayList<>();
+        for (int i = 0; i < statistics.size(); i++) {
+            ProjectRankStatistics projectRankStatistics = statistics.get(i);
+            boolean contain = false;
+            int l = 0;
+            for (int k = 0; k < statistics2.size(); k++) {
+                if (projectRankStatistics.code.equals(statistics2.get(k).code)) {
+                    contain = true;
+                    l = k;
+                    break;
+                }
+            }
+            if (contain) {
+                statistics2.get(l).addCount();
+            } else {
+                projectRankStatistics.setCount(1);
+                statistics2.add(projectRankStatistics);
+            }
+        }
+        getTabsOrderByContainUser(statistics2);
+    }
+
+    public void getTabsOrderByContainUser(List<ProjectRankStatistics> statistics) {
+        sequence = new String[statistics.size()];
+        for (int i = 0; i < statistics.size(); i++) {
+            int max = 0;
+            int k = 0;
+            for (int j = 0; j < statistics.size(); j++) {
+                if (statistics.get(j).count > max) {
+                    max = statistics.get(j).count;
+                    k = j;
+                }
+            }
+            sequence[i] = statistics.get(k).code;
+            statistics.get(k).setCount(-1);
+        }
+    }
+
+    public void getTabsSales(final String[] tabs) {
+        statistics = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("Amusement");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    if (!containTab(avObject.getString("type"), tabs)) {
+                        ProjectRankStatistics projectRankStatistics = new ProjectRankStatistics(avObject.getString("type"));
+                        projectRankStatistics.setSales(avObject.getInt("sales"));
+                        statistics.add(projectRankStatistics);
+                    }
+                }
+
+                getTabsOrderBySales(statistics);
+
+            }
+        });
+    }
+
+    public void getTabsOrderBySales(List<ProjectRankStatistics> statistics) {
+        sequence = new String[statistics.size()];
+        for (int i = 0; i < statistics.size(); i++) {
+            int max = 0;
+            int k = 0;
+            for (int j = 0; j < statistics.size(); j++) {
+                if (statistics.get(j).sales > max) {
+                    max = statistics.get(j).sales;
+                    k = j;
+                }
+            }
+            sequence[i] = statistics.get(k).code;
+            statistics.get(k).setSales(-1);
+        }
+    }
+
+    public void getTabsAllAverage(final String[] tabs) {
+        statistics = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("TravelPlanOrder");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    String[] tripTabs = toTabArray(avObject.getString("tripTabs"));
+                    int[] ranks = toRankArray(avObject.getString("tripRank"));
+                    for (int i = 0; i < tripTabs.length; i++) {
+                        ProjectRankStatistics projectRankStatistics = new ProjectRankStatistics(tripTabs[i], ranks[i]);
+                        if (!containTab(projectRankStatistics.code, tabs)) {
+                            statistics.add(projectRankStatistics);
+                        }
+                    }
+                }
+                getRankAverage();
+            }
+        });
     }
 }
