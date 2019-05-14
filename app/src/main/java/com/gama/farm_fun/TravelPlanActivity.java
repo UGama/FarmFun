@@ -1,7 +1,13 @@
 package com.gama.farm_fun;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +36,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.animation.ObjectAnimator.ofFloat;
 
 public class TravelPlanActivity extends AppCompatActivity implements View.OnClickListener {
     private String userId;
@@ -75,6 +85,8 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     private Toast toast;
 
     private View loading;
+    private ImageView ball;
+    private int StruggleCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +96,7 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
 
         loading = findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
+        ball = loading.findViewById(R.id.ball);
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
@@ -113,7 +126,315 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         Log.i("width/height(px)", String.valueOf(screenWidth) + "/" + String.valueOf(screenHeight));
         Log.i("width/height(dp)", String.valueOf(width) + "/" + String.valueOf(height));
 
+        initBall();
         initUI();
+    }
+
+    public void initBall() {
+        ObjectAnimator objectAnimator = ofFloat(ball, "alpha", 0, 0);
+        objectAnimator.setDuration(2000);
+        objectAnimator.start();
+        objectAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                initBall2();
+                ballShow();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    public void initBall2() {
+        ObjectAnimator objectAnimator = ofFloat(ball, "alpha", 0, 1);
+        objectAnimator.setDuration(100);
+        objectAnimator.start();
+    }
+
+    public void ballShow() {
+        ValueAnimator valueAnimator = new ValueAnimator();
+        valueAnimator.setDuration(2000);
+        valueAnimator.setObjectValues(new PointF(770, 0));
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
+            // fraction = t / duration
+            @Override
+            public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
+                PointF point = new PointF();
+                if (fraction < 0.3) {
+                    point.x = 70 + 350 * fraction * 2;
+                    point.y = 0.5f * 1157.4f * (fraction * 2.4f) * (fraction * 2.4f);
+                } else if (fraction < 0.5) {
+                    point.x = 70 + 350 * fraction * 2;
+                    fraction = 0.5f - fraction;
+                    point.y = 300 - 133.3f + 0.5f * 1157.4f * (fraction * 2.4f) * (fraction * 2.4f);
+                } else if (fraction < 0.7) {
+                    point.x = 70 + 350 * fraction * 2;
+                    fraction -= 0.5f;
+                    point.y = 300 - 133.3f + 0.5f * 1157.4f * (fraction * 2.4f) * (fraction * 2.4f);
+                } else if (fraction < 0.85) {
+                    point.x = 70 + 350 * fraction * 2;
+                    fraction = 0.85f - fraction;
+                    point.y = 300 - 75 + 0.5f * 1157.4f * (fraction * 2.4f) * (fraction * 2.4f);
+                } else {
+                    point.x = 70 + 350 * fraction * 2;
+                    fraction -= 0.85f;
+                    point.y = 300 - 75 + 0.5f * 1157.4f * (fraction * 2.4f) * (fraction * 2.4f);
+                }
+                point.y += 500;
+                return point;
+            }
+        });
+        valueAnimator.start();
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                PointF point = (PointF) animation.getAnimatedValue();
+                ball.setX(point.x);
+                ball.setY(point.y);
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                StruggleCount = 0;
+                Struggle();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator = ofFloat(ball, "rotation",
+                0.0f, 360f);
+        objectAnimator.setDuration(200);
+        objectAnimator.setRepeatCount(10);
+        objectAnimator.start();
+
+    }
+
+    public void Struggle() {
+        ObjectAnimator objectAnimator = ofFloat(ball, "rotation", 0, 45);
+        ObjectAnimator objectAnimator1 = ofFloat(ball, "rotation", 0, 0);
+        ValueAnimator valueAnimator = new ValueAnimator();
+        valueAnimator.setObjectValues(new PointF(70, 475));
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
+            // fraction = t / duration
+            @Override
+            public PointF evaluate(float fraction, PointF startValue,
+                                   PointF endValue) {
+                PointF point = new PointF();
+                point.x = 770 + fraction * 30;
+                point.y = 800;
+                return point;
+            }
+        });
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                PointF point = (PointF) animation.getAnimatedValue();
+                ball.setX(point.x);
+                ball.setY(point.y);
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(300);
+        animatorSet.play(objectAnimator).with(valueAnimator).after(objectAnimator1);
+        animatorSet.start();
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ObjectAnimator objectAnimator = ofFloat(ball, "rotation", 45, 0);
+                ValueAnimator valueAnimator = new ValueAnimator();
+                valueAnimator.setObjectValues(new PointF(70, 475));
+                valueAnimator.setInterpolator(new LinearInterpolator());
+                valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
+                    // fraction = t / duration
+                    @Override
+                    public PointF evaluate(float fraction, PointF startValue,
+                                           PointF endValue) {
+                        PointF point = new PointF();
+                        point.x = 800 - fraction * 30;
+                        point.y = 800;
+                        return point;
+                    }
+                });
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        PointF point = (PointF) animation.getAnimatedValue();
+                        ball.setX(point.x);
+                        ball.setY(point.y);
+                    }
+                });
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.setDuration(300);
+                animatorSet.play(objectAnimator).with(valueAnimator);
+                animatorSet.start();
+                animatorSet.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ObjectAnimator objectAnimator = ofFloat(ball, "rotation", 0, -45);
+                        ObjectAnimator anim0 = ofFloat(ball, "rotation", 0, 0);
+                        ValueAnimator valueAnimator = new ValueAnimator();
+                        valueAnimator.setObjectValues(new PointF(70, 475));
+                        valueAnimator.setInterpolator(new LinearInterpolator());
+                        valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
+                            // fraction = t / duration
+                            @Override
+                            public PointF evaluate(float fraction, PointF startValue,
+                                                   PointF endValue) {
+                                PointF point = new PointF();
+                                point.x = 770 - fraction * 30;
+                                point.y = 800;
+                                return point;
+                            }
+                        });
+                        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                PointF point = (PointF) animation.getAnimatedValue();
+                                ball.setX(point.x);
+                                ball.setY(point.y);
+                            }
+                        });
+                        AnimatorSet animatorSet = new AnimatorSet();
+                        animatorSet.setDuration(300);
+                        animatorSet.play(objectAnimator).with(valueAnimator).after(anim0);
+                        animatorSet.start();
+                        animatorSet.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                ObjectAnimator objectAnimator = ofFloat(ball, "rotation", -45, 0);
+                                ValueAnimator valueAnimator = new ValueAnimator();
+                                valueAnimator.setObjectValues(new PointF(70, 475));
+                                valueAnimator.setInterpolator(new LinearInterpolator());
+                                valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
+                                    // fraction = t / duration
+                                    @Override
+                                    public PointF evaluate(float fraction, PointF startValue,
+                                                           PointF endValue) {
+                                        PointF point = new PointF();
+                                        point.x = 740 + fraction * 30;
+                                        point.y = 800;
+                                        return point;
+                                    }
+                                });
+                                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator animation) {
+                                        PointF point = (PointF) animation.getAnimatedValue();
+                                        ball.setX(point.x);
+                                        ball.setY(point.y);
+                                    }
+                                });
+                                AnimatorSet animatorSet = new AnimatorSet();
+                                animatorSet.setDuration(300);
+                                animatorSet.play(objectAnimator).with(valueAnimator);
+                                animatorSet.start();
+                                animatorSet.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        StruggleCount++;
+                                        if (StruggleCount < 2) {
+                                            Struggle();
+                                        } else {
+                                            StruggleCount = 0;
+                                            loading.setVisibility(View.INVISIBLE);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     public void initUI() {
@@ -296,7 +617,7 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         TravelPlanAdapter travelPlanAdapter = new TravelPlanAdapter(restaurantList);
         restaurantRecyclerView.setAdapter(travelPlanAdapter);
 
-        loading.setVisibility(View.INVISIBLE);
+        //loading.setVisibility(View.INVISIBLE);
     }
 
     private class TravelPlanAdapter extends RecyclerView.Adapter<TravelPlanAdapter.ViewHolder> {
