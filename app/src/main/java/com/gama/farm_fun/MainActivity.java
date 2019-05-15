@@ -541,6 +541,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent2.putExtra("Type", "comment");
                 startActivity(intent2);
                 break;
+            case R.id.post_journal:
+                Intent intent3 = new Intent(MainActivity.this, EditTravelJournalActivity.class);
+                intent3.putExtra("UserId", userId);
+                startActivity(intent3);
+                break;
         }
     }
 

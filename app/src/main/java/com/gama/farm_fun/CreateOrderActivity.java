@@ -227,7 +227,7 @@ public class CreateOrderActivity extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.panel_remark:
                 Intent remarkIntent = new Intent(CreateOrderActivity.this, EditRemarkActivity.class);
-                startActivityForResult(remarkIntent, 1);
+                startActivityForResult(remarkIntent, 0);
                 break;
             case R.id.submit:
                 if (type.equals("manyC") || type.length() == 2) {

@@ -14,6 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/informationPanel"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_common"
         >
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/project_pic"
             android:layout_width="35dp"

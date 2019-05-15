@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EditRemarkActivity extends AppCompatActivity implements View.OnClickListener {
@@ -14,17 +14,20 @@ public class EditRemarkActivity extends AppCompatActivity implements View.OnClic
     private EditText remark;
 
     private View topBar;
+    private TextView title;
     private TextView finish;
-    private ImageView back;
+    private Button back;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editremark);
+        setContentView(R.layout.activity_edit_remark);
 
         remark = findViewById(R.id.remark);
 
         topBar = findViewById(R.id.topBar);
+        title = topBar.findViewById(R.id.title);
+        title.setText("备注");
         finish = topBar.findViewById(R.id.finish);
         finish.setText(getResources().getString(R.string.finish));
         finish.setVisibility(View.VISIBLE);
