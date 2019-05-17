@@ -55,11 +55,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.android.support:support-v4:27.1.1'
     // LeanCloud 基础包
-    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.9'
+    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.10'
     // 推送与即时通讯需要的包
     implementation('cn.leancloud.android:avoscloud-push:4.7.9@aar') { transitive = true }
-    /*// Android 混合推送需要的包
-            implementation ('cn.leancloud.android:avoscloud-mixpush:4.7.9@aar'){transitive = true}*/
+    // Android 混合推送需要的包
+            //implementation ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
     // LeanCloud 用户反馈包.
     implementation 'cn.leancloud.android:avoscloud-feedback:4.7.9@aar'
     // LeanCloud 应用内搜索包
@@ -68,6 +68,10 @@ dependencies {
     implementation('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
         transitive = true
     }
+
+
+    implementation('cn.leancloud.android:avoscloud-sdk:4.7.10')
+
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.facebook.fresco:fresco:1.13.0'
     implementation 'com.android.support:multidex:1.0.3'

@@ -14,6 +14,9 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.model.LatLng;
@@ -64,6 +67,8 @@ public class DatabaseOperation extends AppCompatActivity {
         //updateKTV();
 
         //test();
+
+        //jerryReceiveMsgFromTom();
     }
 
     public void test() {
@@ -871,5 +876,19 @@ public class DatabaseOperation extends AppCompatActivity {
 
     }
 
+
+    public void jerryReceiveMsgFromTom(){
+        AVIMClient jerry = AVIMClient.getInstance("receiver");
+        jerry.open(new AVIMClientCallback(){
+
+            @Override
+            public void done(AVIMClient client, AVIMException e){
+                if (e == null) {
+                    //登录成功后的逻辑
+                    Log.i("test", "succeed");
+                }
+            }
+        });
+    }
 
 }

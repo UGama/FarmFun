@@ -89,6 +89,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".DatabaseOperation" />
+
+        <activity android:name=".ConversationActivity" />
+
+        <activity android:name=".ConversationListActivity" />
+
 
         <!--<activity_commodity android:name=".MainActivity" />-->
 

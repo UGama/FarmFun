@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/friendPic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/male"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/friendTextTopLeft"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toStartOf="@id/friendText"
+            app:layout_constraintBottom_toTopOf="@id/friendText"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/friendTextBottomRight"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/friendText"
+            app:layout_constraintTop_toBottomOf="@id/friendText"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/friendTextTopLeft"
+            app:layout_constraintEnd_toEndOf="@id/friendTextBottomRight"
+            app:layout_constraintTop_toTopOf="@id/friendTextTopLeft"
+            app:layout_constraintBottom_toBottomOf="@id/friendTextBottomRight"
+            android:background="@drawable/shape_friend_message"
+            />
+
+        <TextView
+            android:id="@+id/friendText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/friendPic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/colorBlack"
+            android:text="@string/test"
+            android:textSize="16sp"
+            android:maxEms="14"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/myPic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/male"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/myTextTopLeft"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toStartOf="@id/myText"
+            app:layout_constraintBottom_toTopOf="@id/myText"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/myTextBottomRight"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/myText"
+            app:layout_constraintTop_toBottomOf="@id/myText"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/myTextTopLeft"
+            app:layout_constraintEnd_toEndOf="@id/myTextBottomRight"
+            app:layout_constraintTop_toTopOf="@id/myTextTopLeft"
+            app:layout_constraintBottom_toBottomOf="@id/myTextBottomRight"
+            android:background="@drawable/shape_my_message"
+            />
+
+        <TextView
+            android:id="@+id/myText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/myPic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/colorBlack"
+            android:text="@string/test"
+            android:maxEms="14"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>

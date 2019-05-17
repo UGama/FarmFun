@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String userId;
 
     private ImageView map;
+    private ImageView message;
 
     private ViewPager viewPager;
     private PosterPagerAdapter posterPagerAdapter;
@@ -90,9 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView postComment;
     private ImageView postCustomized;
     private ImageView postJournal;
+    private ImageView postMessage;
     private TextView postCustomizedText;
     private TextView postCommentText;
     private TextView postJournalText;
+    private TextView postMessageText;
 
     private View loading;
 
@@ -239,6 +242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void initUI() {
         map = findViewById(R.id.map);
         map.setOnClickListener(this);
+        message = findViewById(R.id.message);
+        message.setOnClickListener(this);
 
         pick = findViewById(R.id.pick);
         pick.setOnClickListener(this);
@@ -289,6 +294,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postCommentText = postPanel.findViewById(R.id.comment_text);
         postCustomizedText = postPanel.findViewById(R.id.customized_text);
         postJournalText = postPanel.findViewById(R.id.journal_text);
+        postMessage = postPanel.findViewById(R.id.post_message);
+        postMessage.setOnClickListener(this);
+        postMessageText = postPanel.findViewById(R.id.message_text);
 
         loading.setVisibility(View.INVISIBLE);
     }
@@ -377,12 +385,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationPic:
-                Intent intent = new Intent(MainActivity.this, OnlineShopActivity.class);
-                intent.putExtra("UserId", userId);
-                startActivity(intent);
+                break;
+            case R.id.message:
+                Intent messageIntent = new Intent(MainActivity.this, ConversationListActivity.class);
+                messageIntent.putExtra("userId", userId);
+                startActivity(messageIntent);
                 break;
             case R.id.pick:
-                Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
+                Intent pickIntent = new Intent(MainActivity.this, DatabaseOperation.class);
                 pickIntent.putExtra("Type", "pick");
                 pickIntent.putExtra("UserId", userId);
                 startActivity(pickIntent);
@@ -457,6 +467,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 postCommentText.setVisibility(View.INVISIBLE);
                 postCustomizedText.setVisibility(View.INVISIBLE);
                 postJournalText.setVisibility(View.INVISIBLE);
+                postMessageText.setVisibility(View.INVISIBLE);
                 postPanel.setVisibility(View.VISIBLE);
                 postPanel.getBackground().setAlpha(240);
                 ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(postComment,
@@ -487,6 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         postCommentText.setVisibility(View.VISIBLE);
                         postCustomizedText.setVisibility(View.VISIBLE);
                         postJournalText.setVisibility(View.VISIBLE);
+                        postMessageText.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -526,6 +538,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 objectAnimator7.setStartDelay(1000);
                 objectAnimator7.setInterpolator(new OvershootInterpolator());
                 objectAnimator7.start();
+
+                ObjectAnimator objectAnimator8 = ObjectAnimator.ofFloat(postMessage,
+                        "translationY", 700, 0);
+                objectAnimator8.setDuration(1000);
+                objectAnimator8.setInterpolator(new OvershootInterpolator());
+                objectAnimator8.start();
+
+                ObjectAnimator objectAnimator9 = ObjectAnimator.ofFloat(postMessageText,
+                        "alpha", 0, 1);
+                objectAnimator9.setDuration(500);
+                objectAnimator9.setStartDelay(1000);
+                objectAnimator9.setInterpolator(new OvershootInterpolator());
+                objectAnimator9.start();
                 break;
             case R.id.post_back:
                 postPanel.setVisibility(View.INVISIBLE);
@@ -545,6 +570,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent3 = new Intent(MainActivity.this, EditTravelJournalActivity.class);
                 intent3.putExtra("UserId", userId);
                 startActivity(intent3);
+                break;
+            case R.id.post_message:
+                Intent intent4 = new Intent(MainActivity.this, ConversationListActivity.class);
+                intent4.putExtra("userId", userId);
+                startActivity(intent4);
                 break;
         }
     }

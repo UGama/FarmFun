@@ -62,6 +62,17 @@
         android:layout_marginEnd="5dp"
         android:src="@drawable/map"
         />
+
+    <ImageView
+        android:id="@+id/message"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintBottom_toTopOf="@id/map"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toEndOf="@id/map"
+        app:layout_constraintStart_toStartOf="@id/map"
+        android:background="@drawable/icon_message"
+        />
     
     <ImageView
         android:id="@+id/topGuideLine"

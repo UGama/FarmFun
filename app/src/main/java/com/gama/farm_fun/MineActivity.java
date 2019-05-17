@@ -50,6 +50,12 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
     private View onlineOrder;
     private ImageView onlineOrderIcon;
     private TextView onlineOrderText;
+    private View message;
+    private ImageView messageIcon;
+    private TextView messageText;
+    private View customerService;
+    private ImageView customerServiceIcon;
+    private TextView customerServiceText;
 
     private View bottomBar;
     private Button homePage;
@@ -152,6 +158,18 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         onlineOrderIcon.setImageResource(R.drawable.online_order);
         onlineOrderText = onlineOrder.findViewById(R.id.common_name);
         onlineOrderText.setText("商城订单");
+        message = findViewById(R.id.message);
+        message.setOnClickListener(this);
+        messageIcon = message.findViewById(R.id.common_icon);
+        messageIcon.setImageResource(R.drawable.icon_message2);
+        messageText = message.findViewById(R.id.common_name);
+        messageText.setText("我的消息");
+        customerService = findViewById(R.id.customer_service);
+        customerService.setOnClickListener(this);
+        customerServiceIcon = customerService.findViewById(R.id.common_icon);
+        customerServiceIcon.setImageResource(R.drawable.icon_customer_service);
+        customerServiceText = customerService.findViewById(R.id.common_name);
+        customerServiceText.setText("专属客服");
 
         bottomBar = findViewById(R.id.bottom_bar);
         homePage = bottomBar.findViewById(R.id.homePage);
@@ -247,6 +265,25 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                     allOrderIntent.putExtra("UserId", userId);
                     allOrderIntent.putExtra("Type", "all");
                     startActivity(allOrderIntent);
+                }
+                break;
+            case R.id.message:
+                if (userId.equals("tourist")) {
+                    showToast("请先登录");
+                } else {
+                    Intent messageIntent = new Intent(MineActivity.this, ConversationListActivity.class);
+                    messageIntent.putExtra("userId", userId);
+                    startActivity(messageIntent);
+                }
+                break;
+            case R.id.customer_service:
+                if (userId.equals("tourist")) {
+                    showToast("请先登录");
+                } else {
+                    Intent messageIntent = new Intent(MineActivity.this, ConversationListActivity.class);
+                    messageIntent.putExtra("userId", userId);
+                    messageIntent.putExtra("customer_service", true);
+                    startActivity(messageIntent);
                 }
                 break;
             case R.id.userLayout:
