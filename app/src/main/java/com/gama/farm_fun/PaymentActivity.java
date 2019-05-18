@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.payelves.sdk.EPay;
+import com.payelves.sdk.enums.EPayResult;
+import com.payelves.sdk.listener.PayResultListener;
 
 public class PaymentActivity extends AppCompatActivity implements View.OnClickListener {
     private View topBar;
@@ -44,7 +49,16 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = getIntent();
         price = intent.getIntExtra("price", 0);
         Log.i("price", String.valueOf(price));
+
         initUI();
+    }
+
+    public void initEPay() {
+        EPay.getInstance(getApplicationContext()).init("C1TH0PvSH",
+                "e6e8af2747ab460796077347e1b9fcc6",
+                "8303661592018953",
+                "baidu");
+        //TrPay.getInstance(PaymentActivity.this).initPaySdk("8a52c50e25b2469dae9302cfa1d4b061","baidu");
     }
 
     public void initUI() {
@@ -92,6 +106,8 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         title.setText("选择支付方式");
         back = topBar.findViewById(R.id.back);
         back.setOnClickListener(this);
+
+        initEPay();
     }
 
     @Override
@@ -104,7 +120,8 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
                     Intent intent = new Intent();
                     intent.putExtra("way", way);
                     setResult(RESULT_OK, intent);
-                    finish();
+                    EPay();
+                    //trPay();
                 }
                 break;
             case R.id.back:
@@ -122,4 +139,37 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             toast.show();
         }
     }
+
+    public void trPay() {
+        /*TrPay.getInstance(this).callAlipay("农家乐预定", "adminOrder", Long.valueOf("10"), null, null, "xiaonong101", new PayResultListener() {
+            @Override
+            public void onPayFinish(Context context, String s, int i, String s1, int i1, Long aLong, String s2) {
+                if (i1 == TrPayResult.RESULT_CODE_SUCC.getId()) {
+                    //支付成功逻辑处理
+                    showToast("图灵支付：成功");
+                } else if (i1 == TrPayResult.RESULT_CODE_FAIL.getId()) {
+                    //支付失败逻辑处理
+                    showToast("图灵支付：失败");
+                }
+            }
+        });*/
+
+    }
+    public void EPay() {
+        EPay.getInstance(this).pay("农家乐预定", "asd", 2, "adminOrder","admin"
+                            , null, new PayResultListener() {
+                                @Override
+                                public void onFinish(Context context, Long payId, String orderId, String payUserId, EPayResult payResult, int payType, Integer amount) {
+                                    EPay.getInstance(context).closePayView();//关闭快捷支付页面
+                                    if(payResult.getCode() == EPayResult.SUCCESS_CODE.getCode()){
+                                        //支付成功逻辑处理
+                                        Toast.makeText(PaymentActivity.this, payResult.getMsg(), Toast.LENGTH_LONG).show();
+                                    }else if(payResult.getCode() == EPayResult.FAIL_CODE.getCode()){
+                                        //支付失败逻辑处理
+                                        Toast.makeText(PaymentActivity.this, payResult.getMsg(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+    }
+
 }

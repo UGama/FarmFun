@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(messageIntent);
                 break;
             case R.id.pick:
-                Intent pickIntent = new Intent(MainActivity.this, DatabaseOperation.class);
+                Intent pickIntent = new Intent(MainActivity.this, AmusementActivity.class);
                 pickIntent.putExtra("Type", "pick");
                 pickIntent.putExtra("UserId", userId);
                 startActivity(pickIntent);

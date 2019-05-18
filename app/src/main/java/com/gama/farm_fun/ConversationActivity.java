@@ -208,7 +208,6 @@ public class ConversationActivity extends AppCompatActivity implements View.OnCl
 
         }
 
-
     }
 
     public class CustomMessageHandler extends AVIMMessageHandler {
