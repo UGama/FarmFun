@@ -116,7 +116,7 @@
         android:src="@drawable/message"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.85"
         />
 
     <TextView
@@ -125,7 +125,7 @@
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:textSize="18sp"
-        android:text="消息"
+        android:text="发消息"
         app:layout_constraintStart_toStartOf="@id/post_message"
         app:layout_constraintEnd_toEndOf="@id/post_message"
         app:layout_constraintTop_toBottomOf="@id/post_message"
@@ -133,6 +133,56 @@
         android:visibility="invisible"
         />
 
+    <ImageView
+        android:id="@+id/post_video"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomGuideLine"
+        android:layout_marginBottom="220dp"
+        android:src="@drawable/video"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        />
 
+    <TextView
+        android:id="@+id/video_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:text="短视频"
+        app:layout_constraintStart_toStartOf="@id/post_video"
+        app:layout_constraintEnd_toEndOf="@id/post_video"
+        app:layout_constraintTop_toBottomOf="@id/post_video"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:id="@+id/post_camera"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomGuideLine"
+        android:layout_marginBottom="220dp"
+        android:src="@drawable/camera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        />
+
+    <TextView
+        android:id="@+id/camera_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:text="拍照片"
+        app:layout_constraintStart_toStartOf="@id/post_camera"
+        app:layout_constraintEnd_toEndOf="@id/post_camera"
+        app:layout_constraintTop_toBottomOf="@id/post_camera"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible"
+        />
 
 </android.support.constraint.ConstraintLayout>

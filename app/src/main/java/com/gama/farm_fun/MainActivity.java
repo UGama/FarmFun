@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +41,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,10 +95,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView postCustomized;
     private ImageView postJournal;
     private ImageView postMessage;
+    private ImageView postVideo;
+    private ImageView postCamera;
     private TextView postCustomizedText;
     private TextView postCommentText;
     private TextView postJournalText;
     private TextView postMessageText;
+    private TextView postVideoText;
+    private TextView postCameraText;
 
     private View loading;
 
@@ -297,6 +304,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postMessage = postPanel.findViewById(R.id.post_message);
         postMessage.setOnClickListener(this);
         postMessageText = postPanel.findViewById(R.id.message_text);
+        postVideo = postPanel.findViewById(R.id.post_video);
+        postVideo.setOnClickListener(this);
+        postVideoText = postPanel.findViewById(R.id.video_text);
+        postCamera = postPanel.findViewById(R.id.post_camera);
+        postCamera.setOnClickListener(this);
+        postCameraText = postPanel.findViewById(R.id.camera_text);
 
         loading.setVisibility(View.INVISIBLE);
     }
@@ -386,6 +399,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.locationPic:
                 break;
+            case R.id.post_camera:
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(
+                        new File(Environment.getExternalStorageDirectory(), "test")));
+                startActivityForResult(cameraIntent, 0);
+                break;
+            case R.id.post_video:
+                Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                // 录制视频最大时长15s
+                videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
+                startActivityForResult(videoIntent, 1);
+                break;
             case R.id.message:
                 Intent messageIntent = new Intent(MainActivity.this, ConversationListActivity.class);
                 messageIntent.putExtra("userId", userId);
@@ -468,6 +494,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 postCustomizedText.setVisibility(View.INVISIBLE);
                 postJournalText.setVisibility(View.INVISIBLE);
                 postMessageText.setVisibility(View.INVISIBLE);
+                postCameraText.setVisibility(View.INVISIBLE);
+                postVideoText.setVisibility(View.INVISIBLE);
                 postPanel.setVisibility(View.VISIBLE);
                 postPanel.getBackground().setAlpha(240);
                 ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(postComment,
@@ -499,6 +527,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         postCustomizedText.setVisibility(View.VISIBLE);
                         postJournalText.setVisibility(View.VISIBLE);
                         postMessageText.setVisibility(View.VISIBLE);
+                        postVideoText.setVisibility(View.VISIBLE);
+                        postCameraText.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -551,6 +581,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 objectAnimator9.setStartDelay(1000);
                 objectAnimator9.setInterpolator(new OvershootInterpolator());
                 objectAnimator9.start();
+
+                ObjectAnimator objectAnimator10 = ObjectAnimator.ofFloat(postVideo,
+                        "translationY", 700, 0);
+                objectAnimator10.setDuration(1000);
+                objectAnimator10.setInterpolator(new OvershootInterpolator());
+                objectAnimator10.start();
+
+                ObjectAnimator objectAnimator11 = ObjectAnimator.ofFloat(postVideoText,
+                        "alpha", 0, 1);
+                objectAnimator11.setDuration(500);
+                objectAnimator11.setStartDelay(1000);
+                objectAnimator11.setInterpolator(new OvershootInterpolator());
+                objectAnimator11.start();
+
+                ObjectAnimator objectAnimator12 = ObjectAnimator.ofFloat(postCamera,
+                        "translationY", 700, 0);
+                objectAnimator12.setDuration(1000);
+                objectAnimator12.setInterpolator(new OvershootInterpolator());
+                objectAnimator12.start();
+
+                ObjectAnimator objectAnimator13 = ObjectAnimator.ofFloat(postCameraText,
+                        "alpha", 0, 1);
+                objectAnimator13.setDuration(500);
+                objectAnimator13.setStartDelay(1000);
+                objectAnimator13.setInterpolator(new OvershootInterpolator());
+                objectAnimator13.start();
                 break;
             case R.id.post_back:
                 postPanel.setVisibility(View.INVISIBLE);
