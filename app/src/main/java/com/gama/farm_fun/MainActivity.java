@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,12 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -43,7 +39,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -85,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public RecyclerView recommendProjectsRecycler;
     List<RecommendProject> recommendProjectsList;
+    public int recommendSupportNumber;
 
     public RecyclerView travelJournalRecycler;
     List<TravelJournal> travelJournalsList = null;
@@ -199,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         userId = sharedPreferences.getString("id", "tourist");
         Log.i("userId", userId);
-        getRecommendProject();
+        getTravelJournal();
     }
 
     public void getRecommendProject() {
@@ -215,8 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
                 recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
-
-                getTravelJournal();
+                loading.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -311,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postCamera.setOnClickListener(this);
         postCameraText = postPanel.findViewById(R.id.camera_text);
 
-        loading.setVisibility(View.INVISIBLE);
+        getRecommendProject();
     }
 
     public void StartLocateService() {
@@ -406,11 +401,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(cameraIntent, 0);
                 break;
             case R.id.post_video:
-                Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                /*Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 // 录制视频最大时长15s
                 videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
-                startActivityForResult(videoIntent, 1);
+                startActivityForResult(videoIntent, 1);*/
+                Intent videoIntent = new Intent(MainActivity.this, VideoPageActivity.class);
+                startActivity(videoIntent);
                 break;
             case R.id.message:
                 Intent messageIntent = new Intent(MainActivity.this, ConversationListActivity.class);
@@ -665,57 +662,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SimpleDraweeView poster = view.findViewById(R.id.poster);
             Uri uri = Uri.parse(posterList.get(position).url);
             poster.setImageURI(uri);
-            //poster.setImageResource(posterList.get(position).getSourceId());
-            /*switch (List.get(position).Number) {
-                case 1:
-                    List<OwnItem> ownItems1 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 1) {
-                            ownItems1.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager1 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager1);
-                    ItemAdapter adapter1 = new ItemAdapter(ownItems1);
-                    recyclerView.setAdapter(adapter1);
-                    break;
-                case 2:
-                    List<OwnItem> ownItems2 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 2) {
-                            ownItems2.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager2 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager2);
-                    ItemAdapter adapter2 = new ItemAdapter(ownItems2);
-                    recyclerView.setAdapter(adapter2);
-                    break;
-                case 3:
-                    List<OwnItem> ownItems3 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 3) {
-                            ownItems3.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager3 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager3);
-                    ItemAdapter adapter3 = new ItemAdapter(ownItems3);
-                    recyclerView.setAdapter(adapter3);
-                    break;
-                case 4:
-                    List<OwnItem> ownItems4 = new ArrayList<>();
-                    for (OwnItem ownItem : ownItems) {
-                        if (ownItem.getType() == 4) {
-                            ownItems4.add(ownItem);
-                        }
-                    }
-                    LinearLayoutManager layoutManager4 = new LinearLayoutManager(Bag.this);
-                    recyclerView.setLayoutManager(layoutManager4);
-                    ItemAdapter adapter4 = new ItemAdapter(ownItems4);
-                    recyclerView.setAdapter(adapter4);
-                    break;
-            }*/
             container.addView(view);
             return view;
         }
@@ -752,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             query.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject object, AVException e) {
-                    AVFile avFile = new AVFile("test.jpg", object.getString("url"), new HashMap<String, Object>());
+                    /*AVFile avFile = new AVFile("test.jpg", object.getString("url"), new HashMap<String, Object>());
                     avFile.getThumbnailUrl(true, 100, 120);
                     avFile.getDataInBackground(new GetDataCallback() {
                         @Override
@@ -760,7 +706,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                             holder.recommendProjectPic.setImageBitmap(bitmap);
                         }
-                    });
+                    });*/
+                    holder.recommendProjectPic.setImageURI(object.getString("url"));
                 }
             });
             holder.setType(recommendProject.type);
@@ -791,7 +738,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView recommendProjectPic;
+            private SimpleDraweeView recommendProjectPic;
             private TextView recommendProjectText;
             private String type;
 

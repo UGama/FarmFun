@@ -89,7 +89,11 @@ public class ConversationListActivity extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
+        }
     }
 
     private class ConversationAdapter extends RecyclerView.Adapter<ConversationListActivity.ConversationAdapter.ViewHolder> {

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <com.gama.farm_fun.MyVideoPlayer
+        android:id="@+id/mp_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/userPic"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/praise"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/male"
+        android:layout_marginEnd="10dp"
+        />
+
+    <ImageView
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintEnd_toEndOf="@id/userPic"
+        android:background="@drawable/shape_video_user_circle"
+        app:layout_constraintTop_toTopOf="@id/userPic"
+        app:layout_constraintBottom_toBottomOf="@id/userPic"
+        />
+
+    <ImageView
+        android:id="@+id/praise"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintBottom_toTopOf="@id/comment"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/praise"
+        />
+
+    <ImageView
+        android:id="@+id/comment"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintBottom_toTopOf="@id/share"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/video_comment"
+        />
+
+    <ImageView
+        android:id="@+id/share"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/share"
+        />
+
+
+    <!--@-->
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/userName"
+        app:layout_constraintBottom_toBottomOf="@id/userName"
+        android:src="@drawable/at"
+        />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/colorWhite"
+        android:text="小农5cks9d"
+        android:layout_marginStart="30dp"
+        android:textSize="18sp"
+        />
+</android.support.constraint.ConstraintLayout>
