@@ -66,6 +66,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
     public RecyclerView travelJournalRecyclerView;
     public List<TravelJournal> travelJournalList;
+    public int travelJournalSupportNumber;
 
     private View postPanel;
     private Button postBack;
@@ -89,6 +90,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
 
         loading = findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
+        loading.setOnClickListener(this);
 
         initUI();
     }
@@ -354,10 +356,26 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 }
-                TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalList);
-                travelJournalRecyclerView.setAdapter(travelJournalsAdapter);
-                loading.setVisibility(View.INVISIBLE);
-
+                travelJournalSupportNumber = 0;
+                getTravelJournalUrl();
+            }
+        });
+    }
+    public void getTravelJournalUrl() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", travelJournalList.get(travelJournalSupportNumber).firstPic);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                travelJournalList.get(travelJournalSupportNumber).setUrl(object.getString("url"));
+                travelJournalSupportNumber++;
+                if (travelJournalSupportNumber < travelJournalList.size()) {
+                    getTravelJournalUrl();
+                } else {
+                    TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalList);
+                    travelJournalRecyclerView.setAdapter(travelJournalsAdapter);
+                    loading.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
@@ -365,6 +383,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.loading:
+                break;
             case R.id.detail:
                 if (typeShowing.equals("HomeStay")) {
                     Intent intent = new Intent(NewsActivity.this, HomeStayActivity.class);
@@ -648,17 +668,10 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             holder.travelJournalTitle.setText(travelJournal.title);
             holder.travelJournalSubtitle.setText(travelJournal.subTitle);
             holder.setNumber(travelJournal.number);
-            AVQuery<AVObject> query = new AVQuery<>("_File");
-            query.whereEqualTo("name", travelJournal.firstPic);
-            query.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject object, AVException e) {
-                    Uri uri = Uri.parse(object.getString("url"));
-                    holder.travelJournalView.setImageURI(uri);
-                    RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-                    holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
-                }
-            });
+            Uri uri = Uri.parse(travelJournal.url);
+            holder.travelJournalView.setImageURI(uri);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+            holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
 
             holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
                 @Override

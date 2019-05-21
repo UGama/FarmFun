@@ -9,7 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ public class VideoPageActivity extends AppCompatActivity {
     private SnapHelper snapHelper;
     private ListVideoAdapter listVideoAdapter;
 
+    private View loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,21 +39,25 @@ public class VideoPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_page);
         ButterKnife.bind(this);
 
+        loading = findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
         initData();
     }
 
     public void initData() {
         urlList = new ArrayList<>();
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201805/100651/201805181532123423.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803151735198462.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803150923220770.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803150922255785.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803150920130302.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803141625005241.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803141624378522.mp4");
-        urlList.add("http://chuangfen.oss-cn-hangzhou.aliyuncs.com/public/attachment/201803/100651/201803131546119319.mp4");
 
-        initUI();
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereStartsWith("name", "video");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                for (AVObject avObject : avObjects) {
+                    urlList.add(avObject.getString("url"));
+                }
+                initUI();
+            }
+        });
     }
 
     public void initUI() {
@@ -59,6 +69,8 @@ public class VideoPageActivity extends AppCompatActivity {
 
         snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(videoRecyclerView);
+
+        loading.setVisibility(View.INVISIBLE);
 
         videoRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -88,7 +100,7 @@ public class VideoPageActivity extends AppCompatActivity {
         });
     }
 
-    class ListVideoAdapter extends BaseRecAdapter<String, VideoViewHolder> {
+    private class ListVideoAdapter extends BaseRecAdapter<String, VideoViewHolder> {
 
 
         public ListVideoAdapter(List<String> list) {
@@ -99,7 +111,7 @@ public class VideoPageActivity extends AppCompatActivity {
         public void onHolder(VideoViewHolder holder, String bean, int position) {
             ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-
+            holder.title.setText("楠溪江太好玩了！");
             holder.mp_video.setUp(bean, JZVideoPlayerStandard.CURRENT_STATE_NORMAL);
             if (position == 0) {
                 holder.mp_video.startVideo();
@@ -118,11 +130,13 @@ public class VideoPageActivity extends AppCompatActivity {
     public class VideoViewHolder extends BaseRecViewHolder {
         public View rootView;
         public MyVideoPlayer mp_video;
+        public TextView title;
 
         public VideoViewHolder(View rootView) {
             super(rootView);
             this.rootView = rootView;
             this.mp_video = rootView.findViewById(R.id.mp_video);
+            this.title = rootView.findViewById(R.id.title);
         }
 
     }

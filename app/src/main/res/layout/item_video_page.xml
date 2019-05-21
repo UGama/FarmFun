@@ -20,10 +20,10 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/praise"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="40dp"
         android:src="@drawable/male"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         />
 
     <ImageView
@@ -36,13 +36,13 @@
         app:layout_constraintBottom_toBottomOf="@id/userPic"
         />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/praise"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintEnd_toEndOf="@id/userPic"
         app:layout_constraintBottom_toTopOf="@id/comment"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/praise"
         />
 
@@ -50,9 +50,9 @@
         android:id="@+id/comment"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintEnd_toEndOf="@id/userPic"
         app:layout_constraintBottom_toTopOf="@id/share"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/video_comment"
         />
 
@@ -60,11 +60,11 @@
         android:id="@+id/share"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:layout_constraintStart_toStartOf="@id/userPic"
+        app:layout_constraintEnd_toEndOf="@id/userPic"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="50dp"
         android:src="@drawable/share"
-        />
+        />-->
 
 
     <!--@-->
@@ -81,11 +81,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/title"
         android:textColor="@color/colorWhite"
         android:text="小农5cks9d"
         android:layout_marginStart="30dp"
         android:textSize="18sp"
         />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/userName"
+        android:textSize="15sp"
+        android:text="楠溪江太好玩了～"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        android:maxEms="10"
+        android:maxLines="2"
+        android:ellipsize="end"
+        />
+
 </android.support.constraint.ConstraintLayout>

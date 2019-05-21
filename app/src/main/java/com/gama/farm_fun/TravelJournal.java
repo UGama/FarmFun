@@ -6,6 +6,7 @@ public class TravelJournal {
     public String article;
     public int number;
     public String firstPic;
+    public String url;
 
     public TravelJournal(int number, String title, String subTitle,String firstPic) {
         this.number = number;
@@ -16,5 +17,9 @@ public class TravelJournal {
 
     public void setArticle(String article) {
         this.article = article;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

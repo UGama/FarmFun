@@ -14,8 +14,8 @@
         android:id="@+id/record"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/icon_record"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="10dp"
@@ -33,6 +33,14 @@
         android:text="楠溪江短视频"
         android:textColor="@color/colorWhite"
         android:alpha="0.8"
+        />
+
+    <include
+        android:id="@+id/loading"
+        layout="@layout/panel_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public RecyclerView travelJournalRecycler;
     List<TravelJournal> travelJournalsList = null;
+    public int travelJournalSupportNumber;
 
     private View postPanel;
     private Button postBack;
@@ -209,9 +210,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             avObject.getString("picName"));
                     recommendProjectsList.add(recommendProject);
                 }
-                RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
-                recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
-                loading.setVisibility(View.INVISIBLE);
+                recommendSupportNumber = 0;
+                getRecommendUrl();
+            }
+        });
+    }
+
+    public void getRecommendUrl() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", recommendProjectsList.get(recommendSupportNumber).picName);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                recommendProjectsList.get(recommendSupportNumber).setUrl(object.getString("url"));
+                recommendSupportNumber++;
+                if (recommendSupportNumber < recommendProjectsList.size()) {
+                    getRecommendUrl();
+                } else {
+                    RecommendProjectsAdapter recommendProjectsAdapter = new RecommendProjectsAdapter(recommendProjectsList);
+                    recommendProjectsRecycler.setAdapter(recommendProjectsAdapter);
+                    loading.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
@@ -233,10 +252,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 }
-                TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalsList);
-                travelJournalRecycler.setAdapter(travelJournalsAdapter);
+                travelJournalSupportNumber = 0;
+                getTravelJournalUrl();
 
-                initUI();
+            }
+        });
+    }
+
+    public void getTravelJournalUrl() {
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        query.whereEqualTo("name", travelJournalsList.get(travelJournalSupportNumber).firstPic);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                travelJournalsList.get(travelJournalSupportNumber).setUrl(object.getString("url"));
+                travelJournalSupportNumber++;
+                if (travelJournalSupportNumber < travelJournalsList.size()) {
+                    getTravelJournalUrl();
+                } else {
+                    TravelJournalsAdapter travelJournalsAdapter = new TravelJournalsAdapter(travelJournalsList);
+                    travelJournalRecycler.setAdapter(travelJournalsAdapter);
+                    initUI();
+                }
             }
         });
     }
@@ -693,23 +730,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final RecommendProject recommendProject = recommendProjectsList.get(position);
             Log.i(String.valueOf(position), recommendProject.name);
             holder.recommendProjectText.setText(recommendProject.name);
-            AVQuery<AVObject> query = new AVQuery<>("_File");
-            query.whereEqualTo("name", recommendProject.picName);
-            query.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject object, AVException e) {
-                    /*AVFile avFile = new AVFile("test.jpg", object.getString("url"), new HashMap<String, Object>());
-                    avFile.getThumbnailUrl(true, 100, 120);
-                    avFile.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, AVException e) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                            holder.recommendProjectPic.setImageBitmap(bitmap);
-                        }
-                    });*/
-                    holder.recommendProjectPic.setImageURI(object.getString("url"));
-                }
-            });
+            holder.recommendProjectPic.setImageURI(recommendProject.url);
             holder.setType(recommendProject.type);
             holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -784,17 +805,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             holder.travelJournalTitle.setText(travelJournal.title);
             holder.travelJournalSubtitle.setText(travelJournal.subTitle);
             holder.setNumber(travelJournal.number);
-            AVQuery<AVObject> query = new AVQuery<>("_File");
-            query.whereEqualTo("name", travelJournal.firstPic);
-            query.getFirstInBackground(new GetCallback<AVObject>() {
-                @Override
-                public void done(AVObject object, AVException e) {
-                    Uri uri = Uri.parse(object.getString("url"));
-                    holder.travelJournalView.setImageURI(uri);
-                    RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
-                    holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
-                }
-            });
+            Uri uri = Uri.parse(travelJournal.url);
+            holder.travelJournalView.setImageURI(uri);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(10f);
+            holder.travelJournalView.getHierarchy().setRoundingParams(roundingParams);
 
             holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
                 @Override
