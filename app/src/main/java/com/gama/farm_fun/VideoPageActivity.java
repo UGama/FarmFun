@@ -111,7 +111,7 @@ public class VideoPageActivity extends AppCompatActivity {
         public void onHolder(VideoViewHolder holder, String bean, int position) {
             ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            holder.title.setText("楠溪江太好玩了！");
+            holder.title.setText("楠溪江太好玩了吧！");
             holder.mp_video.setUp(bean, JZVideoPlayerStandard.CURRENT_STATE_NORMAL);
             if (position == 0) {
                 holder.mp_video.startVideo();

@@ -156,7 +156,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
     public void EPay() {
-        EPay.getInstance(this).pay("农家乐预定", "asd", 2, "adminOrder","admin"
+        EPay.getInstance(this).pay("农家乐预定", "竹筏漂流（成人票）", 11100, "adminOrder","admin"
                             , null, new PayResultListener() {
                                 @Override
                                 public void onFinish(Context context, Long payId, String orderId, String payUserId, EPayResult payResult, int payType, Integer amount) {

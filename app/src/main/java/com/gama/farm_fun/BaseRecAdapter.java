@@ -10,12 +10,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ch
- * on 2017/12/19.14:24
- * 作用：
- */
-
 public abstract class BaseRecAdapter<T, K extends BaseRecViewHolder> extends RecyclerView.Adapter<K> {
 
     private List<T> list;

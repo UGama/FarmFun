@@ -2,8 +2,10 @@ package com.gama.farm_fun;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -102,6 +106,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView postCameraText;
 
     private View loading;
+
+    private File tempFile;
+    private Toast toast;
+
+    private Dialog bottomDialog;
+    private TextView openCamera;
+    private TextView openAlbum;
+    private TextView cancel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,20 +444,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.locationPic:
                 break;
-            case R.id.post_camera:
+            case R.id.open_camera:
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(
                         new File(Environment.getExternalStorageDirectory(), "test")));
                 startActivityForResult(cameraIntent, 0);
+                bottomDialog.cancel();
+                break;
+            case R.id.open_album:
+                Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
+                startActivityForResult(videoIntent, 2);
+                bottomDialog.cancel();
+                break;
+            case R.id.cancel:
+                bottomDialog.cancel();
+                break;
+            case R.id.post_camera:
+                showDialog();
                 break;
             case R.id.post_video:
-                /*Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                // 录制视频最大时长15s
-                videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
-                startActivityForResult(videoIntent, 1);*/
-                Intent videoIntent = new Intent(MainActivity.this, VideoPageActivity.class);
-                startActivity(videoIntent);
+                Intent shortVideoIntent = new Intent(MainActivity.this, VideoPageActivity.class);
+                startActivity(shortVideoIntent);
                 break;
             case R.id.message:
                 Intent messageIntent = new Intent(MainActivity.this, ConversationListActivity.class);
@@ -854,4 +876,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         postPanel.setVisibility(View.INVISIBLE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    tempFile = new File(Environment.getExternalStorageDirectory(), "test");
+                    cropPic(Uri.fromFile(tempFile));
+                }
+                break;
+            case 1:
+                Bundle bundle = data.getExtras();
+                if (bundle != null) {
+                    Bitmap bitmap = bundle.getParcelable("data");
+                    Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, null, null));
+                    // 把裁剪后的图片保存至本地 返回路径
+                    String urlpath = FileUtilcll.saveFile(this, "crop.jpg", bitmap);
+                    showToast("图片已保存至相册！");
+                }
+                break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    showToast("视频已保存至相册！");
+                }
+                break;
+        }
+    }
+
+    private void cropPic(Uri data) {
+        if (data == null) {
+        } else {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(data, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 320);
+            cropIntent.putExtra("outputY", 320);
+            cropIntent.putExtra("scale", true);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, 1);
+        }
+    }
+
+    private void showToast(String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
+        }
+    }
+
+    private void showDialog() {
+        bottomDialog = new Dialog(this, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_circle2, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
+        params.width = getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(this, 16f);
+        params.bottomMargin = DensityUtil.dp2px(this, 8f);
+        contentView.setLayoutParams(params);
+        bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        openCamera = bottomDialog.findViewById(R.id.open_camera);
+        openCamera.setOnClickListener(this);
+        openAlbum = bottomDialog.findViewById(R.id.open_album);
+        openAlbum.setOnClickListener(this);
+        cancel = bottomDialog.findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
+        bottomDialog.show();
+    }
+
 }

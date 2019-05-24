@@ -489,12 +489,6 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
 
                 }
             });
-            /*holder.recommendProjectPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });*/
             return holder;
         }
 

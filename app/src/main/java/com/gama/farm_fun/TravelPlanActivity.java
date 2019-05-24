@@ -518,7 +518,6 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void getTravelPlanPic() {
-
         AVQuery<AVObject> query = new AVQuery<>("_File");
         query.whereEqualTo("name", travelPlanList.get(picSupport).picName);
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -1196,6 +1195,8 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+
+    //功能使用时
     public void getSimilarUserRank(final String[] tabs) {
         statistics = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("TravelPlanOrder");
@@ -1444,4 +1445,59 @@ public class TravelPlanActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
+
+
+
+
+    //建模型
+    private double[] x1, x2, x3, x4;
+
+    //x1 = getRankAverage();
+    //x2 = getContainUsersAverage();
+    //x3 = getAllSales();
+    //x4 = getAllRank();
+
+    private double theta1, theta2, theta3, theta4;
+
+    private int m;//样本数
+    private int n;//特征数
+
+
+    public void meanNormalization(double[] x) {
+        double u = 0;
+        double[] s = new double[m];
+        for (int i = 1; i <= m; i++) {
+            u += x[i];
+        }
+        u = u / m;
+
+        for (int i = 1; i <= m; i++) {
+            s[i] = Math.sqrt(Math.pow(x[i], 2) - Math.pow(u, 2));
+        }
+        for (int i = 1; i <= m; i++) {
+            x[i] = (x[i] - u) / s[i];
+        }
+    }
+
+    public double lossFunction(double[] x, double[] theta, double y) {
+        double js = 0;
+        for (int i = 0; i < m; i++) {
+            int h = 0;
+            for (int j = 1; j <= n; j++) {
+                h += x[j] * theta[j];
+            }
+            js += Math.pow(h, 2) - Math.pow(y, 2);
+        }
+        js = js / m / 2;
+        return js;
+    }
+
+    private double a = 0.05;//学习率
+
+    /*public void gradientDescent(double[] x, double[] theta, double y) {
+        for (int i = 0; i < theta.length; i++) {
+            theta[i] = theta[i] - a / m;
+        }
+    }*/
+
 }
