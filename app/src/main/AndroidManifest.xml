@@ -86,6 +86,8 @@
 
         <activity android:name=".VideoPageActivity" />
 
+        <activity android:name=".UserSettingActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -159,7 +159,13 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         EPay.getInstance(this).pay("农家乐预定", "竹筏漂流（成人票）", 11100, "adminOrder","admin"
                             , null, new PayResultListener() {
                                 @Override
-                                public void onFinish(Context context, Long payId, String orderId, String payUserId, EPayResult payResult, int payType, Integer amount) {
+                                public void onFinish(Context context,
+                                                     Long payId,
+                                                     String orderId,
+                                                     String payUserId,
+                                                     EPayResult payResult,
+                                                     int payType,
+                                                     Integer amount) {
                                     EPay.getInstance(context).closePayView();//关闭快捷支付页面
                                     if(payResult.getCode() == EPayResult.SUCCESS_CODE.getCode()){
                                         //支付成功逻辑处理

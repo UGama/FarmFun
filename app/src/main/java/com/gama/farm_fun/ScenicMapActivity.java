@@ -104,8 +104,8 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
         mMapView.setLogoPosition(LogoPosition.logoPostionRightTop);
         mMapView.showScaleControl(false);
         mMapView.showZoomControls(false);
-        baiduMap = mMapView.getMap();
 
+        baiduMap = mMapView.getMap();
         baiduMap.setCompassEnable(true);
         baiduMap.setCompassPosition(new android.graphics.Point(70, 380));
         getPosition1();
@@ -188,12 +188,9 @@ public class ScenicMapActivity extends AppCompatActivity implements View.OnClick
         }
         //将地图显示在最后一个marker的位置
         MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-
         baiduMap.setMapStatus(msu);
         LatLng newLatLng = new LatLng(28.334628,120.761494);
-
         MapStatus mapStatus = new MapStatus.Builder().target(newLatLng).zoom(16).build();
-
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
         baiduMap.setMapStatus(mapStatusUpdate);
         baiduMap.setOnMarkerClickListener(this);

@@ -652,12 +652,6 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_traveljournal, parent, false);
             final TravelJournalsAdapter.ViewHolder holder = new TravelJournalsAdapter.ViewHolder(view);
-            holder.travelJournalView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
             return holder;
         }
 
@@ -681,9 +675,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
-
         }
-
+        
         @Override
         public int getItemCount() {
             return travelJournalsList.size();

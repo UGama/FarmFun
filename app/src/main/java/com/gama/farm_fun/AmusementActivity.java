@@ -483,12 +483,6 @@ public class AmusementActivity extends AppCompatActivity implements View.OnClick
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_comment, parent, false);
             final CommentAdapter.ViewHolder holder = new CommentAdapter.ViewHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
             return holder;
         }
 

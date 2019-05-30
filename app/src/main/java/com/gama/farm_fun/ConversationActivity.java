@@ -215,7 +215,7 @@ public class ConversationActivity extends AppCompatActivity implements View.OnCl
         public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
             super.onMessage(message, conversation, client);
             if (message instanceof AVIMTextMessage) {
-                Log.d("test", ((AVIMTextMessage) message).getText());
+                Log.d("receive", ((AVIMTextMessage) message).getText());
                 Message getMessage = new Message("friend", ((AVIMTextMessage) message).getText());
                 messageList.add(getMessage);
                 initMessageRecyclerView();
@@ -235,7 +235,7 @@ public class ConversationActivity extends AppCompatActivity implements View.OnCl
             public void done(AVIMClient client, AVIMException e){
                 if (e == null) {
                     //登录成功后的逻辑
-                    Log.i("test", "succeed");
+                    Log.i("Login", "succeed");
                 }
             }
         });

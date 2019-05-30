@@ -5,13 +5,6 @@ import android.text.TextUtils;
 import com.danikula.videocache.ProxyCacheUtils;
 import com.danikula.videocache.file.FileNameGenerator;
 
-/**
- * 作者： ch
- * 时间： 2018/10/11 0011-上午 10:12
- * 描述： 自定义缓存文件名
- * 来源：
- */
-
 public class MyFileNameGenerator implements FileNameGenerator {
     private static final int MAX_EXTENSION_LENGTH = 4;
 

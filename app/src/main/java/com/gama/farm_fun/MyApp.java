@@ -7,16 +7,7 @@ import android.support.multidex.MultiDex;
 import com.avos.avoscloud.AVOSCloud;
 import com.danikula.videocache.HttpProxyCacheServer;
 
-/**
- * 作者： ch
- * 时间： 2018/10/12 0012-上午 11:34
- * 描述：
- * 来源：
- */
-
 public class MyApp extends Application {
-
-
     private HttpProxyCacheServer proxy;
 
     public static HttpProxyCacheServer getProxy(Context context) {
