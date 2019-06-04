@@ -87,11 +87,15 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
         loading = findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
 
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
+
         getUserInformation();
     }
     public void getUserInformation() {
-        Intent intent = getIntent();
-        userId = intent.getStringExtra("UserId");
+        userLayout = findViewById(R.id.userLayout);
+        userName = userLayout.findViewById(R.id.userName);
+        userName.setText(getResources().getString(R.string.tourist));
 
         if (!userId.equals("tourist")) {
             AVQuery<AVObject> query = new AVQuery<>("Users");
@@ -100,8 +104,6 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void done(AVObject object, AVException e) {
                     netName = object.getString("netName");
-                    userLayout = findViewById(R.id.userLayout);
-                    userName = userLayout.findViewById(R.id.userName);
                     userName.setText(netName);
                     initUI();
                 }
@@ -256,6 +258,13 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.setting:
+                if (userId.equals("tourist")) {
+                    showToast("请先登录。");
+                } else {
+                    Intent settingIntent = new Intent(MineActivity.this, SettingActivity.class);
+                    settingIntent.putExtra("userId", userId);
+                    startActivityForResult(settingIntent, 1);
+                }
                 break;
             case R.id.all_order:
                 if (userId.equals("tourist")) {
@@ -290,6 +299,10 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                 if (userId.equals("tourist")) {
                     Intent loginIntent = new Intent(MineActivity.this, LoginActivity.class);
                     startActivityForResult(loginIntent, 0);
+                } else {
+                    Intent userSettingIntent = new Intent(MineActivity.this, UserSettingActivity.class);
+                    userSettingIntent.putExtra("userId", userId);
+                    startActivity(userSettingIntent);
                 }
                 break;
             case R.id.homePage:
@@ -430,6 +443,12 @@ public class MineActivity extends AppCompatActivity implements View.OnClickListe
                             userName.setText(netName);
                         }
                     });
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    userId = "tourist";
+                    getUserInformation();
                 }
                 break;
         }

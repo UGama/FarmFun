@@ -1,5 +1,6 @@
 package com.gama.farm_fun;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,9 @@ public class UserSettingActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_user_setting);
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
 
         initUI();
     }
@@ -88,10 +92,35 @@ public class UserSettingActivity extends AppCompatActivity implements View.OnCli
             case R.id.headPic:
                 break;
             case R.id.user_name:
+                Intent nameIntent = new Intent(UserSettingActivity.this, EditUserInformationActivity.class);
+                nameIntent.putExtra("type", "name");
+                nameIntent.putExtra("userId", userId);
+                startActivityForResult(nameIntent,0);
                 break;
             case R.id.user_phone:
+                Intent phoneIntent = new Intent(UserSettingActivity.this, EditUserInformationActivity.class);
+                phoneIntent.putExtra("type", "phone");
+                phoneIntent.putExtra("userId", userId);
+                startActivityForResult(phoneIntent, 1);
                 break;
             case R.id.user_sex:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    getUserInformation();
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    getUserInformation();
+                }
                 break;
         }
     }

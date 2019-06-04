@@ -423,6 +423,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationPic:
+                Intent paySuccessIntent = new Intent(MainActivity.this, PaySuccessActivity.class);
+                startActivity(paySuccessIntent);
+                finish();
                 break;
             case R.id.open_camera:
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
